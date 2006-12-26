@@ -1,0 +1,1 @@
+This is the primary working directory. The trunk branch should be mostly stable, with the majority of experimental work taking place in branches, and bug fixes using tags.
