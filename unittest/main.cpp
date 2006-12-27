@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// Dec 26, 2006 - Re-enabled test_factory
 // Dec 25, 2006 - Many disabled tests (changing to using a directory structure once more for libindustry SVN on sourceforge)
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework
 // May 20, 2006 - Created
@@ -27,7 +28,7 @@ using boost::unit_test::test_suite;
 
 //A lot of currently not-fixed tests/etc
 void test_algorithm();
-//void test_factory();
+void test_factory();
 //void test_freetype();
 //void test_image();
 void test_inherit();
@@ -52,7 +53,7 @@ test_suite * init_unit_test_suite( int argc , char * argv[] ) {
 	
 	//common cases:
 	test->add( BOOST_TEST_CASE( & test_algorithm     ) );
-	//test->add( BOOST_TEST_CASE( & test_factory       ) );
+	test->add( BOOST_TEST_CASE( & test_factory       ) );
 	//test->add( BOOST_TEST_CASE( & test_freetype      ) ); //currently borked
 	//test->add( BOOST_TEST_CASE( & test_image         ) );
 	test->add( BOOST_TEST_CASE( & test_inherit       ) );
