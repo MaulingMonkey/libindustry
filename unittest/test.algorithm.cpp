@@ -23,18 +23,19 @@ void test_algorithm( void ) {
 	using namespace industry;
 
 	unsigned data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
-	unsigned expected_results[] = { 1 , 3 , 5 , 7 };
+	unsigned expected_results_odd[] = { 1 , 3 , 5 , 7 };
+	unsigned expected_results_even[] = { 2, 4, 6, 8 };
 
 	const std::vector< unsigned > data2( begin(data) , end(data) );
 	std::vector< unsigned > results;
 	
-	make_range(data) | filter( is_odd )
-	                 | push_back(results)
-	                 ;
+	data | filter( is_odd ) | push_back(results);
 
-	BOOST_CHECK(( make_range(results) == make_range(expected_results) ));
+	BOOST_CHECK(( make_range(results) == make_range(expected_results_odd) ));
 
-	data2 | filter( is_even )
-	      | push_back( results )
-	      ;
+	results.clear();
+
+	data2 | filter( is_even ) | push_back( results );
+
+	BOOST_CHECK(( make_range(expected_results_even) == make_range(results) ));
 }
