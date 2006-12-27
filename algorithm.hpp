@@ -13,5 +13,6 @@
 #include <algorithm>
 #include <industry/algorithm/filter.hpp>
 #include <industry/algorithm/push.hpp>
+#include <industry/algorithm/call.hpp>
 
 #endif //ndef IG_INDUSTRY_ALGORITHM
