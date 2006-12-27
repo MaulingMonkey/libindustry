@@ -18,11 +18,11 @@ namespace industry {
 		template< typename NumT >
 		class finite_numeric_iterator {
 		public:
-			typedef typename std::bidirectional_iterator_tag              iterator_category;
-			typedef typename NumT                                       value_type;
-			typedef typename ptrdiff_t									difference_type;
-			typedef typename NumT*	                                    pointer;
-			typedef typename NumT&                                      reference;
+			typedef std::bidirectional_iterator_tag            iterator_category;
+			typedef NumT                                       value_type;
+			typedef ptrdiff_t                                  difference_type;
+			typedef NumT*                                      pointer;
+			typedef NumT&                                      reference;
 		};
 	}
 }
