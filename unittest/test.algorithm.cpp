@@ -59,7 +59,7 @@ namespace {
 	};
 
 	void print_point(child& p) {
-		std::cout<<p.point<<" ";
+		BOOST_CHECK(p.point == 1);
 	}
 }
 
