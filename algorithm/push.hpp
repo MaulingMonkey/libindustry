@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <industry/traits/range.hpp>
 
 namespace industry {
 	namespace algorithm {
@@ -22,11 +23,11 @@ namespace industry {
 
 			template < typename RangeT >
 			friend void operator|( RangeT & range , const push_back_processor< ContainerT > & p ) {
-				std::copy( range.begin() , range.end() , std::back_inserter( p.container ) );
+				std::copy( range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) , std::back_inserter( p.container ) );
 			}
 			template < typename RangeT >
 			friend void operator|( const RangeT & range , const push_back_processor< ContainerT > & p ) {
-				std::copy( range.begin() , range.end() , std::back_inserter( p.container ) );
+				std::copy( range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) , std::back_inserter( p.container ) );
 			}
 		};
 
