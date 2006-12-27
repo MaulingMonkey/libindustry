@@ -6,6 +6,8 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#include <iostream>
+
 #include <industry/algorithm.hpp>
 #include <industry/arrays.hpp>
 #include <industry/range.hpp>
@@ -39,22 +41,35 @@ void test_algorithm( void ) {
 	BOOST_CHECK(( make_range(expected_results_even) == make_range(results) ));
 }
 
-#include <iostream>
-
 namespace {
 	struct base {
-		void add_point() { std::cout<<"add point."<<std::endl; }
+		base() : point() {}
+		base(int p) : point(p) {}
+		void add_point() { ++point; }
+		int point;
 	};
 
 	struct child : base {
+		child() {}
+		child(int p) : base(p) {}
 		base* get_parent() { return static_cast<base*>(this); }
+		bool operator==(child const& other) {
+			return point == other.point;
+		}
 	};
+
+	void print_point(child& p) {
+		std::cout<<p.point<<" ";
+	}
 }
 
 void test_algorithm_call() {
 	using namespace industry;
 
 	child data[10];
+	std::vector<child> expected_result(10, child(1));
 
 	data | call(&base::add_point);
+	data | call(print_point);
+	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
 }

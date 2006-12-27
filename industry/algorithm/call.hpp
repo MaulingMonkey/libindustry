@@ -22,6 +22,14 @@ namespace industry {
 			struct function_traits { };
 
 			template<typename R, typename A1>
+			struct function_traits<R (*)(A1)> {
+				typedef R result_type;
+				typedef A1 argument_type;
+
+				typedef R (*function_pointer)(A1);
+			};
+
+			template<typename R, typename A1>
 			struct function_traits<R (A1)> {
 				typedef R result_type;
 				typedef A1 argument_type;
@@ -32,7 +40,7 @@ namespace industry {
 			template<typename R, typename C>
 			struct function_traits<R (C::*)()> {
 				typedef R result_type;
-				typedef C argument_type;
+				typedef C& argument_type;
 
 				typedef R (C::*function_pointer)();
 			};
@@ -40,10 +48,13 @@ namespace industry {
 
 		template < typename FunctionS >
 		class call_processor {
-			typedef boost::function< typename detail::function_traits<FunctionS>::result_type ( typename detail::function_traits<FunctionS>::argument_type )> function_type;
+			typedef typename detail::function_traits<FunctionS>::result_type result_type;
+			typedef typename detail::function_traits<FunctionS>::argument_type argument_type;
+
+			typedef boost::function< result_type ( argument_type )> function_type;
 			function_type function;
 		public:
-			call_processor( function_type function ) : function( function ) {}
+			call_processor( function_type function ) : function( function ) { }
 
 			template < typename RangeT >
 			friend void operator|( RangeT & range , const call_processor< FunctionS > & p ) {
