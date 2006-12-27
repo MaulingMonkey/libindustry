@@ -4,8 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 25, 2006 - dot names to directory based name fixes
-// Nov 12, 2006 - Created
+// $LastChangedBy$ - $LastChangedDate$
 
 #include <industry/algorithm.hpp>
 #include <industry/arrays.hpp>
@@ -38,4 +37,24 @@ void test_algorithm( void ) {
 	data2 | filter( is_even ) | push_back( results );
 
 	BOOST_CHECK(( make_range(expected_results_even) == make_range(results) ));
+}
+
+#include <iostream>
+
+namespace {
+	struct base {
+		void add_point() { std::cout<<"add point."<<std::endl; }
+	};
+
+	struct child : base {
+		base* get_parent() { return static_cast<base*>(this); }
+	};
+}
+
+void test_algorithm_call() {
+	using namespace industry;
+
+	child data[10];
+
+	data | call(&base::add_point);
 }

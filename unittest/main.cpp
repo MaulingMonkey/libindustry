@@ -42,8 +42,10 @@ void test_multitype();
 void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
+void test_algorithm_call();
 
 static test_function_ptr test_functions[] = {
+	test_algorithm_call,
 	test_factory,
 	test_algorithm,
 	test_inherit,
