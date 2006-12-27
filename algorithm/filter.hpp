@@ -36,8 +36,8 @@ namespace industry {
 				operator|( RangeT & range , const filter_processor<F> & filt )
 			{
 				typedef boost::filter_iterator< F , typename range_traits< RangeT >::iterator > iterator_type;
-				iterator_type begin( filt.predicate , range.begin() , range.end() );
-				iterator_type end  ( filt.predicate , range.end()   , range.end() );
+				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) );
+				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range)   , range_traits<RangeT>::end(range) );
 				return industry::range< iterator_type >( begin , end );
 			}
 			
@@ -46,8 +46,8 @@ namespace industry {
 				operator|( const RangeT & range , const filter_processor & filt )
 			{
 				typedef boost::filter_iterator< F , typename range_traits< const RangeT >::iterator > iterator_type;
-				iterator_type begin( filt.predicate , range.begin() , range.end() );
-				iterator_type end  ( filt.predicate , range.end()   , range.end() );
+				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) );
+				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range)   , range_traits<RangeT>::end(range) );
 				return industry::range< iterator_type >( begin , end );
 			}
 			
