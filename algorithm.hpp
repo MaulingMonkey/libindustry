@@ -4,8 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 25, 2006 - industry.algorithm.hpp => industry/algorithm.hpp
-// Nov 11, 2006 - Created
+// $LastChangedBy$ - $LastChangedDate$
 
 #ifndef IG_INDUSTRY_ALGORITHM
 #define IG_INDUSTRY_ALGORITHM
