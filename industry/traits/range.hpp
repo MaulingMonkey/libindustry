@@ -10,17 +10,49 @@
 #ifndef IG_INDUSTRY_TRAITS_RANGE
 #define IG_INDUSTRY_TRAITS_RANGE
 
+#include <cstdlib>
+
 namespace industry {
 	template < typename RangeT >
 	struct range_traits {
 		typedef typename RangeT::iterator        iterator;
 		typedef typename RangeT::const_iterator  const_iterator;
+
+		static iterator begin(RangeT& range) { return range.begin(); }
+		static iterator end(RangeT& range) { return range.end(); }
+
+		static const_iterator begin(const RangeT& range) { return range.begin(); }
+		static const_iterator end(const RangeT& range) { return range.end(); }
 	};
 
 	template < typename RangeT >
 	struct range_traits< const RangeT > {
 		typedef typename RangeT::const_iterator  iterator;
 		typedef typename RangeT::const_iterator  const_iterator;
+
+		static const_iterator begin(const RangeT& range) { return range.begin(); }
+		static const_iterator end(const RangeT& range) { return range.end(); }
+	};
+
+	template < typename RangeT, int S >
+	struct range_traits< RangeT[S] > {
+		typedef typename RangeT*                 iterator;
+		typedef typename const RangeT*           const_iterator;
+
+		static iterator begin(RangeT range[S]) { return range; }
+		static iterator end(RangeT range[S]) { return range + S; }
+
+		static const_iterator begin(const RangeT range[S]) { return range; }
+		static const_iterator end(const RangeT range[S]) { return range + S; }
+	};
+
+	template < typename RangeT, int S >
+	struct range_traits< const RangeT[S] > {
+		typedef typename const RangeT*           iterator;
+		typedef typename const RangeT*           const_iterator;
+
+		static const_iterator begin(const RangeT range[S]) { return range; }
+		static const_iterator end(const RangeT range[S]) { return range + S; }
 	};
 }
 
