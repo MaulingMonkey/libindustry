@@ -16,6 +16,10 @@
 #include <limits>
 
 namespace industry {
+	namespace detail {
+
+	}
+
 	template < typename IteratorT >
 	class range {
 		IteratorT begin_, end_;
@@ -24,14 +28,7 @@ namespace industry {
 		typedef IteratorT                                                        const_iterator;
 		typedef IteratorT                                                        iterator;
 		typedef typename std::iterator_traits< IteratorT >::difference_type      difference_type;
-	private:
-		//Ugly hack since iterator_traits dosn't give us a nice size_type:
-		typedef typename std::iterator_traits< IteratorT >::difference_type      size_type_;
-		BOOST_STATIC_ASSERT(( !std::numeric_limits< size_type_ >::is_signed
-		                   || sizeof(unsigned) >= sizeof(size_type_)
-		                   ));
-	public:
-		typedef typename boost::mpl::if_c< std::numeric_limits< size_type_ >::is_signed , unsigned , size_type_ >::type size_type;
+		typedef typename std::allocator<IteratorT>::size_type                    size_type;
 
 		range()                                                  : begin_()               , end_()             {}
 		range( const IteratorT & begin , const IteratorT & end ) : begin_( begin )        , end_( end )        {}

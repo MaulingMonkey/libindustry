@@ -27,7 +27,6 @@
 namespace industry {
 	namespace math {
 		template < typename StorageT , unsigned offset > class fixed;
-		
 	
 		template < typename StorageT , unsigned offset >
 		class fixed {
