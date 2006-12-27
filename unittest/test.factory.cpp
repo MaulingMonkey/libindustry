@@ -82,10 +82,9 @@ template < typename T , typename B > void verify( B * ptr , base::ctor_method ct
 	if (p) BOOST_CHECK_EQUAL( p->ctor_method_used , ctor_method_used );
 }
 
+template < typename T > void cleanup(       T * raw_ptr ) { delete raw_ptr; }
 template < typename T > void cleanup( const T * raw_ptr ) { delete raw_ptr; }
-
-template < typename T >
-void cleanup( const T & , ... ) {}
+template < typename T > void cleanup( const T & ) {}
 
 template < typename InterfaceT >
 void test_factory_interface( void ) {
