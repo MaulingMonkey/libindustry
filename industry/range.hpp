@@ -13,6 +13,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/mpl/if.hpp>
 #include <iterator>
+#include <limits>
 
 namespace industry {
 	template < typename IteratorT >

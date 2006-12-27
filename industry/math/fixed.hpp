@@ -22,6 +22,7 @@
 #include <iostream>
 #include <limits>
 #include <cmath>
+#include <cassert>
 
 namespace industry {
 	namespace math {
