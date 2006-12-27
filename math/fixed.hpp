@@ -134,22 +134,6 @@ namespace industry {
 				return ((l_lo == r_lo) && (l_hi == r_hi));
 			}
 			
-			friend bool operator<(const fixed& left, const fixed& right) {
-				return left.data < right.data;
-			}
-
-			friend bool operator>(const fixed& left, const fixed& right) {
-				return left.data < right.data;
-			}
-
-			friend bool operator<=(const fixed& left, const fixed& right) {
-				return left.data <= right.data;
-			}
-
-			friend bool operator>=(const fixed& left, const fixed& right) {
-				return left.data >= right.data;
-			}
-
 			friend std::ostream & operator<<( std::ostream & os , const fixed & f ) {
 				os << f.to_double();
 				return os;

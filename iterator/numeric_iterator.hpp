@@ -12,61 +12,18 @@
 
 #include <iterator>
 #include <cstdlib>
-#include <cassert>
-#include <industry/range.hpp>
 
 namespace industry {
-	template< typename NumT >
-	class numeric_iterator {
-		typedef numeric_iterator<NumT>       this_type;
-	public:
-		typedef typename std::forward_iterator_tag  iterator_category;
-		typedef typename NumT                       value_type;
-		typedef typename ptrdiff_t                  difference_type;
-		typedef typename NumT*	                    pointer;
-		typedef typename NumT&                      reference;
-
-		numeric_iterator() : value(), increment(), endValue() {}
-		numeric_iterator( value_type const& value, value_type const& endValue, value_type const& increment)
-			: value(value), increment(increment), endValue(endValue) { }
-
-		this_type&   operator++() {
-			if(value + increment < endValue) {
-				value += increment;
-			} else {
-				if(value == endValue) {
-					assert( false && "End iterator reached. Undefined behavior results from traversing past the end." );
-				}
-
-				value = endValue;
-			}
-			return *this;
-		}
-
-		this_type    operator++(int) { this_type copy( *this ); ++*this; return copy; }
-		value_type   operator*() { return value; }
-		pointer      operator->() { return &value; }
-
-		friend bool operator==(const this_type& left, const this_type& right) {
-			return left.value == right.value &&
-				left.increment == right.increment &&
-				left.endValue == right.endValue;
-		}
-		friend bool operator!=(const this_type& left, const this_type& right) {
-			return !(left == right);
-		}
-	private:
-		NumT value;
-		NumT increment;
-		NumT endValue;
-	};
-
-	template<typename NumT>
-	range< numeric_iterator< NumT > > make_numeric_range(NumT begin, NumT end, NumT step = NumT(1)) {
-		return range< numeric_iterator< NumT > >(
-			numeric_iterator< NumT >(begin, end, step),
-			numeric_iterator< NumT >(end, end, step)
-		);
+	namespace iterator {
+		template< typename NumT >
+		class finite_numeric_iterator {
+		public:
+			typedef typename std::bidirectional_iterator_tag              iterator_category;
+			typedef typename NumT                                       value_type;
+			typedef typename ptrdiff_t									difference_type;
+			typedef typename NumT*	                                    pointer;
+			typedef typename NumT&                                      reference;
+		};
 	}
 }
 

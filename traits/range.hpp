@@ -36,8 +36,8 @@ namespace industry {
 
 	template < typename RangeT, int S >
 	struct range_traits< RangeT[S] > {
-		typedef RangeT*                          iterator;
-		typedef const RangeT*                    const_iterator;
+		typedef RangeT*                 iterator;
+		typedef const RangeT*           const_iterator;
 
 		static iterator begin(RangeT range[S]) { return range; }
 		static iterator end(RangeT range[S]) { return range + S; }
@@ -48,8 +48,8 @@ namespace industry {
 
 	template < typename RangeT, int S >
 	struct range_traits< const RangeT[S] > {
-		typedef const RangeT*                   iterator;
-		typedef const RangeT*                   const_iterator;
+		typedef const RangeT*           iterator;
+		typedef const RangeT*           const_iterator;
 
 		static const_iterator begin(const RangeT range[S]) { return range; }
 		static const_iterator end(const RangeT range[S]) { return range + S; }
