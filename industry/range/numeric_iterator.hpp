@@ -4,13 +4,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// Dec 26, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
 
-#include <industry/arrays.hpp>
-#include <industry/range.hpp>
-#include <industry/iterator/numeric_iterator.hpp>
-#include <boost/test/unit_test.hpp>
-#include <vector>
+#ifndef IG_INDUSTRY_RANGE_NUMERIC_ITERATOR
+#define IG_INDUSTRY_RANGE_NUMERIC_ITERATOR
 
-void test_range_numeric_iterator( void ) {
-}
+
+
+#endif //IG_INDUSTRY_RANGE_NUMERIC_ITERATOR

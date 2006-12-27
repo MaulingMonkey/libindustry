@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// Dec 26, 2006 - Re-enabled test_factory
 // Dec 25, 2006 - Many disabled tests (changing to using a directory structure once more for libindustry SVN on sourceforge)
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework
 // May 20, 2006 - Created
@@ -25,11 +26,9 @@ using boost::unit_test::test_suite;
 #pragma warning(pop)
 #endif
 
-typedef void (*test_function_ptr)();
-
 //A lot of currently not-fixed tests/etc
 void test_algorithm();
-//void test_factory();
+void test_factory();
 //void test_freetype();
 //void test_image();
 void test_inherit();
@@ -41,19 +40,6 @@ void test_multitype();
 //void test_nmap();
 void test_range();
 //void test_utility();
-void test_range_numeric_iterator();
-
-static test_function_ptr test_functions[] = {
-	test_algorithm,
-	test_inherit,
-	test_iterator_cast,
-	test_iterator_n,
-	test_math_fixed,
-	test_math_vector,
-	test_multitype,
-	test_range,
-	test_range_numeric_iterator
-};
 
 #if defined( INDUSTRY_OS_WINDOWS )
 //void test_win32_registry();
@@ -64,19 +50,30 @@ test_suite * init_unit_test_suite( int argc , char * argv[] ) {
 	cout << "Test started..." << endl;
 
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
-
-	for(int i = 0; i < (sizeof(test_functions)/sizeof(test_function_ptr)); ++i) {
-		test->add(BOOST_TEST_CASE( test_functions[i] ));
-	}
-
+	
+	//common cases:
+	test->add( BOOST_TEST_CASE( & test_algorithm     ) );
+	test->add( BOOST_TEST_CASE( & test_factory       ) );
+	//test->add( BOOST_TEST_CASE( & test_freetype      ) ); //currently borked
+	//test->add( BOOST_TEST_CASE( & test_image         ) );
+	test->add( BOOST_TEST_CASE( & test_inherit       ) );
+	test->add( BOOST_TEST_CASE( & test_iterator_cast ) );
+	test->add( BOOST_TEST_CASE( & test_iterator_n    ) );
+	test->add( BOOST_TEST_CASE( & test_math_fixed    ) );
+	test->add( BOOST_TEST_CASE( & test_math_vector   ) );
+	test->add( BOOST_TEST_CASE( & test_multitype     ) );
+	//test->add( BOOST_TEST_CASE( & test_nmap          ) );
+	test->add( BOOST_TEST_CASE( & test_range         ) );
+	//test->add( BOOST_TEST_CASE( & test_utility       ) );
+	
 	//OS specific cases:
-#if defined( INDUSTRY_OS_WINDOWS )
+	#if defined( INDUSTRY_OS_WINDOWS )
 	//test->add( BOOST_TEST_CASE( & test_win32_registry ) );
-
-#elif defined( INDUSTRY_OS_X )
+	
+	#elif defined( INDUSTRY_OS_X )
 	//....
-
-#endif
-
+	
+	#endif
+	
 	return test;
 }
