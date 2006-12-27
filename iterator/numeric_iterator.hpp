@@ -20,11 +20,11 @@ namespace industry {
 	class numeric_iterator {
 		typedef numeric_iterator<NumT>       this_type;
 	public:
-		typedef typename std::forward_iterator_tag  iterator_category;
-		typedef typename NumT                       value_type;
-		typedef typename ptrdiff_t                  difference_type;
-		typedef typename NumT*	                    pointer;
-		typedef typename NumT&                      reference;
+		typedef std::forward_iterator_tag  iterator_category;
+		typedef NumT                       value_type;
+		typedef ptrdiff_t                  difference_type;
+		typedef NumT*                      pointer;
+		typedef NumT&                      reference;
 
 		numeric_iterator() : value(), increment(), endValue() {}
 		numeric_iterator( value_type const& value, value_type const& endValue, value_type const& increment)
