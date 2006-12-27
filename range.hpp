@@ -15,10 +15,6 @@
 #include <iterator>
 
 namespace industry {
-	namespace detail {
-
-	}
-
 	template < typename IteratorT >
 	class range {
 		IteratorT begin_, end_;
