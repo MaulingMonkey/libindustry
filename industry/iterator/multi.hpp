@@ -111,8 +111,7 @@ namespace industry {
 			
 			if ( iter_set == 2 ) {
 				if ( begin2 == i2 ) {
-					iter_set = 1;
-					//will continue in iter_set == 1
+					iter_set = 1; //will continue in iter_set == 1
 				} else {
 					--i2;
 					return *this;
@@ -137,7 +136,7 @@ namespace industry {
 				difference_type d1 = end1 - i1;
 				if ( difference > d1 ) {
 					i1 = end1;
-					iter_set = 2;
+					iter_set = 2; //will continue in iter_set == 2
 					difference -= d1;
 				} else {
 					i1 += difference;
@@ -236,6 +235,9 @@ namespace industry {
 				case 2: return lhs.i2 < rhs.i2;
 				default: assert(!"Should never happen");
 			}
+		}
+		friend bool operator> ( const this_t & lhs , const this_t & rhs ) {
+			return rhs < lhs;
 		}
 	};
 }
