@@ -301,7 +301,7 @@ namespace industry {
 		ptr_result_type operator->() const {
 			switch(iter_set) {
 				case 1:  return to_ptr_result( i1 );
-				case 2:  return to_ptr_result( i2 );
+				case 2:  assert( i2 != end2 || !"Tried to dereference end" ); return to_ptr_result( i2 );
 				case 0:  assert(!"Tried to dereference immutable end iterator!");
 				default: assert(!"Should never happen");
 			}
