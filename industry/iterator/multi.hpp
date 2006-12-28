@@ -6,6 +6,7 @@
 //
 // Dec 27, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+// NOTE:  Only forward, bidirectional, and random access iterators are compatible currently.
 
 #ifndef IG_INDUSTRY_ITERATOR_MULTI
 #define IG_INDUSTRY_ITERATOR_MULTI
@@ -53,6 +54,8 @@ namespace industry {
 		template < typename T > struct multi_iterator_result_traits< T ,       T& ,       T  > { typedef       T  result_type; };
 		template < typename T > struct multi_iterator_result_traits< T ,       T& , const T& > { typedef const T& result_type; };
 		template < typename T > struct multi_iterator_result_traits< T ,       T& ,       T& > { typedef       T& result_type; };
+		
+		template < typename T , typename Proxy > struct multi_iterator_result_traits< T , Proxy , Proxy > { typedef Proxy result_type; };
 
 		template < typename ValueT , typename Iter1Result , typename Iter2Result >
 		struct multi_iterator_ptr_result_traits;
@@ -62,6 +65,8 @@ namespace industry {
 		
 		template < typename T > struct multi_iterator_ptr_result_traits< T ,       T* , const T* > { typedef const T& ptr_result_type; };
 		template < typename T > struct multi_iterator_ptr_result_traits< T ,       T* ,       T* > { typedef       T& ptr_result_type; };
+		
+		template < typename T , typename Proxy > struct multi_iterator_ptr_result_traits< T , Proxy , Proxy > { typedef Proxy ptr_result_type; };
 		
 		template < typename Iter1 , typename Iter2 >
 		struct multi_iterator_conversion_traits {
@@ -102,9 +107,9 @@ namespace industry {
 		
 	}
 	template < typename Iter1 , typename Iter2 >
-	class multi_iterator_base : detail::multi_iterator_traits< Iter1 , Iter2 >
+	class multi_iterator : detail::multi_iterator_traits< Iter1 , Iter2 >
 	{
-		typedef multi_iterator_base< Iter1 , Iter2 > this_t;
+		typedef multi_iterator< Iter1 , Iter2 > this_t;
 	protected:
 		Iter1 begin1, i1, end1;
 		Iter2 begin2, i2, end2;
@@ -118,19 +123,19 @@ namespace industry {
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::result_type       result_type;
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::ptr_result_type   ptr_result_type;
 						
-		multi_iterator_base(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
+		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case
 		}
-		multi_iterator_base( const this_t & other
-		                   ): begin1(other.begin1), i1(other.i1), end1(other.end1)
-		                   ,  begin2(other.begin2), i2(other.i2), end2(other.end2), iter_set(other.iter_set)
+		multi_iterator( const this_t & other
+					  ): begin1(other.begin1), i1(other.i1), end1(other.end1)
+					  ,  begin2(other.begin2), i2(other.i2), end2(other.end2), iter_set(other.iter_set)
 		{
 			//Copy case
 		}
-		multi_iterator_base( Iter1 begin1 , Iter1 end1, Iter2 begin2 , Iter2 end2
-		                   ): begin1(begin1), i1(begin1), end1(end1)
-		                   ,  begin2(begin2), i2(begin2), end2(end2), iter_set(1)
+		multi_iterator( Iter1 begin1 , Iter1 end1, Iter2 begin2 , Iter2 end2
+					  ): begin1(begin1), i1(begin1), end1(end1)
+					  ,  begin2(begin2), i2(begin2), end2(end2), iter_set(1)
 		{
 			//Begin iterator
 			

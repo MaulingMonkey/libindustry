@@ -8,6 +8,15 @@
 // $LastChangedBy$ - $LastChangedDate$
 
 #include <industry/iterator/multi.hpp>
+#include <list>
+#include <vector>
 
 void test_multi_iterator() {
+	typedef int*                         Iter1;
+	typedef std::vector<int>::iterator   Iter2;
+	typedef std::list<int>::iterator     Iter3;
+		
+	industry::multi_iterator< Iter1 , Iter2 > iter12_end;
+	industry::multi_iterator< Iter1 , Iter3 > iter13_end;
+	industry::multi_iterator< Iter2 , Iter3 > iter23_end;
 }
