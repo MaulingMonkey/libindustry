@@ -26,6 +26,7 @@ namespace industry {
 			typedef boost::function< FunctionS > function_type;
 		public:
 			transform_iterator_adaptor(function_type function, HeldIterator itor) : function(function), itor(itor){ }
+			typedef typename std::iterator_traits<HeldIterator>::difference_type difference_type;
 		private:
 			friend class boost::iterator_core_access;
 
