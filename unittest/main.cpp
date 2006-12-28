@@ -15,6 +15,7 @@
 #pragma warning( disable : 4267 ) //possible argument       data loss conversion
 #endif
 
+#include <industry/arrays.hpp>
 #include <industry/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test_framework.hpp>
@@ -68,7 +69,7 @@ test_suite * init_unit_test_suite( int argc , char * argv[] ) {
 
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
 
-	for(int i = 0; i < (sizeof(test_functions)/sizeof(test_function_ptr)); ++i) {
+	for( unsigned i = 0 ; i < industry::arrays::size(test_functions) ; ++i ) {
 		test->add(BOOST_TEST_CASE( test_functions[i] ));
 	}
 
