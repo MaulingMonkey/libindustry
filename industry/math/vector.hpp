@@ -20,7 +20,8 @@
 	#include <boost/static_assert.hpp>
 	#include <cassert>
 	#include <cmath>
-	
+	#include <numeric>
+
 namespace industry {
 	namespace math {
 		template < typename T , unsigned Dn >
@@ -87,7 +88,7 @@ namespace industry {
 template < typename T >
 class vector< T , DN > : public vector_base< T , DN > {
 public:
-	vector() { for ( unsigned n = 0 ; n < DN ; ++n ) (*this)[n]=T(); }
+	vector() { std::fill_n(&(*this)[0], DN, T()); }
 	vector( BOOST_PP_ENUM_PARAMS(DN,T elem) ) { BOOST_PP_REPEAT(DN,INDUSTRY_MATH_VECTOR_FILL_THIS_ARGS,elem); }
 	
 	vector& operator+=( const vector & other ) { for ( unsigned i = 0 ; i < DN ; ++i ) (*this)[i] += other[i]; return *this; }
@@ -100,11 +101,11 @@ public:
 	friend vector operator*( const vector & lhs , const T      & rhs ) { vector c(lhs); c *= rhs; return c; }
 	friend vector operator/( const vector & lhs , const T      & rhs ) { vector c(lhs); c /= rhs; return c; }
 	
-	friend T magnitude2( const vector & v ) { T value; for ( unsigned i = 0 ; i < DN ; ++i ) value += T(v[i] * v[i]); return value; }
-	friend T magnitude ( const vector & v ) { return T( std::sqrt( magnitude2( v ) ) ); }
+	friend T square_magnitude( const vector & v ) { return std::inner_product(&v[0], &v[0] + DN, &v[0], T()); }
+	friend T magnitude ( const vector & v ) { return T( std::sqrt( square_magnitude( v ) ) ); }
 	
-	template < typename U > friend U magnitude2( const vector & v ) { U value; for ( unsigned i = 0 ; i < DN ; ++i ) value += U(v[i] * v[i]); return value; }
-	template < typename U > friend U magnitude ( const vector & v ) { return U( std::sqrt( magnitude2/*<U>*/(v) ) ); }
+	template < typename U > friend U square_magnitude( const vector & v ) { return static_cast<U>(square_magnitude(v)); }
+	template < typename U > friend U magnitude ( const vector & v ) { return U( std::sqrt( square_magnitude/*<U>*/(v) ) ); }
 };
 
 

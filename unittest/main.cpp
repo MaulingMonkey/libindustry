@@ -21,6 +21,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test_framework.hpp>
 #include <iostream>
+
 using boost::unit_test::test_suite;
 
 #if defined( _MSC_VER )
