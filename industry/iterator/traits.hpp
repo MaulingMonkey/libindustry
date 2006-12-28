@@ -29,21 +29,14 @@
 
 namespace industry {
 	template < typename Iterator >
-	struct iterator_traits_base : std::iterator_traits< Iterator > {
-	};
+	struct iterator_traits_base : std::iterator_traits< Iterator > { };
 	
-#if defined( INDUSTRY_TYPEOF )
 	template < typename Iterator >
 	struct iterator_traits : iterator_traits_base< Iterator > {
-		typedef typename industry::member_function_ptr_traits< INDUSTRY_TYPEOF(&Iterator::operator* ) >::result_type   result_type;
-		typedef typename industry::member_function_ptr_traits< INDUSTRY_TYPEOF(&Iterator::operator->) >::result_type   ptr_result_type;
+		typedef typename std::iterator_traits<Iterator>::pointer ptr_result_type;
+		typedef typename std::iterator_traits<Iterator>::reference result_type;
 	};
-#else
-	template < typename Iterator > struct iterator_traits;
-	
-	//TODO: Specialize iterator_traits for standard library iterators
-#endif
-		
+
 	template < typename ValueT >
 	struct iterator_traits< ValueT * > : iterator_traits_base< ValueT * > {
 		typedef ValueT & result_type;
