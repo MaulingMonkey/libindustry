@@ -22,4 +22,8 @@ void test_math_vector() {
 	vector< unsigned , 4 > should_compile_4;
 	vector< unsigned , 5 > should_compile_5;
 	vector< unsigned , 6 > should_compile_6;
+
+	typedef vector< float, 3> vf3;
+	vf3 v;
+	BOOST_CHECK(square_magnitude<double>(v) == 0);
 }
