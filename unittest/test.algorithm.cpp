@@ -77,5 +77,6 @@ void test_algorithm_call() {
 	data | call(&child::add_point);
 	data | call(print_point);
 	data | call<void, child&>(boost::bind(print_point, _1, 2));
+
 	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
 }
