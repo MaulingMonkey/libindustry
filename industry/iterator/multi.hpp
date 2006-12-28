@@ -53,10 +53,34 @@ namespace industry {
 		template < typename T > struct multi_iterator_result_traits< T ,       T& ,       T  > { typedef       T  result_type; };
 		template < typename T > struct multi_iterator_result_traits< T ,       T& , const T& > { typedef const T& result_type; };
 		template < typename T > struct multi_iterator_result_traits< T ,       T& ,       T& > { typedef       T& result_type; };
+
+		template < typename ValueT , typename Iter1Result , typename Iter2Result >
+		struct multi_iterator_ptr_result_traits;
 		
-		template < typename Iter   > struct iterator_deref_result_type                  { typedef typename boost::function_traits< typeof(Iter::operator*) >::result_type result_type; };
-		template < typename ValueT > struct iterator_deref_result_type< ValueT* >       { typedef       ValueT& result_type; };
-		template < typename ValueT > struct iterator_deref_result_type< const ValueT* > { typedef const ValueT& result_type; };
+		template < typename T > struct multi_iterator_ptr_result_traits< T , const T* , const T* > { typedef const T& ptr_result_type; };
+		template < typename T > struct multi_iterator_ptr_result_traits< T , const T* ,       T* > { typedef const T& ptr_result_type; };
+		
+		template < typename T > struct multi_iterator_ptr_result_traits< T ,       T* , const T* > { typedef const T& ptr_result_type; };
+		template < typename T > struct multi_iterator_ptr_result_traits< T ,       T* ,       T* > { typedef       T& ptr_result_type; };
+		
+		template < typename Iter1 , typename Iter2 >
+		struct multi_iterator_conversion_traits {
+			typedef typename multi_iterator_result_traits
+				< typename industry::iterator_traits< Iter1 >::value_type
+				, typename industry::iterator_traits< Iter1 >::result_type 
+				, typename industry::iterator_traits< Iter2 >::result_type
+				>::result_type result_type;
+			typedef typename multi_iterator_ptr_result_traits
+				< typename industry::iterator_traits< Iter1 >::value_type
+				, typename industry::iterator_traits< Iter1 >::ptr_result_type
+				, typename industry::iterator_traits< Iter2 >::ptr_result_type
+				>::ptr_result_type ptr_result_type;
+			
+			result_type to_result( Iter1 i ) { return *i; }
+			result_type to_result( Iter2 i ) { return *i; }
+			ptr_result_type to_ptr_result( Iter1 i ) { return i.operator->(); }
+			ptr_result_type to_ptr_result( Iter2 i ) { return i.operator->(); }
+		};
 		
 		template < typename Iter1 , typename Iter2 >
 		struct multi_iterator_traits
@@ -64,17 +88,13 @@ namespace industry {
 				< typename std::iterator_traits< Iter1 >::iterator_category
 				, typename std::iterator_traits< Iter2 >::iterator_category
 				>
-			, multi_iterator_result_traits
-				< typename std::iterator_traits< Iter1 >::value_type
-				, typename iterator_deref_result_type< Iter1 >::result_type
-				, typename iterator_deref_result_type< Iter2 >::result_type
-				>
+			, multi_iterator_conversion_traits< Iter1 , Iter2 >
 		{
-			BOOST_STATIC_ASSERT(( boost::is_same< typename Iter1::value_type , typename Iter2::value_type >::value ));
-			typedef typename Iter1::value_type value_type;
-			typedef typename boost::mpl::if_c< sizeof(typename Iter1::difference_type) >= sizeof(typename Iter2::difference_type)
-			                                 , typename Iter1::difference_type
-			                                 , typename Iter2::difference_type
+			BOOST_STATIC_ASSERT(( boost::is_same< typename std::iterator_traits< Iter1 >::value_type , typename std::iterator_traits< Iter2 >::value_type >::value ));
+			typedef typename std::iterator_traits< Iter1 >::value_type value_type;
+			typedef typename boost::mpl::if_c< sizeof(typename std::iterator_traits< Iter1 >::difference_type) >= sizeof(typename std::iterator_traits< Iter2 >::difference_type)
+			                                 , typename std::iterator_traits< Iter1 >::difference_type
+			                                 , typename std::iterator_traits< Iter2 >::difference_type
 			                                 >::type           difference_type;
 			typedef value_type* pointer;
 			typedef value_type& reference;
@@ -82,13 +102,13 @@ namespace industry {
 		
 	}
 	template < typename Iter1 , typename Iter2 >
-	class multi_iterator_base
+	class multi_iterator_base : detail::multi_iterator_traits< Iter1 , Iter2 >
 	{
 		typedef multi_iterator_base< Iter1 , Iter2 > this_t;
 	protected:
 		Iter1 begin1, i1, end1;
 		Iter2 begin2, i2, end2;
-		unsigned iter_set; //0 == end, 1 == set 1
+		unsigned iter_set; //0 == end, 1 == set 1, 2 == set 2, * == invalid
 	public:
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::iterator_category iterator_category;
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::difference_type   difference_type;
@@ -96,7 +116,8 @@ namespace industry {
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::pointer           pointer;
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::result_type       result_type;
-				
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::ptr_result_type   ptr_result_type;
+						
 		multi_iterator_base(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case
@@ -269,15 +290,22 @@ namespace industry {
 		result_type operator*() const {
 			switch (iter_set) {
 				case 1:
-					return *i1;
+					return to_result( i1 );
 				case 2:
 					assert( i2 != end2 || !"Tried to dereference end" );
-					return *i2;
-				case 0:
-					assert(!"Tried to derefernce immutable end iterator!");
+					return to_result( i2 );
+				case 0:  assert(!"Tried to derefernce immutable end iterator!");
+				default: assert(!"Should never happen");
 			}
 		}
-		//...
+		ptr_result_type operator->() const {
+			switch(iter_set) {
+				case 1:  return to_ptr_result( i1 );
+				case 2:  return to_ptr_result( i2 );
+				case 0:  assert(!"Tried to dereference immutable end iterator!");
+				default: assert(!"Should never happen");
+			}
+		}
 		result_type operator[]( difference_type difference ) const { return *((*this)+difference); }
 	};
 }
