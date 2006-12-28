@@ -18,7 +18,7 @@
 
 namespace {
 	inline bool is_odd( unsigned value )  { return  (value & 0x1); }
-	inline bool is_even( unsigned value ) { return !(value & 0x1); }
+	inline bool is_even( unsigned value ) { return !is_odd(value); }
 }
 
 void test_algorithm( void ) {
@@ -75,6 +75,19 @@ void test_algorithm_call() {
 	std::vector<child> expected_result(10, child(1));
 
 	data | call(&child::add_point);
+	data | call(print_point);
+	data | call<void, child&>(boost::bind(print_point, _1, 2));
+
+	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
+}
+
+void test_algorithm_transform() {
+	using namespace industry;
+
+	child data[10];
+	std::vector<child> expected_result(10, child(1));
+
+	data | transform(&child::get_parent) | call(&base::add_point);
 	data | call(print_point);
 	data | call<void, child&>(boost::bind(print_point, _1, 2));
 

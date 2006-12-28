@@ -45,8 +45,10 @@ void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
 void test_algorithm_call();
+void test_algorithm_transform();
 
 static test_function_ptr test_functions[] = {
+	test_algorithm_transform,
 	test_algorithm_call,
 	test_factory,
 	test_algorithm,

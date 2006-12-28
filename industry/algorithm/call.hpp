@@ -57,4 +57,4 @@ namespace industry {
 	using namespace algorithm;
 }
 
-#endif //ndef IG_INDUSTRY_ALGORITHM_PUSH
+#endif //ndef IG_INDUSTRY_ALGORITHM_CALL
