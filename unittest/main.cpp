@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// Dec 27, 2006 - added test_multi_iterator
+// Dec 26, 2006 - added test_factory
 // Dec 25, 2006 - Many disabled tests (changing to using a directory structure once more for libindustry SVN on sourceforge)
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework
 // May 20, 2006 - Created
@@ -39,6 +41,7 @@ void test_iterator_n();
 void test_math_fixed();
 void test_math_vector();
 void test_multitype();
+void test_multi_iterator();
 //void test_nmap();
 void test_range();
 //void test_utility();
@@ -55,6 +58,7 @@ static test_function_ptr test_functions[] = {
 	test_math_fixed,
 	test_math_vector,
 	test_multitype,
+	test_multi_iterator,
 	test_range,
 	test_range_numeric_iterator
 };
