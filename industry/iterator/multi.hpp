@@ -178,14 +178,22 @@ namespace industry {
 		}
 		this_t operator+( difference_type difference ) { this_t copy(*this); copy += difference; return copy; }
 		this_t operator-( difference_type difference ) { this_t copy(*this); copy -= difference; return copy; }
-		
+	private:
+		static void assert_same_range( const this_t & lhs , const this_t & rhs ) {
+			assert( lhs.begin1 == rhs.begin1 );
+			assert( lhs.end1   == rhs.end1   );
+			assert( lhs.begin2 == rhs.begin2 );
+			assert( lhs.end2   == rhs.end2   );
+		}
+		static bool is_at_end( const this_t & t ) {
+			return t.iter_set == 0
+			    || t.iter_set == 2 && t.i2 == t.end2
+				;
+		}
+	public:
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
 			if ( lhs.iter_set && rhs.iter_set ) {
-				assert( lhs.begin1 == rhs.begin1 );
-				assert( lhs.end1   == rhs.end2   );
-				assert( lhs.begin2 == rhs.begin2 );
-				assert( lhs.end2   == rhs.end2   );
-				
+				assert_same_range( lhs , rhs );
 				if ( lhs.iter_set != rhs.iter_set ) return false;
 				switch ( lhs.iter_set ) {
 					case 1: return lhs.i1 == rhs.i1;
@@ -194,14 +202,40 @@ namespace industry {
 				}
 			}
 		
-			const bool lhs_end = !lhs.iter_set || (lhs.iter_set==2 && lhs.i2 == lhs.end2);
-			const bool rhs_end = !rhs.iter_set || (rhs.iter_set==2 && rhs.i2 == lhs.end2);
-			
-			return lhs_end == rhs_end;
+			return is_at_end( lhs ) == is_at_end( rhs );
 		}
 		
 		friend bool operator!=( const this_t & lhs , const this_t & rhs ) {
 			return !(lhs==rhs);
+		}
+		friend bool operator<=( const this_t & lhs , const this_t & rhs ) {
+			if (!rhs.iter_set) return true;
+			else if (!lhs.iter_set) return is_at_end( rhs );
+			
+			assert_same_range( lhs , rhs );
+			
+			if (lhs.iter_set != rhs.iter_set) return lhs.iter_set < rhs.iter_set;
+			else switch ( lhs.iter_set ) {
+				case 1: return lhs.i1 <= rhs.i1;
+				case 2: return lhs.i2 <= rhs.i2;
+				default: assert(!"Should never happen");
+			}
+		}
+		friend bool operator>=( const this_t & lhs , const this_t & rhs ) {
+			return rhs <= lhs;
+		}
+		friend bool operator< ( const this_t & lhs , const this_t & rhs ) {
+			if (!rhs.iter_set) return !is_at_end( rhs );
+			else if (!lhs.iter_set) return false;
+			
+			assert_same_range( lhs , rhs );
+			
+			if (lhs.iter_set != rhs.iter_set) return lhs.iter_set < rhs.iter_set;
+			else switch ( lhs.iter_set ) {
+				case 1: return lhs.i1 < rhs.i1;
+				case 2: return lhs.i2 < rhs.i2;
+				default: assert(!"Should never happen");
+			}
 		}
 	};
 }
