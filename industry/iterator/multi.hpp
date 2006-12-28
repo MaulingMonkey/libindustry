@@ -135,7 +135,7 @@ namespace industry {
 			
 			if ( iter_set == 1 ) {
 				difference_type d1 = end1 - i1;
-				if ( difference >= d1 ) {
+				if ( difference > d1 ) {
 					i1 = end1;
 					iter_set = 2;
 					difference -= d1;
@@ -159,7 +159,7 @@ namespace industry {
 			
 			if ( iter_set == 2 ) {
 				difference_type d2 = i2 - begin2;
-				if ( difference >= d2 ) {
+				if ( difference > d2 ) {
 					i2 = begin2;
 					iter_set = 1;
 					difference -= d2;
@@ -175,6 +175,33 @@ namespace industry {
 			}
 			
 			return *this;
+		}
+		this_t operator+( difference_type difference ) { this_t copy(*this); copy += difference; return copy; }
+		this_t operator-( difference_type difference ) { this_t copy(*this); copy -= difference; return copy; }
+		
+		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
+			if ( lhs.iter_set && rhs.iter_set ) {
+				assert( lhs.begin1 == rhs.begin1 );
+				assert( lhs.end1   == rhs.end2   );
+				assert( lhs.begin2 == rhs.begin2 );
+				assert( lhs.end2   == rhs.end2   );
+				
+				if ( lhs.iter_set != rhs.iter_set ) return false;
+				switch ( lhs.iter_set ) {
+					case 1: return lhs.i1 == rhs.i1;
+					case 2: return lhs.i2 == rhs.i2;
+					default: assert(!"Should never happen" );
+				}
+			}
+		
+			const bool lhs_end = !lhs.iter_set || (lhs.iter_set==2 && lhs.i2 == lhs.end2);
+			const bool rhs_end = !rhs.iter_set || (rhs.iter_set==2 && rhs.i2 == lhs.end2);
+			
+			return lhs_end == rhs_end;
+		}
+		
+		friend bool operator!=( const this_t & lhs , const this_t & rhs ) {
+			return !(lhs==rhs);
 		}
 	};
 }
