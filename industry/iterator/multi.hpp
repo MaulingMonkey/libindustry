@@ -60,22 +60,68 @@ namespace industry {
 	{
 		typedef multi_iterator< Iter1 , Iter2 > this_t;
 		
-		Iter1 begin1, end1;
-		Iter2 begin2, end2;
+		Iter1 begin1, i1, end1;
+		Iter2 begin2, i2, end2;
 		unsigned iter_set; //0 == end, 1 == set 1
 	public:
-		multi_iterator(): begin1() , end1() , begin2() , end2(), iter_set(0)
+		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
+			//Immutable end case
 		}
 		multi_iterator( const this_t & other
-		              ): begin1(other.begin1), end1(other.end1), begin2(other.begin2), end2(other.end2), iter_set(other.iter_set)
+		              ): begin1(other.begin1), i1(other.i1), end1(other.end1)
+		              ,  begin2(other.begin2), i2(other.i2), end2(other.end2), iter_set(other.iter_set)
 		{
+			//Copy case
 		}
 		multi_iterator( Iter1 begin1 , Iter1 end1, Iter2 begin2 , Iter2 end2
-		              ): begin1(begin1), end1(end1), begin2(begin2), end2(end2), iter_set(1)
+		              ): begin1(begin1), i1(begin1), end1(end1)
+		              ,  begin2(begin2), i2(begin2), end2(end2), iter_set(1)
 		{
+			//Begin iterator
+			
+			if ( begin1 == end1 ) iter_set = 2;
+			//if begin2 == end2 as well, iterset == 2 still
 		}
-		
+		this_t & operator++() {
+			assert( iter_set || !"Tried to increment an immutable end iterator" );
+			
+			if ( iter_set == 1 ) {
+				assert( i1 != end1 || !"Should never happen" ); //iter_set should be 2 if i1==end1
+				++i1;
+				if ( i1 == end1 ) {
+					iter_set = 2;
+				}
+			} else if ( iter_set == 2 ) {
+				assert( i2 != end2 || !"Tried to increment past end" );
+				++i2;
+			} else {
+				assert( !"Should never happen" ); //iter_set should only be 0, 1, or 2
+			}
+			assert( iter_set != 2 || i2 != end2 || !"Tried to increment past the end" );
+		}
+		this_t & operator--() {
+			assert( iter_set || !"Tried to decrement an immutable end iterator" );
+			
+			if ( iter_set == 2 ) {
+				if ( begin2 == i2 ) {
+					iter_set = 1;
+					//will continue in iter_set == 1
+				} else {
+					--i2;
+					return *this;
+				}
+			}
+			
+			if ( iter_set == 1 ) {
+				assert( begin1 != i1 || !"Tried to decrement past begin" );
+				--i1;
+			}
+			
+			return *this;
+		}
+		this_t operator++(int) { this_t copy(*this); ++(*this); return copy; }
+		this_t operator--(int) { this_t copy(*this); --(*this); return copy; }
 	};
 }
 
