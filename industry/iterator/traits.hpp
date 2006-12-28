@@ -7,10 +7,6 @@
 // Dec 28, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
 //
-// FIXME -- Provide #define (and compiler defaults) to disable automatic catch-all case implementation
-//          will require all relevant iterators have industry::iterator_traits specialized for their
-//          iterator type
-// TODO  -- Provide the aforementioned specializations for standard library iterators.
 
 #ifndef IG_INDUSTRY_ITERATOR_TRAITS
 #define IG_INDUSTRY_ITERATOR_TRAITS
