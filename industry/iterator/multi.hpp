@@ -56,7 +56,7 @@ namespace industry {
 		
 	}
 	template < typename Iter1 , typename Iter2 >
-	class multi_iterator : public detail::multi_iterator_traits< Iter1 , Iter2 >
+	class multi_iterator
 	{
 		typedef multi_iterator< Iter1 , Iter2 > this_t;
 		
@@ -64,6 +64,12 @@ namespace industry {
 		Iter2 begin2, i2, end2;
 		unsigned iter_set; //0 == end, 1 == set 1
 	public:
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::iterator_category iterator_category;
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::difference_type   difference_type;
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::value_type        value_type;
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::pointer           pointer;
+		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
+		
 		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case
@@ -122,6 +128,54 @@ namespace industry {
 		}
 		this_t operator++(int) { this_t copy(*this); ++(*this); return copy; }
 		this_t operator--(int) { this_t copy(*this); --(*this); return copy; }
+		this_t & operator+=( difference_type difference ) {
+			assert( iter_set || !"Tried to increment an immutable end iterator" );
+			
+			if ( difference < 0 ) return (*this) -= -difference;
+			
+			if ( iter_set == 1 ) {
+				difference_type d1 = end1 - i1;
+				if ( difference >= d1 ) {
+					i1 = end1;
+					iter_set = 2;
+					difference -= d1;
+				} else {
+					i1 += difference;
+				}
+			}
+			
+			if ( iter_set == 2 ) {
+				difference_type d2 = end2 - i2;
+				assert( difference <= d2 || !"Tried to increment past end" );
+				i2 += difference;
+			}
+			
+			return *this;
+		}
+		this_t & operator-=( difference_type difference ) {
+			assert( iter_set || !"Tried to decrement an immutable end iterator" );
+			
+			if ( difference < 0 ) return (*this) += -difference;
+			
+			if ( iter_set == 2 ) {
+				difference_type d2 = i2 - begin2;
+				if ( difference >= d2 ) {
+					i2 = begin2;
+					iter_set = 1;
+					difference -= d2;
+				} else {
+					i2 -= difference;
+				}
+			}
+			
+			if ( iter_set == 1 ) {
+				difference_type d1 = i1 - begin1;
+				assert( difference <= d1 || !"Tried to decrement past end" );
+				i1 -= difference;
+			}
+			
+			return *this;
+		}
 	};
 }
 
