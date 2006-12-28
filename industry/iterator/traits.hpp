@@ -10,6 +10,8 @@
 #ifndef IG_INDUSTRY_ITERATOR_TRAITS
 #define IG_INDUSTRY_ITERATOR_TRAITS
 
+#include <industry/member_function_ptr_traits.hpp>
+#include <boost/type_traits/function_traits.hpp>
 #include <iterator>
 
 namespace industry {
@@ -19,8 +21,8 @@ namespace industry {
 	
 	template < typename Iterator >
 	struct iterator_traits : iterator_traits_base< Iterator > {
-		typedef typeof(*Iterator())              result_type;
-		typedef typeof(Iterator().operator->())  ptr_result_type;
+		typedef typename industry::member_function_ptr_traits< typeof(&Iterator::operator* ) >::result_type   result_type;
+		typedef typename industry::member_function_ptr_traits< typeof(&Iterator::operator->) >::result_type   ptr_result_type;
 	};
 	
 	template < typename ValueT >
