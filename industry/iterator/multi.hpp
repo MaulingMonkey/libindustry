@@ -81,10 +81,10 @@ namespace industry {
 		
 	}
 	template < typename Iter1 , typename Iter2 >
-	class multi_iterator
+	class multi_iterator_base
 	{
-		typedef multi_iterator< Iter1 , Iter2 > this_t;
-		
+		typedef multi_iterator_base< Iter1 , Iter2 > this_t;
+	protected:
 		Iter1 begin1, i1, end1;
 		Iter2 begin2, i2, end2;
 		unsigned iter_set; //0 == end, 1 == set 1
@@ -96,19 +96,19 @@ namespace industry {
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
 		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::result_type       result_type;
 				
-		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
+		multi_iterator_base(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case
 		}
-		multi_iterator( const this_t & other
-		              ): begin1(other.begin1), i1(other.i1), end1(other.end1)
-		              ,  begin2(other.begin2), i2(other.i2), end2(other.end2), iter_set(other.iter_set)
+		multi_iterator_base( const this_t & other
+		                   ): begin1(other.begin1), i1(other.i1), end1(other.end1)
+		                   ,  begin2(other.begin2), i2(other.i2), end2(other.end2), iter_set(other.iter_set)
 		{
 			//Copy case
 		}
-		multi_iterator( Iter1 begin1 , Iter1 end1, Iter2 begin2 , Iter2 end2
-		              ): begin1(begin1), i1(begin1), end1(end1)
-		              ,  begin2(begin2), i2(begin2), end2(end2), iter_set(1)
+		multi_iterator_base( Iter1 begin1 , Iter1 end1, Iter2 begin2 , Iter2 end2
+		                   ): begin1(begin1), i1(begin1), end1(end1)
+		                   ,  begin2(begin2), i2(begin2), end2(end2), iter_set(1)
 		{
 			//Begin iterator
 			
