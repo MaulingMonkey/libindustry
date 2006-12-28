@@ -16,13 +16,6 @@
 #include <boost/type_traits/function_traits.hpp>
 #include <iterator>
 
-#if !defined( INDUSTRY_TYPEOF )
-#include <set>
-#include <map>
-#include <list>
-#include <vector>
-#endif
-
 namespace industry {
 	template < typename Iterator >
 	struct iterator_traits_base : std::iterator_traits< Iterator > { };
