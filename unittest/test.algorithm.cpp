@@ -14,6 +14,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iterator>
 #include <vector>
+#include <boost/bind.hpp>
 
 namespace {
 	inline bool is_odd( unsigned value )  { return  (value & 0x1); }
@@ -61,6 +62,10 @@ namespace {
 	void print_point(child& p) {
 		BOOST_CHECK(p.point == 1);
 	}
+
+	void print_point(child& p, int i) {
+		BOOST_CHECK(p.point == 1);
+	}
 }
 
 void test_algorithm_call() {
@@ -69,7 +74,8 @@ void test_algorithm_call() {
 	child data[10];
 	std::vector<child> expected_result(10, child(1));
 
-	data | call(&base::add_point);
+	data | call(&child::add_point);
 	data | call(print_point);
+	data | call<void, child&>(boost::bind(print_point, _1, 2));
 	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
 }
