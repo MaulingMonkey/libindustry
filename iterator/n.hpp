@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
 // Dec 25, 2006 - industry.iterator.n.hpp => industry/iterator/n.hpp
 // Nov 12, 2006 - Created
 
