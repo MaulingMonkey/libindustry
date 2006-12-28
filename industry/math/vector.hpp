@@ -88,7 +88,7 @@ namespace industry {
 template < typename T >
 class vector< T , DN > : public vector_base< T , DN > {
 public:
-	vector() { for ( unsigned n = 0 ; n < DN ; ++n ) (*this)[n]=T(); }
+	vector() { std::fill_n(&(*this)[0], DN, T()); }
 	vector( BOOST_PP_ENUM_PARAMS(DN,T elem) ) { BOOST_PP_REPEAT(DN,INDUSTRY_MATH_VECTOR_FILL_THIS_ARGS,elem); }
 	
 	vector& operator+=( const vector & other ) { for ( unsigned i = 0 ; i < DN ; ++i ) (*this)[i] += other[i]; return *this; }
