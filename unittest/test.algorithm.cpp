@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+// Adopted changes from deffer (GDNet) 
 
 #include <iostream>
 
@@ -53,7 +54,8 @@ namespace {
 	struct child : base {
 		child() {}
 		child(int p) : base(p) {}
-		base* get_parent() { return static_cast<base*>(this); }
+		base& get_parent() { return *static_cast<base*>(this); }
+		base* get_parent_ptr() { return static_cast<base*>(this); }
 		bool operator==(child const& other) {
 			return point == other.point;
 		}
@@ -65,6 +67,10 @@ namespace {
 
 	void print_point(child& p, int i) {
 		BOOST_CHECK(p.point == 1);
+	}
+
+	void print_point_ptr(base* p) {
+		BOOST_CHECK(p->point == 1);
 	}
 }
 
@@ -88,6 +94,7 @@ void test_algorithm_transform() {
 	std::vector<child> expected_result(10, child(1));
 
 	data | transform(&child::get_parent) | call(&base::add_point);
+	data | transform(&child::get_parent_ptr) | call(print_point_ptr);
 	data | call(print_point);
 	data | call<void, child&>(boost::bind(print_point, _1, 2));
 
