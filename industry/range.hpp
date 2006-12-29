@@ -87,22 +87,6 @@ namespace industry {
 	template < typename Iter1 , typename Iter2 >
 	class multi_iterator;
 
-	template< typename ItorT, typename RangeT >
-	range< multi_iterator< ItorT, typename range_traits<RangeT>::iterator > >
-		operator+(range<ItorT>& lhs, RangeT & rhs)
-	{
-		typedef multi_iterator< typename range<ItorT>::iterator, typename range_traits<RangeT>::iterator > iterator_type;
-		return range< iterator_type >(iterator_type(lhs.begin(), lhs.end(), range_traits<RangeT>::begin(rhs), range_traits<RangeT>::end(rhs)), iterator_type());
-	}
-
-	template< typename ItorT, typename RangeT >
-	range< multi_iterator< typename range<ItorT>::const_iterator, typename range_traits<RangeT>::const_iterator > >
-		operator+(range<ItorT> const & lhs, RangeT const & rhs)
-	{
-		typedef multi_iterator< typename range<ItorT>::const_iterator, typename range_traits<RangeT>::const_iterator > iterator_type;
-		return range< iterator_type >(iterator_type(lhs.begin(), lhs.end(), range_traits<RangeT>::begin(rhs), range_traits<RangeT>::end(rhs)), iterator_type());
-	}
-
 	template< typename RangeT1, typename RangeT2 >
 	range< multi_iterator< typename range_traits<RangeT1>::iterator, typename range_traits<RangeT2>::iterator > >
 		inorder(RangeT1 & lhs, RangeT2 & rhs)
@@ -117,6 +101,20 @@ namespace industry {
 	{
 		typedef multi_iterator< typename range_traits<RangeT1>::const_iterator, typename range_traits<RangeT2>::const_iterator > iterator_type;
 		return range< iterator_type >(iterator_type(range_traits<RangeT1>::begin(lhs), range_traits<RangeT1>::end(lhs), range_traits<RangeT2>::begin(rhs), range_traits<RangeT2>::end(rhs)), iterator_type());
+	}
+
+	template< typename ItorT, typename RangeT >
+	range< multi_iterator< ItorT, typename range_traits<RangeT>::iterator > >
+		operator+(range<ItorT>& lhs, RangeT & rhs)
+	{
+		return inorder(lhs, rhs);
+	}
+
+	template< typename ItorT, typename RangeT >
+	range< multi_iterator< typename range<ItorT>::const_iterator, typename range_traits<RangeT>::const_iterator > >
+		operator+(range<ItorT> const & lhs, RangeT const & rhs)
+	{
+		return inorder(lhs, rhs);
 	}
 }
 
