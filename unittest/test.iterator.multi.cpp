@@ -25,4 +25,6 @@ void test_multi_iterator() {
 	std::list<int> l(10);
 
 	industry::make_range(v) + l;
+
+	industry::inorder(v, l);
 }
