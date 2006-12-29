@@ -8,6 +8,7 @@
 // $LastChangedBy$ - $LastChangedDate$
 
 #include <industry/iterator/multi.hpp>
+#include <industry/range.hpp>
 #include <list>
 #include <vector>
 
@@ -19,4 +20,9 @@ void test_multi_iterator() {
 	industry::multi_iterator< Iter1 , Iter2 > iter12_end;
 	industry::multi_iterator< Iter1 , Iter3 > iter13_end;
 	industry::multi_iterator< Iter2 , Iter3 > iter23_end;
+
+	std::vector<int> v(10);
+	std::list<int> l(10);
+
+	industry::make_range(v) + l;
 }

@@ -13,6 +13,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/mpl/if.hpp>
 #include <iterator>
+#include <industry/traits/range.hpp>
 
 namespace industry {
 	template < typename IteratorT >
@@ -81,6 +82,25 @@ namespace industry {
 	template < typename T , unsigned N >
 	range< const T * > make_range( const T (&array)[N] ) {
 		return range< const T * >( array );
+	}
+
+	template < typename Iter1 , typename Iter2 >
+	class multi_iterator;
+
+	template< typename ItorT, typename RangeT >
+	range< multi_iterator< ItorT, typename range_traits<RangeT>::iterator > >
+		operator+(range<ItorT>& lhs, RangeT & rhs)
+	{
+		typedef multi_iterator< typename range<ItorT>::iterator, typename range_traits<RangeT>::iterator > iterator_type;
+		return range< iterator_type >(iterator_type(lhs.begin(), lhs.end(), range_traits<RangeT>::begin(rhs), range_traits<RangeT>::end(rhs)), iterator_type());
+	}
+
+	template< typename ItorT, typename RangeT >
+	range< multi_iterator< typename range<ItorT>::const_iterator, typename range_traits<RangeT>::const_iterator > >
+		operator+(range<ItorT> const & lhs, RangeT const & rhs)
+	{
+		typedef multi_iterator< typename range<ItorT>::const_iterator, typename range_traits<RangeT>::const_iterator > iterator_type;
+		return range< iterator_type >(iterator_type(lhs.begin(), lhs.end(), range_traits<RangeT>::begin(rhs), range_traits<RangeT>::end(rhs)), iterator_type());
 	}
 }
 
