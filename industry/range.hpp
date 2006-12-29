@@ -37,7 +37,7 @@ namespace industry {
 
 		IteratorT begin() const { return begin_; }
 		IteratorT end()   const { return end_; }
-		size_type size()  const { difference_type d = end_ - begin_; return (d > 0) ? size_type(+d) : size_type(-d); }
+		size_type size()  const { difference_type d = std::distance(begin_, end_); return (d > 0) ? size_type(+d) : size_type(-d); }
 		bool      empty() const { return begin_ == end_; }
 
 		template < typename OIt >

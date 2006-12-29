@@ -7,10 +7,18 @@
 // Dec 27, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
 
+#include <industry/algorithm.hpp>
 #include <industry/iterator/multi.hpp>
 #include <industry/range.hpp>
 #include <list>
 #include <vector>
+#include <boost/test/unit_test.hpp>
+
+namespace {
+	void add_one(int& i) {
+		++i;
+	}
+}
 
 void test_multi_iterator() {
 	typedef int*                         Iter1;
@@ -21,10 +29,14 @@ void test_multi_iterator() {
 	industry::multi_iterator< Iter1 , Iter3 > iter13_end;
 	industry::multi_iterator< Iter2 , Iter3 > iter23_end;
 
-	std::vector<int> v(10);
-	std::list<int> l(10);
+	std::vector<int> v(5);
+	std::list<int> l(5);
+	int expected_result[10];
+	std::fill_n(expected_result, 10, 1);
 
 	industry::make_range(v) + l;
 
-	industry::inorder(v, l);
+	industry::inorder(v, l) | industry::call(add_one);
+
+	BOOST_CHECK(( industry::inorder(v, l) == industry::make_range(expected_result) ));
 }
