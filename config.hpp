@@ -48,4 +48,10 @@
 	#endif
 #endif
 
+//INDUSTRY_TYPEOF - The typeof keyword extension (if supported by the current compiler)
+#if defined( __GNUC__ )
+#define INDUSTRY_TYPEOF(x) __typeof__(x)
+
+#endif
+
 #endif //ndef IG_INDUSTRY_CONFIG
