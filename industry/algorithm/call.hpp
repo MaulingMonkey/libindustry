@@ -17,41 +17,9 @@
 
 namespace industry {
 	namespace algorithm {
-		namespace detail {
-			template<typename F>
-			struct function_traits { };
-
-			template<typename R, typename A1>
-			struct function_traits<R (*)(A1)> {
-				typedef R result_type;
-				typedef A1 argument_type;
-
-				typedef R (*function_pointer)(A1);
-			};
-
-			template<typename R, typename A1>
-			struct function_traits<R (A1)> {
-				typedef R result_type;
-				typedef A1 argument_type;
-
-				typedef R (*function_pointer)(A1);
-			};
-
-			template<typename R, typename C>
-			struct function_traits<R (C::*)()> {
-				typedef R result_type;
-				typedef C& argument_type;
-
-				typedef R (C::*function_pointer)();
-			};
-		}
-
 		template < typename FunctionS >
 		class call_processor {
-			typedef typename detail::function_traits<FunctionS>::result_type result_type;
-			typedef typename detail::function_traits<FunctionS>::argument_type argument_type;
-
-			typedef boost::function< result_type ( argument_type )> function_type;
+			typedef boost::function< FunctionS > function_type;
 			function_type function;
 		public:
 			call_processor( function_type function ) : function( function ) { }
@@ -66,17 +34,27 @@ namespace industry {
 				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p);
 			}
 
-			typename detail::function_traits<FunctionS>::result_type operator()( typename detail::function_traits<FunctionS>::argument_type argument ) {
+			typename function_type::result_type operator()( typename function_type::arg1_type argument ) {
 				return function(argument);
 			}
 		};
 
-		template < typename FunctionS >
-		call_processor< FunctionS > call( FunctionS function ) {
-			return call_processor< FunctionS >( function );
+		template < typename R, typename A1 >
+		call_processor< R (A1) > call( R (*function)(A1) ) {
+			return call_processor< R(A1) >(function);
+		}
+
+		template < typename R, typename C >
+		call_processor< R (C&) > call( R (C::*function)() ) {
+			return call_processor< R(C&) >(function);
+		}
+
+		template< typename R, typename A1 >
+		call_processor< R (A1) > call( boost::function<R (A1)> function) {
+			return call_processor< R (A1) >(function);
 		}
 	}
 	using namespace algorithm;
 }
 
-#endif //ndef IG_INDUSTRY_ALGORITHM_PUSH
+#endif //ndef IG_INDUSTRY_ALGORITHM_CALL

@@ -4,8 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 27, 2006 - added test_multi_iterator
-// Dec 26, 2006 - added test_factory
+// $LastChangedBy$ - $LastChangedDate$
 // Dec 25, 2006 - Many disabled tests (changing to using a directory structure once more for libindustry SVN on sourceforge)
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework
 // May 20, 2006 - Created
@@ -22,6 +21,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test_framework.hpp>
 #include <iostream>
+
 using boost::unit_test::test_suite;
 
 #if defined( _MSC_VER )
@@ -48,8 +48,10 @@ void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
 void test_algorithm_call();
+void test_algorithm_transform();
 
 static test_function_ptr test_functions[] = {
+	test_algorithm_transform,
 	test_algorithm_call,
 	test_factory,
 	test_algorithm,
