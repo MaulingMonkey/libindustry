@@ -18,11 +18,16 @@ void test_iterator_n( void ) {
 	int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 	std::vector< int > example( begin(data) , end(data) );
 
-	std::vector< int > result( n_iterator< std::vector<int>::iterator >( example.begin() , 4 )
-	                         , n_iterator< std::vector<int>::iterator >()
-	                         );
-
-	BOOST_REQUIRE( result.size() == 4 );
-	for ( int i = 0 ; i < 4 ; ++i ) BOOST_CHECK( result[i] == i+1 );
-	BOOST_CHECK( std::equal( n_iterator< int* >( begin(data) , 4 ) , n_iterator< int* >() , result.begin() ) );
+	std::vector< int > result1( n_iterator< std::vector<int>::iterator >( example.begin() )
+	                          , n_iterator< std::vector<int>::iterator >( 4 )
+	                          );
+	std::vector< int > result2( n_iterator< std::vector<int>::iterator >( example.begin() )
+	                          , n_iterator< std::vector<int>::iterator >( example.end() , 4 )
+	                          );
+	std::vector< int > result3( n_iterator< std::vector<int>::iterator >( example.begin() )
+	                          , n_iterator< std::vector<int>::iterator >( example.end() , 12 )
+	                          );
+	BOOST_CHECK( result1.size() == 4 && std::equal(result1.begin(),result1.end(),begin(data)) );
+	BOOST_CHECK( result1.size() == 4 && std::equal(result2.begin(),result2.end(),begin(data)) );
+	BOOST_CHECK( result1.size() == 8 && std::equal(result3.begin(),result3.end(),begin(data)) );
 }
