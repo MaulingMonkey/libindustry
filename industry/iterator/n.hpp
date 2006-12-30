@@ -42,7 +42,7 @@ namespace industry {
 
 		this_t &    operator++()    { /* prefix  version */ assert( is_initialized(*this) ); ++impl.get(); ++n; return *this; }
 		this_t      operator++(int) { /* postfix version */ assert( is_initialized(*this) ); this_t copy( *this ); ++impl.get(); ++n; return copy; }
-		value_type  operator* () const { assert( is_initialized(*this) ); return impl.get().operator*(); }
+		reference   operator* () const { assert( is_initialized(*this) ); return impl.get().operator*(); }
 		pointer     operator->() const { assert( is_initialized(*this) ); return impl.get().operator->(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
