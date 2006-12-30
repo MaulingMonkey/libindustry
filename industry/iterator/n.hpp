@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+// Dec 29, 2006 - fixes, refactoring
 // Dec 25, 2006 - industry.iterator.n.hpp => industry/iterator/n.hpp
 // Nov 12, 2006 - Created
 
@@ -15,14 +16,17 @@
 #include <boost/call_traits.hpp>
 #include <boost/optional.hpp>
 #include <iterator>
+#include <cassert>
 
 namespace industry {
 	template < typename IteratorT >
 	class n_iterator {
 		typedef n_iterator< IteratorT > this_t;
+		
+		static bool is_initialized( const this_t & iter ) { return iter.impl || iter.n; }
 	protected:
 		boost::optional< IteratorT > impl;
-		unsigned n;
+		size_t n;
 	public:
 		typedef typename std::forward_iterator_tag                               iterator_category;
 		typedef typename std::iterator_traits< IteratorT >::value_type           value_type;
@@ -30,22 +34,22 @@ namespace industry {
 		typedef typename std::iterator_traits< IteratorT >::pointer              pointer;
 		typedef typename std::iterator_traits< IteratorT >::reference            reference;
 		
-		n_iterator() : impl() , n(0) { /* count-only end iterator */ }
-		n_iterator( const IteratorT & iterator ) : impl(iterator) , n(0) { /* count-and-explicit end iterator */ }
-		n_iterator( const IteratorT & iterator , unsigned n ) : impl(iterator) , n(n) { /* iterator */ }
-		n_iterator( const this_t & iterator ) : impl(iterator.impl) , n(iterator.n) { /* iterator copy */ }
+		n_iterator() : impl() , n(0)                                                { /* --- uninitialized iterator --- */  }
+		n_iterator( const IteratorT & iterator ) : impl(iterator) , n(0)            { /* begin iterator */                  }
+		n_iterator( const IteratorT & iterator , size_t n ) : impl(iterator) , n(n) { /* count-and-explicit end iterator */ }
+		n_iterator( size_t n ) : impl() , n(n)                                      { /* count-only end iterator */         }
+		n_iterator( const this_t & iterator ) : impl(iterator.impl) , n(iterator.n) { /* iterator copy */                   }
 
-		this_t &    operator++()    { /* prefix  version */ ++impl.get(); --n; return *this; }
-		this_t      operator++(int) { /* postfix version */ this_t copy( *this ); ++impl.get(); --n; return copy; }
-		value_type  operator* () const { return  *impl.get(); }
-		pointer     operator->() const { return &*impl.get(); }
+		this_t &    operator++()    { /* prefix  version */ assert( is_initialized(*this) ); ++impl.get(); ++n; return *this; }
+		this_t      operator++(int) { /* postfix version */ assert( is_initialized(*this) ); this_t copy( *this ); ++impl.get(); ++n; return copy; }
+		value_type  operator* () const { assert( is_initialized(*this) ); return impl.get().operator*(); }
+		pointer     operator->() const { assert( is_initialized(*this) ); return impl.get().operator->(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
-			if ( lhs.impl && rhs.impl && (lhs.n || rhs.n) ) {
-				return lhs.impl.get() == rhs.impl.get();
-			} else {
-				return (!lhs.impl || !lhs.n) && (!rhs.impl || !rhs.n);
-			}
+			assert( is_initialized(lhs) );
+			assert( is_initialized(rhs) );
+			
+			return lhs.n == rhs.n || (lhs.impl && rhs.impl && lhs.impl.get() == rhs.impl.get());
 		}
 		friend bool operator!=( const this_t & lhs , const this_t & rhs ) {
 			return !(lhs==rhs);
