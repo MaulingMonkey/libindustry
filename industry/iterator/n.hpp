@@ -24,6 +24,7 @@ namespace industry {
 		typedef n_iterator< IteratorT > this_t;
 		
 		static bool is_initialized( const this_t & iter ) { return iter.impl || iter.n; }
+		static bool is_dereferenceable( const this_t & iter ) { return iter.impl; }
 	protected:
 		boost::optional< IteratorT > impl;
 		size_t n;
@@ -42,8 +43,8 @@ namespace industry {
 
 		this_t &    operator++()    { /* prefix  version */ assert( is_initialized(*this) ); ++impl.get(); ++n; return *this; }
 		this_t      operator++(int) { /* postfix version */ assert( is_initialized(*this) ); this_t copy( *this ); ++impl.get(); ++n; return copy; }
-		reference   operator* () const { assert( is_initialized(*this) ); return impl.get().operator*(); }
-		pointer     operator->() const { assert( is_initialized(*this) ); return impl.get().operator->(); }
+		reference   operator* () const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return impl.get().operator*(); }
+		pointer     operator->() const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return impl.get().operator->(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
 			assert( is_initialized(lhs) );
