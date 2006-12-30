@@ -35,9 +35,9 @@ namespace industry {
 		typedef typename std::iterator_traits< IteratorT >::reference            reference;
 		
 		n_iterator() : impl() , n(0)                                                { /* --- uninitialized iterator --- */  }
-		n_iterator( const IteratorT & iterator ) : impl(iterator) , n(0)            { /* begin iterator */                  }
+		explicit n_iterator( const IteratorT & iterator ) : impl(iterator) , n(0)   { /* begin iterator */                  }
 		n_iterator( const IteratorT & iterator , size_t n ) : impl(iterator) , n(n) { /* count-and-explicit end iterator */ }
-		n_iterator( size_t n ) : impl() , n(n)                                      { /* count-only end iterator */         }
+		explicit n_iterator( size_t n ) : impl() , n(n)                             { /* count-only end iterator */         }
 		n_iterator( const this_t & iterator ) : impl(iterator.impl) , n(iterator.n) { /* iterator copy */                   }
 
 		this_t &    operator++()    { /* prefix  version */ assert( is_initialized(*this) ); ++impl.get(); ++n; return *this; }
