@@ -41,7 +41,7 @@ namespace industry {
 		pointer     operator->() const { return &*impl.get(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
-			if ( lhs.impl && rhs.impl && lhs.n && rhs.n ) {
+			if ( lhs.impl && rhs.impl && (lhs.n || rhs.n) ) {
 				return lhs.impl.get() == rhs.impl.get();
 			} else {
 				return (!lhs.impl || !lhs.n) && (!rhs.impl || !rhs.n);
