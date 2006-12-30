@@ -10,8 +10,6 @@
 #ifndef IG_INDUSTRY_TRAITS_RANGE
 #define IG_INDUSTRY_TRAITS_RANGE
 
-#include <cstdlib>
-
 namespace industry {
 	template < typename RangeT >
 	struct range_traits {
