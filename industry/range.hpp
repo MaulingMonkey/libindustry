@@ -15,6 +15,7 @@
 #include <boost/mpl/if.hpp>
 #include <iterator>
 #include <industry/traits/range.hpp>
+#include <cstddef>
 
 namespace industry {
 	template < typename IteratorT >
@@ -34,7 +35,7 @@ namespace industry {
 		range( const range & other )                             : begin_( other.begin_ ) , end_( other.end_ ) {}
 		template < typename O >              range( const range<O>   & other     ) : begin_( other.begin_ )      , end_( other.end_ )      {}
 		template < typename ContainerT >     range( ContainerT       & container ) : begin_( container.begin() ) , end_( container.end() ) {}
-		template < typename T , unsigned N > range( T (&array)[N]                ) : begin_( array )             , end_( array + N )       {}
+		template < typename T , std::size_t N > range( T (&array)[N]                ) : begin_( array )             , end_( array + N )       {}
 
 		IteratorT begin() const { return begin_; }
 		IteratorT end()   const { return end_; }
