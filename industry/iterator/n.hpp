@@ -30,9 +30,10 @@ namespace industry {
 		typedef typename std::iterator_traits< IteratorT >::pointer              pointer;
 		typedef typename std::iterator_traits< IteratorT >::reference            reference;
 		
-		n_iterator() : impl() , n(0) {}
-		n_iterator( const IteratorT & iterator , unsigned n ) : impl(iterator) , n(n) {}
-		n_iterator( const this_t & iterator ) : impl(iterator.impl) , n(iterator.n) {}
+		n_iterator() : impl() , n(0) { /* count-only end iterator */ }
+		n_iterator( const IteratorT & iterator ) : impl(iterator) , n(0) { /* count-and-explicit end iterator */ }
+		n_iterator( const IteratorT & iterator , unsigned n ) : impl(iterator) , n(n) { /* iterator */ }
+		n_iterator( const this_t & iterator ) : impl(iterator.impl) , n(iterator.n) { /* iterator copy */ }
 
 		this_t &    operator++()    { /* prefix  version */ ++impl.get(); --n; return *this; }
 		this_t      operator++(int) { /* postfix version */ this_t copy( *this ); ++impl.get(); --n; return copy; }
@@ -40,7 +41,7 @@ namespace industry {
 		pointer     operator->() const { return &*impl.get(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
-			if ( lhs.impl && rhs.impl ) {
+			if ( lhs.impl && rhs.impl && lhs.n && rhs.n ) {
 				return lhs.impl.get() == rhs.impl.get();
 			} else {
 				return (!lhs.impl || !lhs.n) && (!rhs.impl || !rhs.n);
