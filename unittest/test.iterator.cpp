@@ -28,6 +28,6 @@ void test_iterator_n( void ) {
 	                          , n_iterator< std::vector<int>::iterator >( example.end() , 12 )
 	                          );
 	BOOST_CHECK( result1.size() == 4 && std::equal(result1.begin(),result1.end(),begin(data)) );
-	BOOST_CHECK( result1.size() == 4 && std::equal(result2.begin(),result2.end(),begin(data)) );
-	BOOST_CHECK( result1.size() == 8 && std::equal(result3.begin(),result3.end(),begin(data)) );
+	BOOST_CHECK( result2.size() == 4 && std::equal(result2.begin(),result2.end(),begin(data)) );
+	BOOST_CHECK( result3.size() == 8 && std::equal(result3.begin(),result3.end(),begin(data)) );
 }
