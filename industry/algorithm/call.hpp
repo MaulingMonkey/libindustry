@@ -19,39 +19,35 @@ namespace industry {
 	namespace algorithm {
 		template < typename FunctionS >
 		class call_processor {
-			typedef boost::function< FunctionS > function_type;
+			typedef FunctionS function_type;
 			function_type function;
 		public:
 			call_processor( function_type function ) : function( function ) { }
 
 			template < typename RangeT >
 			friend void operator|( RangeT & range , const call_processor< FunctionS > & p ) {
-				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p);
+				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p.function);
 			}
 
 			template < typename RangeT >
 			friend void operator|( const RangeT & range , const call_processor< FunctionS > & p ) {
-				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p);
-			}
-
-			typename function_type::result_type operator()( typename function_type::arg1_type argument ) {
-				return function(argument);
+				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p.function);
 			}
 		};
 
 		template < typename R, typename A1 >
-		call_processor< R (A1) > call( R (*function)(A1) ) {
-			return call_processor< R(A1) >(function);
+		call_processor< boost::function<R (A1)> > call( R (*function)(A1) ) {
+			return call(boost::function<R (A1)>(function));
 		}
 
 		template < typename R, typename C >
-		call_processor< R (C&) > call( R (C::*function)() ) {
-			return call_processor< R(C&) >(function);
+		call_processor< boost::function<R (C&)> > call( R (C::*function)() ) {
+			return call(boost::function<R (C&)>(function));
 		}
 
 		template< typename R, typename A1 >
-		call_processor< R (A1) > call( boost::function<R (A1)> function) {
-			return call_processor< R (A1) >(function);
+		call_processor< boost::function<R (A1)> > call( boost::function<R (A1)> function) {
+			return call_processor< boost::function<R (A1)> >(function);
 		}
 	}
 	using namespace algorithm;
