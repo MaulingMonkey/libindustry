@@ -10,15 +10,12 @@
 #define IG_INDUSTRY_NULLPTR
 
 namespace industry {
-	class nullptr_t {
-	public:
+	const struct {
 		template<typename ValueT> operator ValueT*() const { return 0; }
 		template<typename ClassT, typename ValueT> operator ValueT ClassT::*() const { return 0; }
 	private:
 		void operator&() const;
-	};
-
-	const nullptr_t nullptr = {};
+	} nullptr = {};
 }
 
 #endif //IG_INDUSTRY_NULLPTR
