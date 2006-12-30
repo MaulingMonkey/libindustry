@@ -10,8 +10,6 @@
 #ifndef IG_INDUSTRY_CONCEPT_IS_A_RANGE
 #define IG_INDUSTRY_CONCEPT_IS_A_RANGE
 
-#include <typeinfo>
-
 namespace industry {
 	namespace concept {
 		template < typename T >
@@ -22,7 +20,7 @@ namespace industry {
 			template < typename IteratorT > true_t check( IteratorT (T::*)() = & T::begin , IteratorT (T::*)() = & T::end );
 			false_t check( ... );
 
-			static const bool value = (typeid(check()) == typeid(true_t));
+			static const bool value = (sizeof(check()) == sizeof(true_t));
 		};
 	}
 }
