@@ -10,6 +10,8 @@
 #ifndef IG_INDUSTRY_CONCEPT_IS_A_RANGE
 #define IG_INDUSTRY_CONCEPT_IS_A_RANGE
 
+#include <typeinfo>
+
 namespace industry {
 	namespace concept {
 		template < typename T >
