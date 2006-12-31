@@ -104,17 +104,13 @@ namespace industry {
 				if ( i1 == end1 ) {
 					iter_set = 2;
 				}
-
-				return *this;
 			} else if ( iter_set == 2 ) {
 				assert( i2 != end2 || !"Tried to increment past end" );
 				++i2;
-
-				return *this;
 			} else {
 				assert( !"Should never happen" ); //iter_set should only be 0, 1, or 2
 			}
-			assert( iter_set != 2 || i2 != end2 || !"Tried to increment past the end" );
+			return *this;
 		}
 		this_t & operator--() {
 			assert( iter_set || !"Tried to decrement an immutable end iterator" );
