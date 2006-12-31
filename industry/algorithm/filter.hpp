@@ -33,21 +33,21 @@ namespace industry {
 
 			template < typename RangeT >
 			friend industry::range< boost::filter_iterator< F , typename range_traits< RangeT >::iterator > >
-				operator|( RangeT & range , const filter_processor<F> & filt )
+				operator|( RangeT & range_ , const filter_processor<F> & filt )
 			{
 				typedef boost::filter_iterator< F , typename range_traits< RangeT >::iterator > iterator_type;
-				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) );
-				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range)   , range_traits<RangeT>::end(range) );
+				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range_) , range_traits<RangeT>::end(range_) );
+				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range_)   , range_traits<RangeT>::end(range_) );
 				return industry::range< iterator_type >( begin , end );
 			}
 			
 			template < typename RangeT >
 			friend industry::range< boost::filter_iterator< F , typename range_traits< const RangeT >::iterator > >
-				operator|( const RangeT & range , const filter_processor & filt )
+				operator|( const RangeT & range_ , const filter_processor & filt )
 			{
 				typedef boost::filter_iterator< F , typename range_traits< const RangeT >::iterator > iterator_type;
-				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) );
-				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range)   , range_traits<RangeT>::end(range) );
+				iterator_type begin( filt.predicate , range_traits<RangeT>::begin(range_) , range_traits<RangeT>::end(range_) );
+				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range_)   , range_traits<RangeT>::end(range_) );
 				return industry::range< iterator_type >( begin , end );
 			}
 			
