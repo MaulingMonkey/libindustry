@@ -50,8 +50,10 @@ void test_range();
 void test_range_numeric_iterator();
 void test_algorithm_call();
 void test_algorithm_transform();
+void test_algorithm_transform_memberptr();
 
 static test_function_ptr test_functions[] = {
+	test_algorithm_transform_memberptr,
 	test_algorithm_transform,
 	test_algorithm_call,
 	test_factory,
