@@ -22,13 +22,15 @@ namespace industry {
 			push_back_processor( ContainerT & container ) : container( container ) {}
 
 			template < typename RangeT >
-			friend void operator|( RangeT & range , const push_back_processor< ContainerT > & p ) {
-				std::copy( range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) , std::back_inserter( p.container ) );
+			friend void operator|( RangeT & range_ , const push_back_processor< ContainerT > & p ) {
+				std::copy( range_traits<RangeT>::begin(range_) , range_traits<RangeT>::end(range_) , std::back_inserter( p.container ) );
 			}
 			template < typename RangeT >
-			friend void operator|( const RangeT & range , const push_back_processor< ContainerT > & p ) {
-				std::copy( range_traits<RangeT>::begin(range) , range_traits<RangeT>::end(range) , std::back_inserter( p.container ) );
+			friend void operator|( const RangeT & range_ , const push_back_processor< ContainerT > & p ) {
+				std::copy( range_traits<RangeT>::begin(range_) , range_traits<RangeT>::end(range_) , std::back_inserter( p.container ) );
 			}
+		private:
+			push_back_processor& operator=(push_back_processor const&);
 		};
 
 		template < typename ContainerT >

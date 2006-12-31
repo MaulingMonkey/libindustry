@@ -18,11 +18,11 @@ namespace industry {
 		typedef typename RangeT::iterator        iterator;
 		typedef typename RangeT::const_iterator  const_iterator;
 
-		static iterator begin(RangeT& range) { return range.begin(); }
-		static iterator end(RangeT& range) { return range.end(); }
+		static iterator begin(RangeT& range_) { return range_.begin(); }
+		static iterator end(RangeT& range_) { return range_.end(); }
 
-		static const_iterator begin(const RangeT& range) { return range.begin(); }
-		static const_iterator end(const RangeT& range) { return range.end(); }
+		static const_iterator begin(const RangeT& range_) { return range_.begin(); }
+		static const_iterator end(const RangeT& range_) { return range_.end(); }
 	};
 
 	template < typename RangeT >
@@ -30,8 +30,8 @@ namespace industry {
 		typedef typename RangeT::const_iterator  iterator;
 		typedef typename RangeT::const_iterator  const_iterator;
 
-		static const_iterator begin(const RangeT& range) { return range.begin(); }
-		static const_iterator end(const RangeT& range) { return range.end(); }
+		static const_iterator begin(const RangeT& range_) { return range_.begin(); }
+		static const_iterator end(const RangeT& range_) { return range_.end(); }
 	};
 
 	template < typename RangeT, size_t S >
@@ -39,11 +39,11 @@ namespace industry {
 		typedef RangeT*                 iterator;
 		typedef const RangeT*           const_iterator;
 
-		static iterator begin(RangeT range[S]) { return range; }
-		static iterator end(RangeT range[S]) { return range + S; }
+		static iterator begin(RangeT range_[S]) { return range_; }
+		static iterator end(RangeT range_[S]) { return range_ + S; }
 
-		static const_iterator begin(const RangeT range[S]) { return range; }
-		static const_iterator end(const RangeT range[S]) { return range + S; }
+		static const_iterator begin(const RangeT range_[S]) { return range_; }
+		static const_iterator end(const RangeT range_[S]) { return range_ + S; }
 	};
 
 	template < typename RangeT, size_t S >
@@ -51,8 +51,8 @@ namespace industry {
 		typedef const RangeT*           iterator;
 		typedef const RangeT*           const_iterator;
 
-		static const_iterator begin(const RangeT range[S]) { return range; }
-		static const_iterator end(const RangeT range[S]) { return range + S; }
+		static const_iterator begin(const RangeT range_[S]) { return range_; }
+		static const_iterator end(const RangeT range_[S]) { return range_ + S; }
 	};
 }
 

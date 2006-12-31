@@ -57,18 +57,18 @@ namespace industry {
 
 			template< typename RangeT >
 			friend range< transform_iterator_adaptor<FunctionS, typename range_traits<RangeT>::iterator> >
-				operator|(RangeT & range, transform_proxy<FunctionS> const& proxy)
+				operator|(RangeT & range_, transform_proxy<FunctionS> const& proxy)
 			{
 				typedef transform_iterator_adaptor<FunctionS, typename range_traits<RangeT>::iterator> iterator_type;
-				return industry::range<iterator_type>(iterator_type(proxy.function, range_traits<RangeT>::begin(range)), iterator_type(proxy.function, range_traits<RangeT>::end(range)));
+				return industry::range<iterator_type>(iterator_type(proxy.function, range_traits<RangeT>::begin(range_)), iterator_type(proxy.function, range_traits<RangeT>::end(range_)));
 			}
 
 			template< typename RangeT >
 			friend range< transform_iterator_adaptor<FunctionS, typename range_traits<RangeT>::iterator> >
-				operator|(RangeT const & range, transform_proxy<FunctionS> const& proxy)
+				operator|(RangeT const & range_, transform_proxy<FunctionS> const& proxy)
 			{
 				typedef transform_iterator_adaptor<FunctionS, typename range_traits<RangeT>::iterator> iterator_type;
-				return industry::range<iterator_type>(iterator_type(proxy.function, range_traits<RangeT>::begin(range)), iterator_type(proxy.function, range_traits<RangeT>::end(range)));
+				return industry::range<iterator_type>(iterator_type(proxy.function, range_traits<RangeT>::begin(range_)), iterator_type(proxy.function, range_traits<RangeT>::end(range_)));
 			}
 		private:
 			boost::function<FunctionS> function;

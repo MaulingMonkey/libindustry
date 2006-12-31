@@ -11,9 +11,9 @@
 
 #include <algorithm>
 #include <iterator>
-#include <industry/traits/range.hpp>
 #include <boost/function.hpp>
 #include <boost/functional.hpp>
+#include <industry/traits/range.hpp>
 
 namespace industry {
 	namespace algorithm {
@@ -25,13 +25,13 @@ namespace industry {
 			call_processor( function_type function ) : function( function ) { }
 
 			template < typename RangeT >
-			friend void operator|( RangeT & range , const call_processor< FunctionS > & p ) {
-				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p.function);
+			friend void operator|( RangeT & range_ , const call_processor< FunctionS > & p ) {
+				std::for_each(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), p.function);
 			}
 
 			template < typename RangeT >
-			friend void operator|( const RangeT & range , const call_processor< FunctionS > & p ) {
-				std::for_each(range_traits<RangeT>::begin(range), range_traits<RangeT>::end(range), p.function);
+			friend void operator|( const RangeT & range_ , const call_processor< FunctionS > & p ) {
+				std::for_each(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), p.function);
 			}
 		};
 
