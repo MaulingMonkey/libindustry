@@ -23,11 +23,19 @@ namespace industry {
 		template < unsigned , typename T > struct inherit_from : T {};
 		template < unsigned N > struct inherit_from< N , nil > {};
 		
-		template < template < typename > class TT , unsigned , typename Base > struct crtp_inherit_from : TT< Base > {};
-		template < template < typename > class TT , unsigned N > struct crtp_inherit_from< TT , N , nil > {};
+		template < template < typename > class TT , unsigned , typename Arg1 > struct template1_inherit_from                   : TT< Arg1 > {};
+		template < template < typename > class TT , unsigned N >               struct template1_inherit_from< TT            , N , nil  > {};
+		template < unsigned N , typename Arg1 >                                struct template1_inherit_from< template1_nil , N , Arg1 > {};
+		template < unsigned N >                                                struct template1_inherit_from< template1_nil , N , nil  > {};
 		
-		template < template < typename > class TT , unsigned , typename T > struct template_inherit_from : TT< T > {};
-		template < template < typename > class TT , unsigned N > struct template_inherit_from< TT , N , nil > {};
+		template < template < typename , typename > class TT , unsigned , typename Arg1 , typename Arg2 > struct template2_inherit_from : TT< Arg1 , Arg2 > {};
+		template < template < typename , typename > class TT , unsigned N , typename Arg1 > struct template2_inherit_from< TT            , N , Arg1 , nil  > {};
+		template < template < typename , typename > class TT , unsigned N , typename Arg2 > struct template2_inherit_from< TT            , N , nil  , Arg2 > {};
+		template < template < typename , typename > class TT , unsigned N >                 struct template2_inherit_from< TT            , N , nil  , nil  > {};
+		template < unsigned N , typename Arg1 , typename Arg2 >                             struct template2_inherit_from< template2_nil , N , Arg1 , Arg2 > {};
+		template < unsigned N , typename Arg1 >                                             struct template2_inherit_from< template2_nil , N , Arg1 , nil  > {};
+		template < unsigned N , typename Arg2 >                                             struct template2_inherit_from< template2_nil , N , nil  , Arg2 > {};
+		template < unsigned N >                                                             struct template2_inherit_from< template2_nil , N , nil  , nil  > {};
 		
 		template < template < typename , typename > class TT , unsigned , typename Base , typename T > struct crtp_template_inherit_from : TT< Base , T > {};
 		template < template < typename , typename > class TT , unsigned N , typename Base > struct crtp_template_inherit_from< TT , N , Base , nil > {};
@@ -49,21 +57,21 @@ namespace industry {
 	struct inherit : BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , MC_INDUSTRY_INHERIT_FROM_use , T ) {};
 	#undef MC_INDUSTRY_INHERIT_FROM_use
 	
-	#define MC_INDUSTRY_TEMPLATE_INHERIT_FROM_use(z, n, data)                             \
-		detail::template_inherit_from<               BOOST_PP_TUPLE_ELEM(2,0,data)        \
-		                             , n                                                  \
-		                             , BOOST_PP_CAT( BOOST_PP_TUPLE_ELEM(2,1,data) , n )  \
-		                             >
+	#define MC_INDUSTRY_TEMPLATE_INHERIT_FROM_use(z, n, data)                              \
+		detail::template1_inherit_from<               BOOST_PP_TUPLE_ELEM(2,0,data)        \
+		                              , n                                                  \
+		                              , BOOST_PP_CAT( BOOST_PP_TUPLE_ELEM(2,1,data) , n )  \
+		                              >
 	template < template < typename > class TT , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT( INDUSTRY_INHERIT_LIMIT , typename T , nil ) >
 	struct template_inherit : BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , MC_INDUSTRY_TEMPLATE_INHERIT_FROM_use , (TT , T) ) {};
 	#undef MC_INDUSTRY_TEMPLATE_INHERIT_FROM_use
 	
-	#define MC_INDUSTRY_CRTP_TEMPLATE_INHERIT_FROM_use(z, n, data)                             \
-		detail::crtp_template_inherit_from<               BOOST_PP_TUPLE_ELEM(3,0,data)        \
-										  , n                                                  \
-										  ,               BOOST_PP_TUPLE_ELEM(3,1,data)        \
-										  , BOOST_PP_CAT( BOOST_PP_TUPLE_ELEM(3,2,data) , n )  \
-										  >
+	#define MC_INDUSTRY_CRTP_TEMPLATE_INHERIT_FROM_use(z, n, data)                         \
+		detail::template2_inherit_from<               BOOST_PP_TUPLE_ELEM(3,0,data)        \
+									  , n                                                  \
+									  ,               BOOST_PP_TUPLE_ELEM(3,1,data)        \
+									  , BOOST_PP_CAT( BOOST_PP_TUPLE_ELEM(3,2,data) , n )  \
+									  >
 	template < template < typename , typename > class TT , typename Base , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT( INDUSTRY_INHERIT_LIMIT , typename T , nil ) >
 	struct crtp_template_inherit : BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , MC_INDUSTRY_CRTP_TEMPLATE_INHERIT_FROM_use , (TT, Base, T) ) {};
 	#undef MC_INDUSTRY_CRTP_TEMPLATE_INHERIT_FROM_use
