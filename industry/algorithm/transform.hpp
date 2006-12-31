@@ -115,7 +115,7 @@ namespace industry {
 		private:
 			friend class boost::iterator_core_access;
 
-			template< typename Obj >
+			template< typename Obj_ >
 			struct apply_dereference
 			{
 				static dereferenced_type apply(const this_type & t) {
