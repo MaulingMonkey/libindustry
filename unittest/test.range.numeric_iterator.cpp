@@ -8,7 +8,7 @@
 
 #include <industry/arrays.hpp>
 #include <industry/range.hpp>
-#include <industry/iterator/numeric_iterator.hpp>
+#include <industry/iterator/numeric.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
 #include <industry/algorithm.hpp>
