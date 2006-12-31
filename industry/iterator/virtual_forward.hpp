@@ -65,7 +65,8 @@ namespace industry {
 		typedef Value*                    pointer;
 	
 		virtual_forward_iterator(): i() {}
-		virtual_forward_iterator( const virtual_forward_iterator & copy ): i(copy.i->clone()) {}
+		virtual_forward_iterator( const virtual_forward_iterator & copy ): i(copy.i->clone()) { assert(i); }
+
 		template < typename ForwardIterator >
 		virtual_forward_iterator( const ForwardIterator & iter )
 			:i( new virtual_forward_iterator_detail::impl< Value , ForwardIterator >(iter) )
@@ -74,11 +75,11 @@ namespace industry {
 		reference operator*() const { return i->get_reference(); }
 		pointer   operator->() const { return i->get_pointer(); }
 		
-		self_t & operator++() { i->increment(); return *this; }
-		self_t   operator++(int) { self_t copy(*this); i->increment(); return copy; }
+		self_t & operator++()    { assert(i); i->increment(); return *this; }
+		self_t   operator++(int) { assert(i); self_t copy(*this); i->increment(); return copy; }
 		
-		friend bool operator==( const self_t & lhs , const self_t & rhs ) { return lhs.i->equals(*rhs.i); }
-		friend bool operator!=( const self_t & lhs , const self_t & rhs ) { return !(lhs==rhs); }
+		friend bool operator==( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return lhs.i->equals(*rhs.i); }
+		friend bool operator!=( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return !(lhs==rhs); }
 	};
 }
 
