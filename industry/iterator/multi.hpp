@@ -62,7 +62,7 @@ namespace industry {
 		
 	}
 	template < typename Iter1 , typename Iter2 >
-	class multi_iterator : detail::multi_iterator_traits< Iter1 , Iter2 >
+	class multi_iterator : industry::detail::multi_iterator_traits< Iter1 , Iter2 >
 	{
 		typedef multi_iterator< Iter1 , Iter2 > this_t;
 	protected:
@@ -70,12 +70,12 @@ namespace industry {
 		Iter2 begin2, i2, end2;
 		unsigned iter_set; //0 == end, 1 == set 1, 2 == set 2, * == invalid
 	public:
-		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::iterator_category iterator_category;
-		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::difference_type   difference_type;
-		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::value_type        value_type;
-		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::pointer           pointer;
-		typedef typename detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
-						
+		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::iterator_category iterator_category;
+		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::difference_type   difference_type;
+		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::value_type        value_type;
+		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::pointer           pointer;
+		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
+								
 		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case

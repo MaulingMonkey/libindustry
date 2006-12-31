@@ -20,7 +20,7 @@ namespace industry {
 			template < typename IteratorT > true_t check( IteratorT (T::*)() = & T::begin , IteratorT (T::*)() = & T::end );
 			false_t check( ... );
 
-			static const bool value = (typeid(check()) == typeid(true_t));
+			static const bool value = (sizeof(check()) == sizeof(true_t));
 		};
 	}
 }

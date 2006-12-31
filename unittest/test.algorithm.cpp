@@ -12,6 +12,7 @@
 #include <industry/algorithm.hpp>
 #include <industry/arrays.hpp>
 #include <industry/range.hpp>
+#include <industry/math/vector.hpp>
 #include <boost/test/unit_test.hpp>
 #include <iterator>
 #include <vector>
@@ -68,9 +69,15 @@ namespace {
 	void print_point(child& p, int i) {
 		BOOST_CHECK(p.point == 1);
 	}
-
+	
 	void print_point_ptr(base* p) {
 		BOOST_CHECK(p->point == 1);
+	}
+
+	void initialize_vector(industry::math::vector<float, 3>& v) {
+		v[0] = 1.0f;
+		v[1] = 2.0f;
+		v[2] = 3.0f;
 	}
 }
 
@@ -85,6 +92,13 @@ void test_algorithm_call() {
 	data | call<void, child&>(boost::bind(print_point, _1, 2));
 
 	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
+
+	std::vector< math::vector<float, 3> > particles(10);
+	particles | call(initialize_vector);
+
+	std::vector< math::vector<float, 3> > expected_particles_result(10, math::vector<float, 3>(1.0f, 2.0f, 3.0f));
+
+	BOOST_CHECK(( make_range(expected_particles_result) == make_range(particles) ));
 }
 
 void test_algorithm_transform() {

@@ -10,7 +10,7 @@
 #ifndef IG_INDUSTRY_TRAITS_RANGE
 #define IG_INDUSTRY_TRAITS_RANGE
 
-#include <cstdlib>
+#include <cstddef>
 
 namespace industry {
 	template < typename RangeT >
@@ -34,7 +34,7 @@ namespace industry {
 		static const_iterator end(const RangeT& range) { return range.end(); }
 	};
 
-	template < typename RangeT, int S >
+	template < typename RangeT, size_t S >
 	struct range_traits< RangeT[S] > {
 		typedef RangeT*                 iterator;
 		typedef const RangeT*           const_iterator;
@@ -46,7 +46,7 @@ namespace industry {
 		static const_iterator end(const RangeT range[S]) { return range + S; }
 	};
 
-	template < typename RangeT, int S >
+	template < typename RangeT, size_t S >
 	struct range_traits< const RangeT[S] > {
 		typedef const RangeT*           iterator;
 		typedef const RangeT*           const_iterator;
