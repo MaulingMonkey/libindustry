@@ -92,7 +92,7 @@ namespace industry {
 			typedef boost::iterator_adaptor<
 				transform_memberptr_iterator_adaptor< Res, Obj, HeldIterator >
 				, HeldIterator
-				, typename Res // value_type
+				, Res // value_type
 				, typename std::iterator_traits< HeldIterator >::iterator_category
 				, typename copy_const<
 				Res,
