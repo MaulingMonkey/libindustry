@@ -68,7 +68,7 @@ namespace industry {
 		virtual_forward_iterator( const virtual_forward_iterator & copy ): i(copy.i->clone()) { assert(i); }
 
 		template < typename ForwardIterator >
-		virtual_forward_iterator( const ForwardIterator & iter )
+		explicit virtual_forward_iterator( const ForwardIterator & iter )
 			:i( new virtual_forward_iterator_detail::impl< Value , ForwardIterator >(iter) )
 		{}
 		
