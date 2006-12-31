@@ -48,6 +48,7 @@ void test_multi_iterator();
 void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
+void test_template_group();
 void test_algorithm_call();
 void test_algorithm_transform();
 void test_algorithm_transform_memberptr();
@@ -68,7 +69,8 @@ static test_function_ptr test_functions[] = {
 	test_multitype,
 	test_multi_iterator,
 	test_range,
-	test_range_numeric_iterator
+	test_range_numeric_iterator,
+	test_template_group
 };
 
 #if defined( INDUSTRY_OS_WINDOWS )
