@@ -54,9 +54,11 @@ namespace industry {
 				return i == static_cast< const forward_impl & >( other ).i;
 			}
 		};
-		template < typename Value >
+		template < typename SelfT , typename Value >
 		class forward_base {
-			typedef forward_base< Value > self_t;
+			typedef SelfT self_t;
+			self_t & self()             { return static_cast<       self_t& >( *this ); }
+			const self_t & self() const { return static_cast< const self_t& >( *this ); }
 		protected:
 			boost::scoped_ptr< forward_impl_interface< Value > > i;
 		public:
@@ -76,18 +78,17 @@ namespace industry {
 			reference operator*() const { return i->get_reference(); }
 			pointer   operator->() const { return i->get_pointer(); }
 		
-			self_t & operator++()    { assert(i); i->increment(); return *this; }
-			self_t   operator++(int) { assert(i); self_t copy(*this); i->increment(); return copy; }
+			self_t & operator++()    { assert(i); i->increment(); return self(); }
+			self_t   operator++(int) { assert(i); self_t copy(self()); i->increment(); return copy; }
 		
-			friend bool operator==( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return lhs.i->equals(*rhs.i); }
-			friend bool operator!=( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return !(lhs==rhs); }
+			friend bool operator==( const forward_base & lhs , const forward_base & rhs ) { assert( lhs.i && rhs.i ); return lhs.i->equals(*rhs.i); }
+			friend bool operator!=( const forward_base & lhs , const forward_base & rhs ) { assert( lhs.i && rhs.i ); return !(lhs==rhs); }
 		};
 	}
 	
 	template < typename Value >
-	class virtual_forward_iterator : public virtual_iterator_detail::forward_base< Value > {
-		typedef virtual_forward_iterator< Value > self_t;
-		typedef virtual_iterator_detail::forward_base< Value > super;
+	class virtual_forward_iterator : public virtual_iterator_detail::forward_base< virtual_forward_iterator< Value > , Value > {
+		typedef virtual_iterator_detail::forward_base< virtual_forward_iterator< Value > , Value > super;
 	public:
 		typedef std::forward_iterator_tag iterator_category;
 	
