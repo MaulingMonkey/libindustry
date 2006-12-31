@@ -39,6 +39,7 @@ void test_inherit();
 void test_iterator_cast();
 void test_iterator_n();
 void test_iterator_traits();
+void test_iterator_virtual_forward();
 void test_math_fixed();
 void test_math_vector();
 void test_multitype();
@@ -59,6 +60,7 @@ static test_function_ptr test_functions[] = {
 	test_iterator_cast,
 	test_iterator_n,
 	test_iterator_traits,
+	test_iterator_virtual_forward,
 	test_math_fixed,
 	test_math_vector,
 	test_multitype,
