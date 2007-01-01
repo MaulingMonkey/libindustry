@@ -53,25 +53,6 @@ void test_algorithm_call();
 void test_algorithm_transform();
 void test_algorithm_transform_memberptr();
 
-static test_function_ptr test_functions[] = {
-	test_algorithm_transform_memberptr,
-	test_algorithm_transform,
-	test_algorithm_call,
-	test_factory,
-	test_algorithm,
-	test_inherit,
-	test_iterator_cast,
-	test_iterator_n,
-	test_iterator_traits,
-	test_iterator_virtual_forward,
-	test_math_fixed,
-	test_math_vector,
-	test_multitype,
-	test_multi_iterator,
-	test_range,
-	test_range_numeric_iterator,
-	test_template_group
-};
 
 #if defined( INDUSTRY_OS_WINDOWS )
 //void test_win32_registry();
@@ -83,9 +64,23 @@ test_suite * init_unit_test_suite( int argc , char * argv[] ) {
 
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
 
-	for( unsigned i = 0 ; i < industry::arrays::size(test_functions) ; ++i ) {
-		test->add(BOOST_TEST_CASE( test_functions[i] ));
-	}
+	test->add(BOOST_TEST_CASE(test_algorithm_transform_memberptr));
+	test->add(BOOST_TEST_CASE(test_algorithm_transform));
+	test->add(BOOST_TEST_CASE(test_algorithm_call));
+	test->add(BOOST_TEST_CASE(test_factory));
+	test->add(BOOST_TEST_CASE(test_algorithm));
+	test->add(BOOST_TEST_CASE(test_inherit));
+	test->add(BOOST_TEST_CASE(test_iterator_cast));
+	test->add(BOOST_TEST_CASE(test_iterator_n));
+	test->add(BOOST_TEST_CASE(test_iterator_traits));
+	//test->add(BOOST_TEST_CASE(test_iterator_virtual_forward));
+	test->add(BOOST_TEST_CASE(test_math_fixed));
+	test->add(BOOST_TEST_CASE(test_math_vector));
+	test->add(BOOST_TEST_CASE(test_multitype));
+	test->add(BOOST_TEST_CASE(test_multi_iterator));
+	test->add(BOOST_TEST_CASE(test_range));
+	test->add(BOOST_TEST_CASE(test_range_numeric_iterator));
+	test->add(BOOST_TEST_CASE(test_template_group));
 
 	//OS specific cases:
 #if defined( INDUSTRY_OS_WINDOWS )
