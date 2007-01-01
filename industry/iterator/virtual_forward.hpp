@@ -91,7 +91,10 @@ namespace industry {
 		typedef virtual_iterator_detail::forward_base< virtual_forward_iterator< Value > , Value > super;
 	public:
 		typedef std::forward_iterator_tag iterator_category;
-	
+		
+		virtual_forward_iterator(): super() {}
+		virtual_forward_iterator( const virtual_forward_iterator & copy ): super( static_cast< const super & >(copy) ) {}
+		
 		template < typename ForwardIterator >
 		explicit virtual_forward_iterator( const ForwardIterator & iter ): super(iter) {}
 	};
