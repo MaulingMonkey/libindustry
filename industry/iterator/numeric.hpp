@@ -30,7 +30,7 @@ namespace industry {
 		typedef boost::iterator_facade<numeric_iterator<ValueT, StepT, EqualityP>, ValueT, std::random_access_iterator_tag> base_type;
 	public:
 		numeric_iterator() : infinite(true) {}
-		numeric_iterator(ValueT value, StepT step, EqualityP equality_comparer = EqualityP()) : value(value), step(step), equality_comparer(equality_comparer), infinite(false) {}
+		numeric_iterator(ValueT value, StepT step, EqualityP equality_comparer = EqualityP()) : equality_comparer(equality_comparer), value(value), step(step), infinite(false) {}
 	private:
 		friend class boost::iterator_core_access;
 
