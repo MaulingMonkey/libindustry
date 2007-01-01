@@ -12,10 +12,11 @@
 #include <industry/nil.hpp>
 #include <boost/test/unit_test.hpp>
 
-struct foo {};
-struct bar {};
-struct baz : industry::inherit< foo , bar , industry::nil , industry::nil > { virtual ~baz(){} };
-
+namespace {
+	struct foo {};
+	struct bar {};
+	struct baz : industry::inherit< foo , bar , industry::nil , industry::nil > { virtual ~baz(){} };
+}
 void test_inherit( void ) {
 	baz test;
 	BOOST_CHECK(  dynamic_cast<           foo * >( &test ) );
@@ -24,6 +25,6 @@ void test_inherit( void ) {
 }
 
 /****
- * 1. (baz*) cast supresses GCC warning that the cast cannot succeed
- *    (we know this, we're unit-test verifying this after all!!!)
+* 1. (baz*) cast supresses GCC warning that the cast cannot succeed
+*    (we know this, we're unit-test verifying this after all!!!)
 ****/

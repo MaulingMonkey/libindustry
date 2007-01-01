@@ -18,38 +18,40 @@
 #include <iostream>
 #include <cassert>
 
-struct base {
-	virtual ~base() {}
-	
-	typedef int ctor_method;
-	static const ctor_method
-		void_ctor_method    = 1,
-		int_ctor_method     = 2,
-		char_ctor_method    = 3,
-		int_int_ctor_method = 4,
-		copy_ctor_method    = 5;
-};
+namespace {
+	struct base {
+		virtual ~base() {}
 
-class foo : public base {
-public:
-	ctor_method ctor_method_used;
-	
-	foo( void )          : ctor_method_used( void_ctor_method    ) {}
-	foo( int n )         : ctor_method_used( int_ctor_method     ) {}
-	foo( char c )        : ctor_method_used( char_ctor_method    ) {}
-	foo( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-	foo( const foo & f ) : ctor_method_used( f.ctor_method_used  ) {}
-};
-class bar : public base {
-public:
-	ctor_method ctor_method_used;
-	
-	bar( void )          : ctor_method_used( void_ctor_method    ) {}
-	bar( int n )         : ctor_method_used( int_ctor_method     ) {}
-	bar( char c )        : ctor_method_used( char_ctor_method    ) {}
-	bar( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-	bar( const bar & b ) : ctor_method_used( b.ctor_method_used  ) {}
-};
+		typedef int ctor_method;
+		static const ctor_method
+			void_ctor_method    = 1,
+			int_ctor_method     = 2,
+			char_ctor_method    = 3,
+			int_int_ctor_method = 4,
+			copy_ctor_method    = 5;
+	};
+
+	class foo : public base {
+	public:
+		ctor_method ctor_method_used;
+
+		foo( void )          : ctor_method_used( void_ctor_method    ) {}
+		foo( int n )         : ctor_method_used( int_ctor_method     ) {}
+		foo( char c )        : ctor_method_used( char_ctor_method    ) {}
+		foo( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
+		foo( const foo & f ) : ctor_method_used( f.ctor_method_used  ) {}
+	};
+	class bar : public base {
+	public:
+		ctor_method ctor_method_used;
+
+		bar( void )          : ctor_method_used( void_ctor_method    ) {}
+		bar( int n )         : ctor_method_used( int_ctor_method     ) {}
+		bar( char c )        : ctor_method_used( char_ctor_method    ) {}
+		bar( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
+		bar( const bar & b ) : ctor_method_used( b.ctor_method_used  ) {}
+	};
+}
 
 template < typename T > void verify( const boost::any & any , base::ctor_method ctor_method_used ) {
 	bool threw = true;
@@ -92,26 +94,26 @@ void test_factory_interface( void ) {
 	industry::factory< industry::type , InterfaceT ,                    void ( void ) , void ( int ) , void( char ) , void ( int , int )   > factory;
 	factory.template type< foo >( typeid(foo) );
 	factory.template auto_type< bar >();
-	
+
 	boost::array< industry::type , 2 > types = { typeid(foo) , typeid(bar) };
 	boost::array< InterfaceT , 2 > example;
 	for ( unsigned i = 0 ; i < 2 ; ++i ) {
 		example[i] = factory.create( types[i] , 42 );
 	}
-	
+
 	verify< foo >( example[0] , base::int_ctor_method );
 	verify< bar >( example[1] , base::int_ctor_method );
-	
+
 	InterfaceT v  = factory.create( typeid(foo)           );
 	InterfaceT u  = factory.create( typeid(foo) , 42      );
 	InterfaceT c  = factory.create( typeid(foo) , 'c'     );
 	InterfaceT uu = factory.create( typeid(foo) , 42 , 42 );
-	
+
 	verify< foo >( v  , base::void_ctor_method    );
 	verify< foo >( u  , base::int_ctor_method     );
 	verify< foo >( c  , base::char_ctor_method    );
 	verify< foo >( uu , base::int_int_ctor_method );
-	
+
 	BOOST_CHECK_THROW( factory.create(typeid(int),42) , industry::bad_factory_type );
 	cleanup( example[0] );
 	cleanup( example[1] );
