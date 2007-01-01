@@ -8,6 +8,7 @@
 
 #include <industry/iterator/numeric.hpp>
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 void test_range_numeric_iterator( ) {
 	using namespace industry;

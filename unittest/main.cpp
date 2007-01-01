@@ -73,7 +73,7 @@ test_suite * init_unit_test_suite( int argc , char * argv[] ) {
 	test->add(BOOST_TEST_CASE(test_iterator_cast));
 	test->add(BOOST_TEST_CASE(test_iterator_n));
 	test->add(BOOST_TEST_CASE(test_iterator_traits));
-	//test->add(BOOST_TEST_CASE(test_iterator_virtual_forward));
+	test->add(BOOST_TEST_CASE(test_iterator_virtual_forward));
 	test->add(BOOST_TEST_CASE(test_math_fixed));
 	test->add(BOOST_TEST_CASE(test_math_vector));
 	test->add(BOOST_TEST_CASE(test_multitype));

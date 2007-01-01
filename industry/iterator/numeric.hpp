@@ -60,12 +60,12 @@ namespace industry {
 
 		template<typename YValueT, typename YStepT, typename YEqualityP>
 		typename base_type::difference_type distance_to(numeric_iterator<YValueT, YStepT, YEqualityP> const& other) const {
-			return infinite ?
-				std::numeric_limits<typename base_type::difference_type>::min() :
-				other.infinite ?
-					std::numeric_limits<typename base_type::difference_type>::max() :
-					typename base_type::difference_type((other.value - value) / step)
-			;
+			if(infinite)
+				return -std::numeric_limits<typename base_type::difference_type>::max();
+			else if(other.infinite)
+				return std::numeric_limits<typename base_type::difference_type>::min();
+			else
+				return typename base_type::difference_type((other.value - value) / step);
 		}
 
 		EqualityP equality_comparer;
