@@ -136,7 +136,7 @@ namespace {
 	T* by_ptr_(T& t) { return &t; };
 
 	const base1* id_test(const base1 * p) { return p; };
-};
+}
 
 void test_algorithm_transform_memberptr() {
 	using namespace industry;
@@ -167,4 +167,4 @@ void test_algorithm_transform_memberptr() {
 	ptr_vec | transform(&base1::n) | call(check_one);
 	ptr_vec | transform(&base1::n) | call(set_two);
 	val_tab | transform(&base1::n) | call(check_two);
-};
+}
