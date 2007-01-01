@@ -114,3 +114,57 @@ void test_algorithm_transform() {
 
 	BOOST_CHECK(( make_range(expected_result) == make_range(data) ));
 }
+
+namespace {
+	struct base1 {
+		int n;
+		const int cn;
+		base1() : n(0), cn(0) {};
+	};
+
+	void test_r(int&) {};
+	void test_cr(const int&) {};
+
+	void set_one(int& r) { r = 1; };
+	void check_one(const int& r) { BOOST_CHECK(r == 1); };
+	void set_two(int& r) { r = 2; };
+	void check_two(const int& r) { BOOST_CHECK(r == 2); };
+
+	template<typename T>
+	T& by_ref_(T* t) { return *t; };
+	template<typename T>
+	T* by_ptr_(T& t) { return &t; };
+
+	const base1* id_test(const base1 * p) { return p; };
+};
+
+void test_algorithm_transform_memberptr() {
+	using namespace industry;
+
+	base1 val_tab[10];
+	const base1 const_val_tab[10];
+	std::vector<base1*> ptr_vec;
+	std::vector<const base1*> const_ptr_vec;
+
+	val_tab | transform(by_ptr_<base1>) | push_back(ptr_vec);
+	const_val_tab | transform(by_ptr_<const base1>) | push_back(const_ptr_vec);
+	BOOST_CHECK( (make_range(val_tab) | transform(by_ptr_<base1>)) == make_range(ptr_vec) );
+
+	const std::vector<const base1*> & const_ptr_vec_const = const_ptr_vec;
+
+	// compile checks...
+	val_tab | transform(&base1::n) | call(test_r);
+	val_tab | transform(&base1::n) | call(test_cr);
+	val_tab | transform(&base1::cn) | call(test_cr);
+	ptr_vec | transform(&base1::n) | call(test_r);
+	ptr_vec | transform(&base1::n) | call(test_cr);
+	ptr_vec | transform(&base1::cn) | call(test_cr);
+	const_ptr_vec | call(id_test);
+	const_ptr_vec_const | transform(id_test);
+	const_ptr_vec_const | transform(&base1::n) | call(test_cr);
+	// run-time checks...
+	val_tab | transform(&base1::n) | call(set_one);
+	ptr_vec | transform(&base1::n) | call(check_one);
+	ptr_vec | transform(&base1::n) | call(set_two);
+	val_tab | transform(&base1::n) | call(check_two);
+};

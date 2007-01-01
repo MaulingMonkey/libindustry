@@ -19,67 +19,84 @@
 #endif
 
 namespace industry {
-	namespace virtual_forward_iterator_detail {
-		template < typename Value >
-		struct impl_interface {
-			virtual ~impl_interface() {}
+	namespace virtual_iterator_detail {
+		template < typename ValueT >
+		struct forward_impl_interface {
+			typedef ValueT value_type;
 			
-			virtual Value& get_reference() const = 0;
-			virtual Value* get_pointer()   const = 0;
-			virtual std::auto_ptr< impl_interface< Value > > clone() const = 0;
+			virtual ~forward_impl_interface() {}
+			
+			virtual value_type& get_reference() const = 0;
+			virtual value_type* get_pointer()   const = 0;
+			virtual std::auto_ptr< forward_impl_interface< value_type > > clone() const = 0;
 			virtual void increment() = 0;
-			virtual bool equals( const impl_interface< Value > & other ) const = 0;
+			virtual bool equals( const forward_impl_interface< value_type > & other ) const = 0;
 		};
 		
-		template < typename Value , typename ForwardIterator >
-		class impl : public impl_interface< Value > {
+		template < typename Interface , typename ForwardIterator >
+		class forward_impl : public Interface {
 			ForwardIterator i;
+		protected:
+			typedef typename Interface::value_type value_type;
 		public:
-			impl( const ForwardIterator & i ): i(i) {}
+			forward_impl( const ForwardIterator & i ): i(i) {}
 			
-			virtual Value& get_reference() const { return *i; }
-			virtual Value* get_pointer()   const { return &*i; }
-			virtual std::auto_ptr< impl_interface< Value > > clone() const {
-				return std::auto_ptr< impl_interface< Value > >( new impl(*this) );
+			virtual value_type& get_reference() const { return *i; }
+			virtual value_type* get_pointer()   const { return &*i; }
+			virtual std::auto_ptr< forward_impl_interface< value_type > > clone() const {
+				return std::auto_ptr< forward_impl_interface< value_type > >( new forward_impl(*this) );
 			}
 			virtual void increment() {
 				++i;
 			}
-			virtual bool equals( const impl_interface< Value > & other ) const {
+			virtual bool equals( const forward_impl_interface< value_type > & other ) const {
 				assert( typeid(*this) == typeid(other) );
-				return i == static_cast< const impl & >( other ).i;
+				return i == static_cast< const forward_impl & >( other ).i;
 			}
+		};
+		template < typename SelfT , typename Value >
+		class forward_base {
+			typedef SelfT self_t;
+			self_t & self()             { return static_cast<       self_t& >( *this ); }
+			const self_t & self() const { return static_cast< const self_t& >( *this ); }
+		protected:
+			boost::scoped_ptr< forward_impl_interface< Value > > i;
+		public:
+			typedef std::ptrdiff_t            difference_type;
+			typedef Value                     value_type;
+			typedef Value&                    reference;
+			typedef Value*                    pointer;
+
+			forward_base(): i() {}
+			forward_base( const forward_base & copy ): i(copy.i->clone()) { assert(i); }
+			
+			template < typename ForwardIterator >
+			explicit forward_base( const ForwardIterator & iter )
+				:i( new virtual_iterator_detail::forward_impl< virtual_iterator_detail::forward_impl_interface< Value > , ForwardIterator >(iter) )
+			{}
+			
+			reference operator*() const { return i->get_reference(); }
+			pointer   operator->() const { return i->get_pointer(); }
+		
+			self_t & operator++()    { assert(i); i->increment(); return self(); }
+			self_t   operator++(int) { assert(i); self_t copy(self()); i->increment(); return copy; }
+		
+			friend bool operator==( const forward_base & lhs , const forward_base & rhs ) { assert( lhs.i && rhs.i ); return lhs.i->equals(*rhs.i); }
+			friend bool operator!=( const forward_base & lhs , const forward_base & rhs ) { assert( lhs.i && rhs.i ); return !(lhs==rhs); }
 		};
 	}
 	
 	template < typename Value >
-	class virtual_forward_iterator {
-		typedef virtual_forward_iterator< Value > self_t;
-		
-		boost::scoped_ptr< virtual_forward_iterator_detail::impl_interface< Value > > i;
+	class virtual_forward_iterator : public virtual_iterator_detail::forward_base< virtual_forward_iterator< Value > , Value > {
+		typedef virtual_iterator_detail::forward_base< virtual_forward_iterator< Value > , Value > super;
 	public:
 		typedef std::forward_iterator_tag iterator_category;
-		typedef std::ptrdiff_t            difference_type;
-		typedef Value                     value_type;
-		typedef Value&                    reference;
-		typedef Value*                    pointer;
-	
-		virtual_forward_iterator(): i() {}
-		virtual_forward_iterator( const virtual_forward_iterator & copy ): i(copy.i->clone()) { assert(i); }
-
+		
+		virtual_forward_iterator(): super() {}
+		virtual_forward_iterator( const virtual_forward_iterator & copy ): super( static_cast< const super & >(copy) ) {}
+		
 		template < typename ForwardIterator >
-		explicit virtual_forward_iterator( const ForwardIterator & iter )
-			:i( new virtual_forward_iterator_detail::impl< Value , ForwardIterator >(iter) )
-		{}
-		
-		reference operator*() const { return i->get_reference(); }
-		pointer   operator->() const { return i->get_pointer(); }
-		
-		self_t & operator++()    { assert(i); i->increment(); return *this; }
-		self_t   operator++(int) { assert(i); self_t copy(*this); i->increment(); return copy; }
-		
-		friend bool operator==( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return lhs.i->equals(*rhs.i); }
-		friend bool operator!=( const self_t & lhs , const self_t & rhs ) { assert( lhs.i && rhs.i ); return !(lhs==rhs); }
+		explicit virtual_forward_iterator( const ForwardIterator & iter ): super(iter) {}
 	};
 }
 

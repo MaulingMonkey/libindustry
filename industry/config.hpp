@@ -31,12 +31,17 @@
 //INDUSTRY_OS_WINDOWS - Windows 95 or later
 //INDUSTRY_OS_X       - OS X
 //INDUSTRY_OS_LINUX   - Linux
+//INDUSTRY_OS_UNKNOWN - Unknown OS
+
 #if defined( _MSC_VER )
 #define INDUSTRY_OS_WINDOWS
+
 #elif defined( __APPLE__ )
 #define INDUSTRY_OS_X
+
 #else
-#error "Unknown platform!"
+#define INDUSTRY_OS_UNKNOWN
+
 #endif
 
 //INDUSTRY_UNICODE_DEFAULT - Defacto i/o mode (e.g. TCHAR type, streams to use, etc)
