@@ -46,7 +46,7 @@ namespace industry {
 				return raw( src * (1u << offset) );
 			}
 			static fixed round0( double src ) {
-				return raw( src * (1u << offset) );
+				return raw( storage_type( src * (1u << offset) ) );
 			}
 			static fixed round0( const char * src ) {
 				return round0( boost::lexical_cast< double >( src ) );
