@@ -38,12 +38,12 @@ namespace industry {
 
 		template<class RangeT, class InputIterator, class BinaryPredicate>
 		bool equal(RangeT const& range_, InputIterator begin) {
-			std::equal(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), begin, std::equal_to<typename std::iterator_traits<InputIterator>::value_type>());
+			return std::equal(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), begin, std::equal_to<typename std::iterator_traits<InputIterator>::value_type>());
 		}
 
 		template<class RangeT, class InputIterator, class BinaryPredicate>
 		bool equal(RangeT const& range_, InputIterator begin, BinaryPredicate predicate) {
-			std::equal(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), begin, predicate);
+			return std::equal(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), begin, predicate);
 		}
 
 		template<class RangeT, class Type>
