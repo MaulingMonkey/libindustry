@@ -59,7 +59,7 @@ namespace industry {
 
 		template<class RangeT1, class RangeT2>
 		typename range_traits<RangeT1>::iterator find_end(RangeT1 const& range1, RangeT2 const& range2) {
-			return find_end(range1, range2, std::equal_to<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return find_end(range1, range2, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class BinaryPredicate>
@@ -69,7 +69,7 @@ namespace industry {
 
 		template<class RangeT1, class RangeT2>
 		typename range_traits<RangeT1>::iterator find_first_of(RangeT1 const& range1, RangeT2 const& range2) {
-			return find_first_of(range1, range2, std::equal_to<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return find_first_of(range1, range2, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class BinaryPredicate>
@@ -89,18 +89,18 @@ namespace industry {
 
 		template<class RangeT, class Generator>
 		void generate(RangeT& range_, Generator generator) {
-			std::generate(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+			std::generate(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), generator);
 		}
 
 		template<class RangeT, class Size, class Generator>
 		void generate_n(RangeT& range_, Size size, Generator generator) {
 			assert(size <= range_traits<RangeT>::end(range_) - range_traits<RangeT>::begin(range_));
-			std::generate_n(range_traits<RangeT>::begin(range_), size, predicate);
+			std::generate_n(range_traits<RangeT>::begin(range_), size, generator);
 		}
 
 		template<class RangeT1, class RangeT2>
 		typename range_traits<RangeT1>::iterator includes(RangeT1 const& range1, RangeT2 const& range2) {
-			return includes(range1, range2, std::equal_to<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return includes(range1, range2, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class BinaryPredicate>
@@ -110,7 +110,7 @@ namespace industry {
 
 		template<class RangeT1, class RangeT2>
 		bool lexicographical_compare(RangeT1 const& range1, RangeT2 const& range2) {
-			return lexicographical_compare(range1, range2, std::equal_to<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return lexicographical_compare(range1, range2, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class BinaryPredicate>
@@ -120,7 +120,7 @@ namespace industry {
 
 		template<class RangeT>
 		void make_heap(RangeT const& range) {
-			make_heap(range_, std::less<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+			make_heap(range, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
@@ -129,18 +129,18 @@ namespace industry {
 		}
 
 		template<class RangeT>
-		range_traits<RangeT>::iterator max_element(RangeT const& range) {
-			return max_element(range_, std::greater<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+		typename range_traits<RangeT>::iterator max_element(RangeT const& range) {
+			return max_element(range, std::greater<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
-		range_traits<RangeT>::iterator max_element(RangeT const& range_, BinaryPredicate predicate) {
+		typename range_traits<RangeT>::iterator max_element(RangeT const& range_, BinaryPredicate predicate) {
 			return std::max_element(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
 		}
 
 		template<class RangeT1, class RangeT2, class OutputIterator>
 		bool merge(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
-			return merge(range1, range2, out, std::equal_to<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return merge(range1, range2, out, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
@@ -149,18 +149,18 @@ namespace industry {
 		}
 
 		template<class RangeT>
-		range_traits<RangeT>::iterator min_element(RangeT const& range) {
-			return min_element(range_, std::less<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+		typename range_traits<RangeT>::iterator min_element(RangeT const& range) {
+			return min_element(range, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
-		range_traits<RangeT>::iterator min_element(RangeT const& range_, BinaryPredicate predicate) {
+		typename range_traits<RangeT>::iterator min_element(RangeT const& range_, BinaryPredicate predicate) {
 			return std::min_element(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
 		}
 
 		template<class RangeT, class InputIterator>
 		std::pair<typename range_traits<RangeT>::iterator, InputIterator> mismatch(RangeT const& range_, InputIterator first) {
-			return mismatch(range_, std::greater<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+			return mismatch(range_, std::greater<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class InputIterator, class BinaryPredicate>
@@ -170,7 +170,7 @@ namespace industry {
 
 		template<class RangeT>
 		bool next_permutation(RangeT& range) {
-			return next_permutation(range_, std::less<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+			return next_permutation(range, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
@@ -185,7 +185,7 @@ namespace industry {
 
 		template<class RangeT>
 		void pop_heap(RangeT& range_) {
-			pop_heap(range_, std::less<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+			pop_heap(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
@@ -195,7 +195,7 @@ namespace industry {
 
 		template<class RangeT>
 		bool prev_permutation(RangeT& range) {
-			return prev_permutation(range_, std::less<typename std::iterator_traits<range_traits<RangeT>::iterator>::value_type>());
+			return prev_permutation(range, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
 		}
 
 		template<class RangeT, class BinaryPredicate>
