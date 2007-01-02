@@ -42,7 +42,7 @@ namespace industry {
 		
 		#define IMPLEMENT_CRTPN(z,n,unused)                                                                                                                                     \
 		template < template < typename , BOOST_PP_ENUM_PARAMS( n , typename BOOST_PP_INTERCEPT ) > class class_ , BOOST_PP_ENUM_PARAMS( n , typename T ) > class crtp ## n {    \
-			public: template < typename Self > struct with_self { typedef class_< Self , BOOST_PP_ENUM_PARAMS( n , T ) > type; };                                                       \
+			public: template < typename Self > struct with_self { typedef class_< Self , BOOST_PP_ENUM_PARAMS( n , T ) > type; };                                               \
 		}; /*------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 		BOOST_PP_REPEAT_FROM_TO(1,10,IMPLEMENT_CRTPN,~)
 		#undef IMPLEMENT_CRTPN
@@ -52,10 +52,13 @@ namespace industry {
 			template < typename Self > struct crtp_apply_self< ::industry::nil , Self > { typedef ::industry::nil type; };
 		}
 		
-		#define INHERIT_ARGN(z,n,unused) typename ::industry::templates::detail::crtp_apply_self< CRTP ## n , Self >::type
+		#define ARGN(n) typename ::industry::templates::detail::crtp_apply_self< CRTP ## n , Self >::type
+		#define INHERIT_ARGN(z,n,unused) ARGN(n)
+		#define TYPEDEF_SUPERN(z,n,unused) typedef ARGN(n) BOOST_PP_CAT( super , BOOST_PP_ADD(1,n) );
 		template < typename Self , BOOST_PP_ENUM_BINARY_PARAMS( INDUSTRY_INHERIT_LIMIT , typename CRTP , = ::industry::nil  BOOST_PP_INTERCEPT ) >
-		class crtp_inherit : public ::industry::inherit< BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , INHERIT_ARGN , ~ ) >
-		{};
+		class crtp_inherit : public ::industry::inherit< BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , INHERIT_ARGN , ~ ) > {
+			BOOST_PP_REPEAT( INDUSTRY_INHERIT_LIMIT , TYPEDEF_SUPERN , ~ )
+		};
 		#undef INHERIT_ARGN
 	}
 }
