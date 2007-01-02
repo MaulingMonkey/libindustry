@@ -19,9 +19,9 @@ template < typename , typename > struct foo2 {};
 template < typename , typename > struct bar2 {};
 template < typename , typename > struct baz2 {};
 
-typedef industry::template_group < foo  , bar  , baz  > group;
-typedef industry::template1_group< foo1 , bar1 , baz1 > group1;
-typedef industry::template2_group< foo2 , bar2 , baz2 > group2;
+typedef industry::group < foo  , bar  , baz  > group;
+typedef industry::tt1_group< foo1 , bar1 , baz1 > group1;
+typedef industry::tt2_group< foo2 , bar2 , baz2 > group2;
 
 void test_template_group() {
 	group a;
