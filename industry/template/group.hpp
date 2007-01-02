@@ -36,12 +36,17 @@
 		=  ::industry::template ## ttn ## _nil                                                \
 /*-------------------------------------------------------------------------------------------*/
 #define INDUSTRY_TEMPLATE_GROUPN_TYPENAMES_DECL(n)  BOOST_PP_REPEAT( INDUSTRY_TEMPLATE_GROUP_LIMIT , INDUSTRY_TEMPLATE_GROUPN_TYPENAME_DECL , n )
-
-#define INDUSTRY_IMPLEMENT_TEMPLATEN_GROUP(z,n,unused) template < INDUSTRY_TEMPLATE_GROUPN_TYPENAMES_DECL(n) > struct template ## n ## _group {};
+#define INDUSTRY_IMPLEMENT_TEMPLATEN_GROUP(z,n,unused) template < INDUSTRY_TEMPLATE_GROUPN_TYPENAMES_DECL(n) > struct tt ## n ## _group {};
 
 namespace industry {
-	template < BOOST_PP_ENUM_BINARY_PARAMS( INDUSTRY_TEMPLATE_GROUP_LIMIT , typename Item , = ::industry::nil  BOOST_PP_INTERCEPT ) > struct template_group {};
-	BOOST_PP_REPEAT_FROM_TO( 1 , BOOST_PP_ADD( 1 , INDUSTRY_TEMPLATE_GROUP_TT_LIMIT ) , INDUSTRY_IMPLEMENT_TEMPLATEN_GROUP , ~ )
+	namespace templates {
+		template < BOOST_PP_ENUM_BINARY_PARAMS( INDUSTRY_TEMPLATE_GROUP_LIMIT , typename Item , = ::industry::nil  BOOST_PP_INTERCEPT ) > struct group {};
+		BOOST_PP_REPEAT_FROM_TO( 1 , BOOST_PP_ADD( 1 , INDUSTRY_TEMPLATE_GROUP_TT_LIMIT ) , INDUSTRY_IMPLEMENT_TEMPLATEN_GROUP , ~ )
+	}
+	using ::industry::templates::group;
+	#define USEN(z,n,unused) using ::industry::templates::tt ## n ## _group;
+	BOOST_PP_REPEAT_FROM_TO( 1 , BOOST_PP_ADD( 1 , INDUSTRY_TEMPLATE_GROUP_TT_LIMIT ) , USEN , ~ )
+	#undef USEN
 }
 
 #endif //ndef IG_INDUSTRY_TEMPLATE_GROUP
