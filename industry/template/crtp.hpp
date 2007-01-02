@@ -23,12 +23,10 @@ namespace industry {
 			typedef SelfType self_type;
 			self_type & self() {
 				self_type * ptr = static_cast< self_type * >( this );
-				assert( ptr == dynamic_cast< self_type * >( this ) );
 				return *ptr;
 			}
 			const self_type & self() const {
 				const self_type * ptr = static_cast< const self_type * >( this );
-				assert( ptr == dynamic_cast< const self_type * >( this ) );
 				return *ptr;
 			}
 		};
