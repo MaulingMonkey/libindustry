@@ -14,5 +14,6 @@
 #include <industry/algorithm/push.hpp>
 #include <industry/algorithm/call.hpp>
 #include <industry/algorithm/transform.hpp>
+#include <industry/algorithm/standard_algorithm_adaptors.hpp>
 
 #endif //ndef IG_INDUSTRY_ALGORITHM
