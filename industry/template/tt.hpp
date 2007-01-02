@@ -1,10 +1,11 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // Jan  1, 2007 - Created
+// $LastChangedBy$ - $LastChangedDate$
 
 #ifndef INDUSTRY_TEMPLATE_TT_LIMIT
 #define INDUSTRY_TEMPLATE_TT_LIMIT 10
@@ -21,5 +22,7 @@ namespace industry {
 		BOOST_PP_REPEAT_FROM_TO( 1 , BOOST_PP_ADD( 1 , INDUSTRY_TEMPLATE_TT_LIMIT ) , IMPL_TTn , ~ )
 		#undef IMPL_TTn
 	}
-	using ::industry::templates::tt1;
+	#define USING_TTn(z,n,unused) using ::industry::templates::tt ## n ;
+	BOOST_PP_REPEAT_FROM_TO( 1 , BOOST_PP_ADD( 1 , INDUSTRY_TEMPLATE_TT_LIMIT ) , USING_TTn , ~ )
+	#undef USING_TTn
 }
