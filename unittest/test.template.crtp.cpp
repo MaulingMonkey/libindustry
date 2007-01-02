@@ -19,14 +19,24 @@ namespace {
 	template < typename Self , typename , typename > struct class2 : crtp_self< Self > {};
 	template < typename Self , typename > struct class3 {};
 	
-	class user : public crtp_inherit< user , crtp<class1> , crtp2<class2,int,char> , crtp1<class3,bool> > {
+	class user;
+	
+	#define INHERIT crtp_inherit< Self , crtp<class1> , crtp2<class2,int,char> , crtp1<class3,bool> >
+	template < typename Self >
+	class base : public INHERIT { typedef INHERIT inherit;
+	#undef INHERIT
+		using inherit::self;
+		typedef typename inherit::super3  super3;
 	public:
-		user() {
-			BOOST_CHECK(( typeid(self()) == typeid(user) ));
-			BOOST_CHECK(( typeid(class2<user,int,char>::self()) == typeid(user) ));
+		base() {
+			BOOST_CHECK(( typeid(self())                        == typeid(user)   ));
+			BOOST_CHECK(( typeid(class2<user,int,char>::self()) == typeid(user)   ));
+			BOOST_CHECK(( typeid(class3<Self,bool>)             == typeid(super3) ));
 		}
-		virtual ~user() {}
+		virtual ~base() {}
 	};
+	
+	class user : public base<user> {};
 }
 
 void test_template_crtp() {

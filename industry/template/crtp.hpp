@@ -57,6 +57,7 @@ namespace industry {
 		#define TYPEDEF_SUPERN(z,n,unused) typedef ARGN(n) BOOST_PP_CAT( super , BOOST_PP_ADD(1,n) );
 		template < typename Self , BOOST_PP_ENUM_BINARY_PARAMS( INDUSTRY_INHERIT_LIMIT , typename CRTP , = ::industry::nil  BOOST_PP_INTERCEPT ) >
 		class crtp_inherit : public ::industry::inherit< BOOST_PP_ENUM( INDUSTRY_INHERIT_LIMIT , INHERIT_ARGN , ~ ) > {
+		public:
 			BOOST_PP_REPEAT( INDUSTRY_INHERIT_LIMIT , TYPEDEF_SUPERN , ~ )
 		};
 		#undef INHERIT_ARGN
