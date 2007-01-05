@@ -202,6 +202,181 @@ namespace industry {
 		bool prev_permutation(RangeT& range_, BinaryPredicate predicate) {
 			return std::prev_permutation(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
 		}
+
+		template<class RangeT>
+		void push_heap(RangeT& range_) {
+			push_heap(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class BinaryPredicate>
+		void push_heap(RangeT& range_, BinaryPredicate predicate) {
+			std::push_heap(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT>
+		void random_shuffle(RangeT& range_) {
+			random_shuffle(range_, std::rand);
+		}
+
+		template<class RangeT, class RandomNumberGenerator>
+		void random_shuffle(RangeT& range_, RandomNumberGenerator generator) {
+			std::random_shuffle(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), generator);
+		}
+
+		template<class RangeT, class Value>
+		typename range_traits<RangeT>::iterator remove(RangeT& range_, Value const& value) {
+			return std::remove(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value);
+		}
+
+		template<class RangeT, class Predicate>
+		typename range_traits<RangeT>::iterator remove_if(RangeT& range_, Predicate predicate) {
+			return std::remove_if(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT, class OutputIterator, class Value>
+		OutputIterator remove_copy(RangeT const& range_, OutputIterator out, Value const& value) {
+			return std::remove_copy(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), out, value);
+		}
+
+		template<class RangeT, class OutputIterator, class Predicate>
+		OutputIterator remove_copy_if(RangeT const& range_, OutputIterator out, Predicate predicate) {
+			return std::remove_copy_if(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), out, predicate);
+		}
+
+		template<class RangeT>
+		void reverse(RangeT& range_) {
+			std::reverse(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_));
+		}
+
+		template<class RangeT, class OutputIterator>
+		OutputIterator reverse(RangeT const& range_, OutputIterator out) {
+			return std::reverse_copy(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), out);
+		}
+
+		template<class RangeT1, class RangeT2>
+		typename range_traits<RangeT1>::iterator search(RangeT1& range1, RangeT2 const& range2) {
+			return search(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), std::equal<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class BinaryPredicate>
+		typename range_traits<RangeT1>::iterator search(RangeT1& range1, RangeT2 const& range2, BinaryPredicate predicate) {
+			return std::search(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), predicate);
+		}
+
+		template<class RangeT1, class Size, class Type>
+		typename range_traits<RangeT1>::iterator search_n(RangeT1& range1, Size count, Type const& value) {
+			return std::search_n(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), count, value, std::equal<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class Size, class Type, class BinaryPredicate>
+		typename range_traits<RangeT1>::iterator search_n(RangeT1& range1, Size count, Type const& value, BinaryPredicate predicate) {
+			return std::search_n(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), count, value, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_difference(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_difference(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_intersection(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_intersection(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_intersection(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_intersection(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_symmetric_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_symmetric_difference(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_symmetric_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_symmetric_difference(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_union(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_union(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_union(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_union(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT>
+		void sort(RangeT const& range_) {
+			return sort(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class BinaryPredicate>
+		void sort(RangeT const& range_, BinaryPredicate predicate) {
+			return std::sort(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT>
+		void sort_heap(RangeT const& range_) {
+			return sort_heap(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class BinaryPredicate>
+		void sort_heap(RangeT const& range_, BinaryPredicate predicate) {
+			return std::sort_heap(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT, class Predicate>
+		typename range_traits<RangeT>::iterator stable_partition(RangeT range_, Predicate predicate) {
+			std::stable_partition(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT>
+		void stable_sort(RangeT const& range_) {
+			return stable_sort(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class BinaryPredicate>
+		void stable_sort(RangeT const& range_, BinaryPredicate predicate) {
+			return std::stable_sort(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT, class OutputIterator, class UnaryFunction>
+		OutputIterator transform(RangeT range_, OutputIterator out, UnaryFunction predicate) {
+			return std::transform(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), out, predicate);
+		}
+
+		template<class RangeT, class InputIterator, class OutputIterator, class BinaryPredicate>
+		OutputIterator transform(RangeT range_, InputIterator inItor, OutputIterator out, BinaryPredicate predicate) {
+			return std::transform(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), inItor, out, predicate);
+		}
+
+		template<class RangeT>
+		typename range_traits<RangeT>::iterator unique(RangeT const& range) {
+			return unique(range, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class BinaryPredicate>
+		typename range_traits<RangeT>::iterator unique(RangeT const& range_, BinaryPredicate predicate) {
+			return std::unique(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), predicate);
+		}
+
+		template<class RangeT, class OutputIterator>
+		OutputIterator unique_copy(RangeT const& range, OutputIterator out) {
+			return unique_copy(range, out, std::equal_to<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
+		}
+
+		template<class RangeT, class OutputIterator, class BinaryPredicate>
+		OutputIterator unique_copy(RangeT const& range_, OutputIterator out, BinaryPredicate predicate) {
+			return std::unique_copy(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), out, predicate);
+		}
 	}
 
 	using namespace algorithm;
