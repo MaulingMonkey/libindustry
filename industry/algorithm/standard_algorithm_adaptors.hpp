@@ -273,6 +273,46 @@ namespace industry {
 			return std::search_n(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), count, value, predicate);
 		}
 
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_difference(range1, range2, out, std::less<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_difference(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_intersection(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_intersection(range1, range2, out, std::less<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_intersection(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_intersection(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_symmetric_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_symmetric_difference(range1, range2, out, std::less<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_symmetric_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_symmetric_difference(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator>
+		OutputIterator set_union(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
+			return set_union(range1, range2, out, std::less<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+		}
+
+		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
+		OutputIterator set_union(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out, BinaryPredicate predicate) {
+			return std::set_union(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), out, predicate);
+		}
+
 		template<class RangeT>
 		void sort(RangeT const& range_) {
 			return sort(range_, std::less<typename std::iterator_traits<typename range_traits<RangeT>::iterator>::value_type>());
