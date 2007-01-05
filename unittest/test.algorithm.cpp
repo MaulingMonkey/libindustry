@@ -66,7 +66,7 @@ namespace {
 		BOOST_CHECK(p.point == 1);
 	}
 
-	void print_point(child& p, int i) {
+	void print_point(child& p, int) {
 		BOOST_CHECK(p.point == 1);
 	}
 
