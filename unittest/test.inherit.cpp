@@ -16,15 +16,11 @@ namespace {
 	struct foo {};
 	struct bar {};
 	struct baz : industry::inherit< foo , bar , industry::nil , industry::nil > { virtual ~baz(){} };
+	
+	std::auto_ptr< baz > test( new baz );
 }
 void test_inherit( void ) {
-	baz test;
-	BOOST_CHECK(  dynamic_cast<           foo * >( &test ) );
-	BOOST_CHECK(  dynamic_cast<           bar * >( &test ) );
-	BOOST_CHECK( !dynamic_cast< industry::nil * >( (baz*) &test ) ); //[1]
+	BOOST_CHECK(  dynamic_cast<           foo * >( test.get() ) );
+	BOOST_CHECK(  dynamic_cast<           bar * >( test.get() ) );
+	BOOST_CHECK( !dynamic_cast< industry::nil * >( test.get() ) );
 }
-
-/****
-* 1. (baz*) cast supresses GCC warning that the cast cannot succeed
-*    (we know this, we're unit-test verifying this after all!!!)
-****/
