@@ -59,7 +59,7 @@ void test_algorithm_transform_memberptr();
 //void test_win32_registry();
 #endif
 
-test_suite * init_unit_test_suite( int argc , char * argv[] ) {
+test_suite * init_unit_test_suite( int , char *[] ) {
 	using namespace std;
 	cout << "Test started..." << endl;
 
