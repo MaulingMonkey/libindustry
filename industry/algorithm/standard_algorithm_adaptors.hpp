@@ -255,7 +255,7 @@ namespace industry {
 
 		template<class RangeT1, class RangeT2>
 		typename range_traits<RangeT1>::iterator search(RangeT1& range1, RangeT2 const& range2) {
-			return search(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), std::equal<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return search(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), range_traits<RangeT2>::begin(range2), range_traits<RangeT2>::end(range2), std::equal<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class BinaryPredicate>
@@ -265,7 +265,7 @@ namespace industry {
 
 		template<class RangeT1, class Size, class Type>
 		typename range_traits<RangeT1>::iterator search_n(RangeT1& range1, Size count, Type const& value) {
-			return std::search_n(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), count, value, std::equal<typename std::iterator_traits<range_traits<RangeT1>::iterator>::value_type>());
+			return std::search_n(range_traits<RangeT1>::begin(range1), range_traits<RangeT1>::end(range1), count, value, std::equal<typename std::iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
 		}
 
 		template<class RangeT1, class Size, class Type, class BinaryPredicate>
@@ -275,7 +275,7 @@ namespace industry {
 
 		template<class RangeT1, class RangeT2, class OutputIterator>
 		OutputIterator set_difference(RangeT1 const& range1, RangeT2 const& range2, OutputIterator out) {
-			return set_difference(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::iterator>::value_type>());
+			return set_difference(range1, range2, out, std::less<typename iterator_traits<typename range_traits<RangeT1>::const_iterator>::value_type>());
 		}
 
 		template<class RangeT1, class RangeT2, class OutputIterator, class BinaryPredicate>
