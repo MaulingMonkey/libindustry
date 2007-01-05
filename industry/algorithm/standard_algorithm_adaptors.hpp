@@ -386,7 +386,7 @@ namespace industry {
 
 		template<class RangeT, class Value, class BinaryPredicate>
 		bool binary_search(RangeT const& range_, Value const& value, BinaryPredicate predicate) {
-			return std::binary_search(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predciate);
+			return std::binary_search(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predicate);
 		}
 
 		template<class RangeT, class Value>
@@ -396,7 +396,7 @@ namespace industry {
 
 		template<class RangeT, class Value, class BinaryPredicate>
 		typename range_traits<RangeT>::iterator lower_bound(RangeT const& range_, Value const& value, BinaryPredicate predicate) {
-			return std::lower_bound(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predciate);
+			return std::lower_bound(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predicate);
 		}
 
 		template<class RangeT, class Value>
@@ -406,7 +406,7 @@ namespace industry {
 
 		template<class RangeT, class Value, class BinaryPredicate>
 		typename range_traits<RangeT>::iterator upper_bound(RangeT const& range_, Value const& value, BinaryPredicate predicate) {
-			return std::upper_bound(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predciate);
+			return std::upper_bound(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predicate);
 		}
 
 		template<class RangeT, class Value>
@@ -416,7 +416,7 @@ namespace industry {
 
 		template<class RangeT, class Value, class BinaryPredicate>
 		range<typename range_traits<RangeT>::iterator> equal_range(RangeT const& range_, Value const& value, BinaryPredicate predicate) {
-			std::pair<typename range_traits<RangeT>::iterator, typename range_traits<RangeT>::iterator> r = std::equal_range(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predciate);
+			std::pair<typename range_traits<RangeT>::iterator, typename range_traits<RangeT>::iterator> r = std::equal_range(range_traits<RangeT>::begin(range_), range_traits<RangeT>::end(range_), value, predicate);
 			return range<typename range_traits<RangeT>::iterator>(r.first, r.second);
 		}
 	}
