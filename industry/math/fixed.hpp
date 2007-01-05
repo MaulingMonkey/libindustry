@@ -16,6 +16,7 @@
 
 #define INDUSTRY_FIXED_DIV_TRACE(x)// std::cout << x << std::endl
 
+#include <industry/math/utility.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/static_assert.hpp>
