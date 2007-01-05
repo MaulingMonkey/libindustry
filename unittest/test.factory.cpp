@@ -95,7 +95,7 @@ void test_factory_interface( void ) {
 	factory.template type< foo >( typeid(foo) );
 	factory.template auto_type< bar >();
 
-	boost::array< industry::type , 2 > types = { industry::type( typeid(foo) ) , industry::type( typeid(bar) ) };
+	boost::array< industry::type , 2 > types = {{ typeid(foo) , typeid(bar) }};
 	boost::array< InterfaceT , 2 > example;
 	for ( unsigned i = 0 ; i < 2 ; ++i ) {
 		example[i] = factory.create( types[i] , 42 );
