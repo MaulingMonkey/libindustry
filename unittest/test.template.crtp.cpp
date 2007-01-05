@@ -12,6 +12,12 @@
 #include <industry/template/crtp.hpp>
 #include <boost/test/unit_test.hpp>
 
+#if defined( _MSVC_VER )
+void test_template_crtp() {
+	BOOST_CHECK((!"template/crtp.hpp --- test disabled (does not work on MSVC)"));
+}
+
+#else
 namespace {
 	using namespace ::industry::templates;
 	
@@ -47,3 +53,5 @@ void test_template_crtp() {
 	BOOST_CHECK((  dynamic_cast< class3<user,bool>     * >( (user*) &example ) ));
 	BOOST_CHECK(( !dynamic_cast< ::industry::nil       * >( (user*) &example ) ));
 }
+
+#endif
