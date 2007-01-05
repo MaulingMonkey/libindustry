@@ -35,21 +35,21 @@ namespace {
 	public:
 		ctor_method ctor_method_used;
 
-		foo( void )          : ctor_method_used( void_ctor_method    ) {}
-		foo( int n )         : ctor_method_used( int_ctor_method     ) {}
-		foo( char c )        : ctor_method_used( char_ctor_method    ) {}
-		foo( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-		foo( const foo & f ) : ctor_method_used( f.ctor_method_used  ) {}
+		foo( void )          : base(), ctor_method_used( void_ctor_method    ) {}
+		foo( int )           : base(), ctor_method_used( int_ctor_method     ) {}
+		foo( char )          : base(), ctor_method_used( char_ctor_method    ) {}
+		foo( int , int )     : base(), ctor_method_used( int_int_ctor_method ) {}
+		foo( const foo & f ) : base(), ctor_method_used( f.ctor_method_used  ) {}
 	};
 	class bar : public base {
 	public:
 		ctor_method ctor_method_used;
 
-		bar( void )          : ctor_method_used( void_ctor_method    ) {}
-		bar( int n )         : ctor_method_used( int_ctor_method     ) {}
-		bar( char c )        : ctor_method_used( char_ctor_method    ) {}
-		bar( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-		bar( const bar & b ) : ctor_method_used( b.ctor_method_used  ) {}
+		bar( void )          : base(), ctor_method_used( void_ctor_method    ) {}
+		bar( int )           : base(), ctor_method_used( int_ctor_method     ) {}
+		bar( char )          : base(), ctor_method_used( char_ctor_method    ) {}
+		bar( int , int )     : base(), ctor_method_used( int_int_ctor_method ) {}
+		bar( const bar & b ) : base(), ctor_method_used( b.ctor_method_used  ) {}
 	};
 }
 

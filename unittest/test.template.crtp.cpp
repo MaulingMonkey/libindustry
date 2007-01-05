@@ -46,12 +46,12 @@ namespace {
 }
 
 void test_template_crtp() {
-	user example;
+	std::auto_ptr< user > example( new user ); //FIXME -- Can't move this into the anon namespace -- why?
 	
-	BOOST_CHECK((  dynamic_cast< class1<user>          * >( (user*) &example ) ));
-	BOOST_CHECK((  dynamic_cast< class2<user,int,char> * >( (user*) &example ) ));
-	BOOST_CHECK((  dynamic_cast< class3<user,bool>     * >( (user*) &example ) ));
-	BOOST_CHECK(( !dynamic_cast< ::industry::nil       * >( (user*) &example ) ));
+	BOOST_CHECK((  dynamic_cast< class1<user>          * >( example.get() ) ));
+	BOOST_CHECK((  dynamic_cast< class2<user,int,char> * >( example.get() ) ));
+	BOOST_CHECK((  dynamic_cast< class3<user,bool>     * >( example.get() ) ));
+	BOOST_CHECK(( !dynamic_cast< ::industry::nil       * >( example.get() ) ));
 }
 
 #endif
