@@ -12,7 +12,7 @@ namespace industry {
 	namespace math {
 		namespace detail {
 			template < bool is_signed , typename T > struct positive { static bool impl( const T & value ) { return value >= 0; } };
-			template < typename T > struct positive< false , T >     { static bool impl( const T & value ) { return true; } };
+			template < typename T > struct positive< false , T >     { static bool impl( const T &       ) { return true; } };
 		}
 	
 		template < typename T >
