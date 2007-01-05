@@ -26,7 +26,7 @@ namespace industry {
 	struct member_function_ptr_traits< R (C::*)( BOOST_PP_ENUM_PARAMS( n , A ) ) > {        \
 		typedef R result_type;                                                              \
 		typedef C class_type;                                                               \
-		BOOST_PP_REPEAT( n , MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF , arg );                    \
+		BOOST_PP_REPEAT( n , MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF , arg )                     \
 	}; /* -------------------------------------------------------------------------------- */
 	
 	#define MEMBER_FUNCTION_PTR_TRAITS_CONST(z,n,unused)                                    \
@@ -34,15 +34,15 @@ namespace industry {
 	struct member_function_ptr_traits< R (C::*)( BOOST_PP_ENUM_PARAMS( n , A ) ) const > {  \
 		typedef R result_type;                                                              \
 		typedef const C class_type;                                                         \
-		BOOST_PP_REPEAT( n , MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF , arg );                    \
+		BOOST_PP_REPEAT( n , MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF , arg )                     \
 	}; /* -------------------------------------------------------------------------------- */
 	
-	BOOST_PP_REPEAT(10,MEMBER_FUNCTION_PTR_TRAITS,~);
-	BOOST_PP_REPEAT(10,MEMBER_FUNCTION_PTR_TRAITS_CONST,~);
+	BOOST_PP_REPEAT(10,MEMBER_FUNCTION_PTR_TRAITS,~)
+	BOOST_PP_REPEAT(10,MEMBER_FUNCTION_PTR_TRAITS_CONST,~)
 	
-	//#undef MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF
-	//#undef MEMBER_FUNCTION_PTR_TRAITS
-	//#undef MEMBER_FUNCTION_PTR_TRAITS_CONST
+	#undef MEMBER_FUNCTION_PTR_TRAITS_TYPEDEF
+	#undef MEMBER_FUNCTION_PTR_TRAITS
+	#undef MEMBER_FUNCTION_PTR_TRAITS_CONST
 }
 
 #endif //ndef IG_INDUSTRY_MEMBER_FUNCTION_PTR_TRAITS

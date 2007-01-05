@@ -66,7 +66,7 @@ namespace {
 		BOOST_CHECK(p.point == 1);
 	}
 
-	void print_point(child& p, int i) {
+	void print_point(child& p, int) {
 		BOOST_CHECK(p.point == 1);
 	}
 	
@@ -122,21 +122,21 @@ namespace {
 		base1() : n(0), cn(0) {};
 	};
 
-	void test_r(int&) {};
-	void test_cr(const int&) {};
+	void test_r(int&) {}
+	void test_cr(const int&) {}
 
-	void set_one(int& r) { r = 1; };
-	void check_one(const int& r) { BOOST_CHECK(r == 1); };
-	void set_two(int& r) { r = 2; };
-	void check_two(const int& r) { BOOST_CHECK(r == 2); };
+	void set_one(int& r) { r = 1; }
+	void check_one(const int& r) { BOOST_CHECK(r == 1); }
+	void set_two(int& r) { r = 2; }
+	void check_two(const int& r) { BOOST_CHECK(r == 2); }
 
 	template<typename T>
-	T& by_ref_(T* t) { return *t; };
+	T& by_ref_(T* t) { return *t; }
 	template<typename T>
-	T* by_ptr_(T& t) { return &t; };
+	T* by_ptr_(T& t) { return &t; }
 
-	const base1* id_test(const base1 * p) { return p; };
-};
+	const base1* id_test(const base1 * p) { return p; }
+}
 
 void test_algorithm_transform_memberptr() {
 	using namespace industry;
@@ -167,4 +167,4 @@ void test_algorithm_transform_memberptr() {
 	ptr_vec | transform(&base1::n) | call(check_one);
 	ptr_vec | transform(&base1::n) | call(set_two);
 	val_tab | transform(&base1::n) | call(check_two);
-};
+}

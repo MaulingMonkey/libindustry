@@ -37,12 +37,12 @@ namespace industry {
 
 		template < typename R, typename A1 >
 		call_processor< boost::function<R (A1)> > call( R (*function)(A1) ) {
-			return call(boost::function<R (A1)>(function));
+			return call_processor< boost::function< R(A1)> >(function);
 		}
 
 		template < typename R, typename C >
 		call_processor< boost::function<R (C&)> > call( R (C::*function)() ) {
-			return call(boost::function<R (C&)>(function));
+			return call_processor< boost::function< R(C&)> >(function);
 		}
 
 		template< typename R, typename A1 >

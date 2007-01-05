@@ -35,21 +35,21 @@ namespace {
 	public:
 		ctor_method ctor_method_used;
 
-		foo( void )          : ctor_method_used( void_ctor_method    ) {}
-		foo( int n )         : ctor_method_used( int_ctor_method     ) {}
-		foo( char c )        : ctor_method_used( char_ctor_method    ) {}
-		foo( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-		foo( const foo & f ) : ctor_method_used( f.ctor_method_used  ) {}
+		foo( void )          : base(), ctor_method_used( void_ctor_method    ) {}
+		foo( int )           : base(), ctor_method_used( int_ctor_method     ) {}
+		foo( char )          : base(), ctor_method_used( char_ctor_method    ) {}
+		foo( int , int )     : base(), ctor_method_used( int_int_ctor_method ) {}
+		foo( const foo & f ) : base(), ctor_method_used( f.ctor_method_used  ) {}
 	};
 	class bar : public base {
 	public:
 		ctor_method ctor_method_used;
 
-		bar( void )          : ctor_method_used( void_ctor_method    ) {}
-		bar( int n )         : ctor_method_used( int_ctor_method     ) {}
-		bar( char c )        : ctor_method_used( char_ctor_method    ) {}
-		bar( int a , int b ) : ctor_method_used( int_int_ctor_method ) {}
-		bar( const bar & b ) : ctor_method_used( b.ctor_method_used  ) {}
+		bar( void )          : base(), ctor_method_used( void_ctor_method    ) {}
+		bar( int )           : base(), ctor_method_used( int_ctor_method     ) {}
+		bar( char )          : base(), ctor_method_used( char_ctor_method    ) {}
+		bar( int , int )     : base(), ctor_method_used( int_int_ctor_method ) {}
+		bar( const bar & b ) : base(), ctor_method_used( b.ctor_method_used  ) {}
 	};
 }
 
@@ -95,7 +95,7 @@ void test_factory_interface( void ) {
 	factory.template type< foo >( typeid(foo) );
 	factory.template auto_type< bar >();
 
-	boost::array< industry::type , 2 > types = { typeid(foo) , typeid(bar) };
+	boost::array< industry::type , 2 > types = {{ typeid(foo) , typeid(bar) }};
 	boost::array< InterfaceT , 2 > example;
 	for ( unsigned i = 0 ; i < 2 ; ++i ) {
 		example[i] = factory.create( types[i] , 42 );

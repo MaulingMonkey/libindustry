@@ -16,6 +16,7 @@
 
 #define INDUSTRY_FIXED_DIV_TRACE(x)// std::cout << x << std::endl
 
+#include <industry/math/utility.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/static_assert.hpp>
@@ -46,7 +47,7 @@ namespace industry {
 				return raw( src * (1u << offset) );
 			}
 			static fixed round0( double src ) {
-				return raw( src * (1u << offset) );
+				return raw( storage_type( src * (1u << offset) ) );
 			}
 			static fixed round0( const char * src ) {
 				return round0( boost::lexical_cast< double >( src ) );
@@ -103,9 +104,8 @@ namespace industry {
 				const unsigned LO = offset;
 				
 				//reject sign incompatibilities:
-				if ( std::numeric_limits<LST>::is_signed && !std::numeric_limits<RST>::is_signed && lhs.data          < 0 ) return false;
-				if ( !std::numeric_limits<LST>::is_signed && std::numeric_limits<RST>::is_signed && rhs.to_raw_data() < 0 ) return false;
-				
+				if ( is_positive(lhs.data) != is_positive(rhs.to_raw_data()) ) return false;
+								
 				//common use type:
 				typedef typename boost::mpl::if_c<
 					sizeof(LST) == sizeof(RST)
@@ -208,7 +208,6 @@ namespace industry {
 			fixed & operator/=( const fixed & other ) {
 				//TODO: Sanity check this.  Yet again.  Hell, just sanity check it forever.
 				
-				#if 1
 				storage_type value = 0;
 				storage_type numer = data;       //const bool numer_pos = numer >= 0;
 				storage_type denom = other.data; //const bool denom_pos = denom >= 0;
@@ -217,12 +216,6 @@ namespace industry {
 	
 				const storage_type storage_max = std::numeric_limits< storage_type >::max();
 				const storage_type storage_min = std::numeric_limits< storage_type >::min();
-				#if 0 //unused
-				const storage_type storage_dir = ((numer>=0) == (denom>=0))
-				                               ? storage_max
-				                               : storage_min
-				                               ;
-				#endif
 				
 				//1. Factor out as many 2s from denominator as possible
 				while ( remaining_shift && !(denom%2) ) denom /= 2 , --remaining_shift;
@@ -231,16 +224,16 @@ namespace industry {
 				//2. Deal with the (remaining) numerator
 				do {
 					//2a. Multiply as many remaining 2s as possibe (without overflow)
-					if (numer>=0) while ( remaining_shift && numer < storage_max/2 ) numer *= 2 , --remaining_shift;
-					else          while ( remaining_shift && numer > storage_min/2 ) numer *= 2 , --remaining_shift;
+					if (is_positive(numer)) while ( remaining_shift && numer < storage_max/2 ) numer *= 2 , --remaining_shift;
+					else                    while ( remaining_shift && numer > storage_min/2 ) numer *= 2 , --remaining_shift;
 					INDUSTRY_FIXED_DIV_TRACE( "[2a] => " << value << " + " << numer << " / " << denom << " << " << remaining_shift );
 					
 					//2b. Over/underflow rejection
-					const storage_type remaining = ((numer>=0) == (denom>=0))
+					const storage_type remaining = (is_positive(numer) == is_positive(denom))
 					                             ? /*then*/ (storage_max-value)
 					                             : /*else*/ (storage_min-value)
 					                             ;
-					if ((numer>=0) == (denom>=0)) {
+					if (is_positive(numer) == is_positive(denom)) {
 						assert( storage_max / (1<<remaining_shift) >= numer/denom && "overflow" ); //quotient alone overflows
 						assert( remaining >= numer/denom*(1<<remaining_shift)     && "overflow" ); //quotient + remaining overflows
 					}
@@ -251,19 +244,19 @@ namespace industry {
 					
 					//2c. If we have (abs(numer/denom) < 1) and are unable to shift either operand,
 					//    forcibly do so (round down) to avoid deadlock
-					const bool inadequate_ratio = ((numer>=0)==(denom>=0))
+					const bool inadequate_ratio = (is_positive(numer)==is_positive(denom))
 					                            ? (numer/denom<storage_type(+1))
 					                            : (numer/denom>storage_type(-1))
 					                            ;
-					const bool numer_pos_locked = ((numer>=0)==(denom>=0))
+					const bool numer_pos_locked = (is_positive(numer)==is_positive(denom))
 					                            ? (storage_max/2>=numer)
 					                            : (storage_min/2<=numer)
 					                            ;
 					const bool denom_pos_locked = (denom%2);
 					
 					if ( remaining_shift && inadequate_ratio && numer_pos_locked && denom_pos_locked ) {
-						if (denom>=0) denom = (denom+1)/2;
-						else          denom = (denom-1)/2;
+						if (is_positive(denom)) denom = (denom+1)/2;
+						else                    denom = (denom-1)/2;
 						--remaining_shift;
 						INDUSTRY_FIXED_DIV_TRACE( "[2c] => " << value << " + " << numer << " / " << denom << " << " << remaining_shift );
 					}
@@ -275,81 +268,6 @@ namespace industry {
 				
 				//3. Finish
 				data = value;
-				return *this;
-				
-				#elif 1 //best algo yet
-				
-				const storage_type storage_max = std::numeric_limits< storage_type >::max();
-				const storage_type storage_min = std::numeric_limits< storage_type >::min();
-				
-				unsigned shift = offset;
-				storage_type value = data;
-				
-				std::cout << "( " << data << ">>" << offset << "   /   " << other.data << ">>" << offset << "   ==   ";
-				if ( value >= 0 ) while ( shift && (storage_max/2 >= value)) value *= 2 , --shift;
-				else              while ( shift && (storage_min/2 <= value)) value *= 2 , --shift;
-				std::cout << value << ">>" << offset << "   /   ";
-				
-				storage_type denom = other.data;
-				
-				while ( shift && !(denom%2) ) denom /= 2 , --shift;
-				std::cout << denom << ">>" << shift << "   ==   ";
-				value /= denom;
-				while ( shift ) {
-					assert( storage_max/2 >= value && "overflow" );
-					assert( storage_min/2 <= value && "underflow" );
-					value *= 2;
-					--shift;
-				}
-				std::cout << value << ">>" << offset << std::endl;
-				
-				data = value;
-				
-				return *this;
-				 
-				#elif 0
-				
-				storage_type remainder = data;
-				storage_type result = 0;
-				
-				for ( unsigned i = 0 ; i < offset ; ++i ) {
-					storage_type iter_precalc = remainder * storage_type(1u << i) / other.data;
-					storage_type iter_result = iter_precalc * storage_type(1u << (offset-i));
-					remainder -= iter_precalc * other.data / storage_type(1u << i);
-					result += iter_result;
-				}
-				
-				data = result;
-				
-				#elif 0
-				unsigned factor = std::min( data > 0 ? unsigned( std::numeric_limits< storage_type >::max() / data ) - 1
-					                                 : unsigned( std::numeric_limits< storage_type >::min() / data ) - 1
-					                      , offset - 1 );
-				data = (factor ? storage_type(1u<<factor) : 1) * data / other.data * ((offset-factor) ? storage_type(1u<<(offset-factor)) : 1);
-				#elif 0
-				
-				unsigned offset2 = sizeof( storage_type ) * CHAR_BIT - (std::numeric_limits< storage_type >::is_signed ? 1 : 0 ) - offset - 1;
-				
-				storage_type factor( 1u << ((offset > 0) ? (offset) : 0) );
-				storage_type factor2( 1u << ((offset2 > 0) ? (offset2) : 0) );
-				storage_type factord = factor / factor2;
-				
-				storage_type correct_magnitude = data / other.data * factor;
-				storage_type correct_detail    = factor2 * data / other.data * factord;
-				
-				data = correct_magnitude + correct_detail % factor;
-				
-				#else
-				
-				storage_type factor( 1u << (offset ? offset : 0) );
-				storage_type correct_magnitude = data / other.data * factor;
-				storage_type remainder = data - (data / other.data * other.data);
-				storage_type correct_detail = remainder * factor / other.data;
-				
-				data = correct_magnitude + correct_detail;
-				
-				#endif
-				
 				return *this;
 			}
 			friend fixed operator*( const fixed & lhs , storage_type rhs ) {

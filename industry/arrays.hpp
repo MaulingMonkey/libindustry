@@ -17,7 +17,7 @@ namespace industry {
 		template < typename T , unsigned N > const T * end  ( const T (&array)[N] ) { return array + N; }
 		template < typename T , unsigned N > T *       begin( T       (&array)[N] ) { return array;     }
 		template < typename T , unsigned N > T *       end  ( T       (&array)[N] ) { return array + N; }
-		template < typename T , unsigned N > unsigned  size ( const T (&array)[N] ) { return N;         }
+		template < typename T , unsigned N > unsigned  size ( const T (&     )[N] ) { return N;         }
 	}
 	using namespace arrays;
 }
