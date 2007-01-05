@@ -56,6 +56,15 @@ namespace industry {
 			return !(lhs==rhs);
 		}
 	};
+	
+	template < typename Iterator >
+	n_iterator< Iterator > make_n_iterator( const Iterator & source ) {
+		return n_iterator< Iterator >( source );
+	}
+	template < typename Iterator >
+	n_iterator< Iterator > make_n_iterator( const Iterator & source , size_t n ) {
+		return n_iterator< Iterator >( source , n );
+	}
 }
 
 #endif //ndef IG_INDUSTRY_ITERATOR_N

@@ -37,10 +37,18 @@ void test_iterator_n( void ) {
 	std::vector< int > result6( n_iterator< int* >( begin(data) )
 							  , n_iterator< int* >( end(data) , 4 )
 							  );
+	std::vector< int > result7( make_n_iterator( example.begin()   )
+	                          , make_n_iterator( example.end() , 4 )
+	                          );
+	std::vector< int > result8( make_n_iterator( begin(data)   )
+	                          , make_n_iterator( end(data) , 4 )
+	                          );
 	BOOST_CHECK( result1.size() == 4 && std::equal(result1.begin(),result1.end(),begin(data)) );
 	BOOST_CHECK( result2.size() == 4 && std::equal(result2.begin(),result2.end(),begin(data)) );
 	BOOST_CHECK( result3.size() == 8 && std::equal(result3.begin(),result3.end(),begin(data)) );
 	BOOST_CHECK( result4.size() == 8 && std::equal(result4.begin(),result4.end(),begin(data)) );
 	BOOST_CHECK( result5.size() == 0 );
 	BOOST_CHECK( result6.size() == 4 && std::equal(result6.begin(),result6.end(),begin(data)) );
+	BOOST_CHECK( result7.size() == 4 && std::equal(result7.begin(),result7.end(),begin(data)) );
+	BOOST_CHECK( result8.size() == 4 && std::equal(result8.begin(),result8.end(),begin(data)) );
 }
