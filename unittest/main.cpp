@@ -53,6 +53,7 @@ void test_template_tt();
 void test_algorithm_call();
 void test_algorithm_transform();
 void test_algorithm_transform_memberptr();
+void test_container_default_allocation_policy();
 
 
 #if defined( INDUSTRY_OS_WINDOWS )
@@ -65,6 +66,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
 
+	test->add(BOOST_TEST_CASE(test_container_default_allocation_policy));
 	test->add(BOOST_TEST_CASE(test_algorithm_transform_memberptr));
 	test->add(BOOST_TEST_CASE(test_algorithm_transform));
 	test->add(BOOST_TEST_CASE(test_algorithm_call));
