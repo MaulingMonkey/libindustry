@@ -104,9 +104,8 @@ namespace industry {
 				const unsigned LO = offset;
 				
 				//reject sign incompatibilities:
-				if ( std::numeric_limits<LST>::is_signed && !std::numeric_limits<RST>::is_signed && lhs.data          < 0 ) return false;
-				if ( !std::numeric_limits<LST>::is_signed && std::numeric_limits<RST>::is_signed && rhs.to_raw_data() < 0 ) return false;
-				
+				if ( is_positive(lhs.data) != is_positive(rhs.to_raw_data()) ) return false;
+								
 				//common use type:
 				typedef typename boost::mpl::if_c<
 					sizeof(LST) == sizeof(RST)
@@ -232,16 +231,16 @@ namespace industry {
 				//2. Deal with the (remaining) numerator
 				do {
 					//2a. Multiply as many remaining 2s as possibe (without overflow)
-					if (numer>=0) while ( remaining_shift && numer < storage_max/2 ) numer *= 2 , --remaining_shift;
-					else          while ( remaining_shift && numer > storage_min/2 ) numer *= 2 , --remaining_shift;
+					if (is_positive(numer)) while ( remaining_shift && numer < storage_max/2 ) numer *= 2 , --remaining_shift;
+					else                    while ( remaining_shift && numer > storage_min/2 ) numer *= 2 , --remaining_shift;
 					INDUSTRY_FIXED_DIV_TRACE( "[2a] => " << value << " + " << numer << " / " << denom << " << " << remaining_shift );
 					
 					//2b. Over/underflow rejection
-					const storage_type remaining = ((numer>=0) == (denom>=0))
+					const storage_type remaining = (is_positive(numer) == is_positive(denom))
 					                             ? /*then*/ (storage_max-value)
 					                             : /*else*/ (storage_min-value)
 					                             ;
-					if ((numer>=0) == (denom>=0)) {
+					if (is_positive(numer) == is_positive(denom)) {
 						assert( storage_max / (1<<remaining_shift) >= numer/denom && "overflow" ); //quotient alone overflows
 						assert( remaining >= numer/denom*(1<<remaining_shift)     && "overflow" ); //quotient + remaining overflows
 					}
@@ -252,11 +251,11 @@ namespace industry {
 					
 					//2c. If we have (abs(numer/denom) < 1) and are unable to shift either operand,
 					//    forcibly do so (round down) to avoid deadlock
-					const bool inadequate_ratio = ((numer>=0)==(denom>=0))
+					const bool inadequate_ratio = (is_positive(numer)==is_positive(denom))
 					                            ? (numer/denom<storage_type(+1))
 					                            : (numer/denom>storage_type(-1))
 					                            ;
-					const bool numer_pos_locked = ((numer>=0)==(denom>=0))
+					const bool numer_pos_locked = (is_positive(numer)==is_positive(denom))
 					                            ? (storage_max/2>=numer)
 					                            : (storage_min/2<=numer)
 					                            ;
