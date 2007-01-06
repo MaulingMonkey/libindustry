@@ -34,20 +34,20 @@ namespace {
 		using inherit::self;
 		typedef typename inherit::super3  super3;
 	public:
-		base() {
+		virtual ~base() {}
+		void test() {
 			BOOST_CHECK(( typeid(self())                        == typeid(user)   ));
 			BOOST_CHECK(( typeid(class2<user,int,char>::self()) == typeid(user)   ));
 			BOOST_CHECK(( typeid(class3<Self,bool>)             == typeid(super3) ));
 		}
-		virtual ~base() {}
 	};
 	
 	class user : public base<user> {};
+	std::auto_ptr< user > example( new user );
 }
 
 void test_template_crtp() {
-	std::auto_ptr< user > example( new user ); //FIXME -- Can't move this into the anon namespace -- why?
-	
+	example->test();
 	BOOST_CHECK((  dynamic_cast< class1<user>          * >( example.get() ) ));
 	BOOST_CHECK((  dynamic_cast< class2<user,int,char> * >( example.get() ) ));
 	BOOST_CHECK((  dynamic_cast< class3<user,bool>     * >( example.get() ) ));
