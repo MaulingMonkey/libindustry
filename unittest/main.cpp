@@ -39,7 +39,7 @@ void test_inherit();
 void test_iterator_cast();
 void test_iterator_n();
 void test_iterator_traits();
-void test_iterator_virtual_forward();
+void test_iterator_virtual();
 void test_math_fixed();
 void test_math_vector();
 void test_multitype();
@@ -76,7 +76,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test->add(BOOST_TEST_CASE(test_iterator_cast));
 	test->add(BOOST_TEST_CASE(test_iterator_n));
 	test->add(BOOST_TEST_CASE(test_iterator_traits));
-	test->add(BOOST_TEST_CASE(test_iterator_virtual_forward));
+	test->add(BOOST_TEST_CASE(test_iterator_virtual));
 	test->add(BOOST_TEST_CASE(test_math_fixed));
 	test->add(BOOST_TEST_CASE(test_math_vector));
 	test->add(BOOST_TEST_CASE(test_multitype));

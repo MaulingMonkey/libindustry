@@ -45,16 +45,16 @@ namespace industry {
 		
 		template < typename Interface , typename ForwardIterator >
 		class forward_impl : public Interface {
-			ForwardIterator i;
 		protected:
+			ForwardIterator i;
 			typedef typename Interface::value_type value_type;
 		public:
 			forward_impl( const ForwardIterator & i ): i(i) {}
 			
 			virtual value_type& get_reference() const { return *i; }
 			virtual value_type* get_pointer()   const { return &*i; }
-			virtual std::auto_ptr< forward_impl_interface< value_type > > clone() const {
-				return std::auto_ptr< forward_impl_interface< value_type > >( new forward_impl(*this) );
+			virtual std::auto_ptr< Interface > clone() const {
+				return std::auto_ptr< Interface >( new forward_impl(*this) );
 			}
 			virtual void increment() { ++i; }
 			virtual bool equals( const forward_impl_interface< value_type > & other ) const {
