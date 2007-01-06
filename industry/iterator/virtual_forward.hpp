@@ -32,7 +32,7 @@ namespace industry {
 			
 			virtual value_type& get_reference() const = 0;
 			virtual value_type* get_pointer()   const = 0;
-			virtual std::auto_ptr< forward_impl_interface< value_type > > clone() const = 0;
+			virtual forward_impl_interface< value_type > * clone() const = 0;
 			virtual void increment() = 0;
 			virtual bool equals( const forward_impl_interface< value_type > & other ) const = 0;
 			
@@ -53,8 +53,8 @@ namespace industry {
 			
 			virtual value_type& get_reference() const { return *i; }
 			virtual value_type* get_pointer()   const { return &*i; }
-			virtual std::auto_ptr< Interface > clone() const {
-				return std::auto_ptr< Interface >( new forward_impl(*this) );
+			virtual Interface * clone() const {
+				return new forward_impl(*this);
 			}
 			virtual void increment() { ++i; }
 			virtual bool equals( const forward_impl_interface< value_type > & other ) const {

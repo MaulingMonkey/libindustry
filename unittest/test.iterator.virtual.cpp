@@ -7,6 +7,13 @@
 // Jan  5, 2007 - virtual_forward => virtual
 // Dec 31, 2006 - Created
 
+#if 1
+#include <industry/iterator/detail/virtual_impl.hpp>
+
+void test_iterator_virtual () {}
+
+#else // Previous old code -- being replaced
+
 #include <industry/iterator/virtual_bidirectional.hpp>
 #include <industry/iterator/virtual_forward.hpp>
 #include <industry/arrays.hpp>
@@ -42,5 +49,7 @@ namespace {
 
 void test_iterator_virtual() {
 	test_forward_iteration< ::industry::virtual_forward_iterator >();
-	//test_forward_iteration< ::industry::virtual_bidirectional_iterator >();
+	test_forward_iteration< ::industry::virtual_bidirectional_iterator >();
 }
+
+#endif

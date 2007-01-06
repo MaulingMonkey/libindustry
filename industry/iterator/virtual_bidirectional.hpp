@@ -25,7 +25,7 @@ namespace industry {
 		public:
 			typedef ValueT value_type;
 			
-			virtual std::auto_ptr< bidirectional_impl_interface< value_type > > clone() const = 0;
+			virtual bidirectional_impl_interface< value_type > * clone() const = 0;
 			virtual void decrement() = 0;
 			
 			template < typename BidirectionalIterator > struct with_iterator {
@@ -44,8 +44,8 @@ namespace industry {
 		public:
 			bidirectional_impl( const BidirectionalIterator & i ): super(i) {}
 			
-			virtual std::auto_ptr< bidirectional_impl_interface< value_type > > clone() const {
-				return std::auto_ptr< Interface >( new bidirectional_impl(*this) );
+			virtual bidirectional_impl_interface< value_type > * clone() const {
+				return new bidirectional_impl(*this);
 			}
 			virtual void decrement() { --i; }
 		};
@@ -64,6 +64,7 @@ namespace industry {
 			typedef typename super::pointer    pointer;
 			
 			bidirectional_base(): super() {}
+			bidirectional_base( const super & copy ): super(copy) {}
 			bidirectional_base( const bidirectional_base & copy ): super(copy) {}
 			
 			template < typename BidirectionalIterator >
