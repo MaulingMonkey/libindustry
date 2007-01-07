@@ -12,7 +12,7 @@
 #include <industry/template/crtp.hpp>
 #include <boost/test/unit_test.hpp>
 
-#if defined( _MSVC_VER )
+#if defined( _MSC_VER )
 void test_template_crtp() {
 	BOOST_CHECK((!"template/crtp.hpp --- test disabled (does not work on MSVC)"));
 }
