@@ -64,6 +64,9 @@ namespace industry {
 				using virtual_impl_base_bidirectional< Self , Value , Category , Iterator >::i;
 			public:
 				virtual void move_by( ptrdiff_t d ) { i += d; }
+				virtual ptrdiff_t distance_to( const virtual_random_access_impl_interface & other ) const {
+					return static_cast< const virtual_impl_base_random_access<Self,Value,Category,Iterator> & >(other).i - i;
+				}
 			};
 			
 			template < typename Value , typename Category , typename Iterator > struct virtual_impl;

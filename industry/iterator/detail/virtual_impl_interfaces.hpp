@@ -35,6 +35,7 @@ namespace industry {
 			struct virtual_random_access_impl_interface {
 				virtual ~virtual_random_access_impl_interface() {}
 				virtual void move_by( ptrdiff_t ) = 0;
+				virtual ptrdiff_t distance_to( const virtual_random_access_impl_interface & other ) const = 0;
 			};
 			
 			template < typename Value , typename Category , typename Iterator > struct virtual_impl;

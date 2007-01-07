@@ -9,6 +9,7 @@
 
 #include <industry/iterator/virtual_bidirectional.hpp>
 #include <industry/iterator/virtual_forward.hpp>
+#include <industry/iterator/virtual_random_access.hpp>
 #include <industry/arrays.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
@@ -23,6 +24,12 @@ namespace {
 
 		int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 		std::vector< int > example( begin(data) , end(data) );
+		
+		int_viter begin(example.begin());
+		int_viter i5(example.begin());
+		std::advance(i5,5);
+		BOOST_CHECK_EQUAL( int(std::distance(begin,i5)) , int(5) );
+
 		BOOST_CHECK( std::equal( example.begin() , example.end() , int_viter(example.begin()) ) );
 		BOOST_CHECK( std::equal( int_viter(example.begin()) , int_viter(example.end()) , example.begin() ) );
 		
@@ -47,6 +54,7 @@ namespace {
 
 		int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 		std::vector< int > example( begin(data) , end(data) );
+		const std::vector< int > & const_example = example;
 		
 		const_int_viter fwd8back3( example.begin() );
 		std::advance( fwd8back3 , +8 );
@@ -66,10 +74,43 @@ namespace {
 		*i5 = 42;
 		BOOST_CHECK(( *fwd8back3 == 42 ));
 	}
+	template < template < typename > class iterator >
+	void test_random_access_iteration() {
+		using namespace industry;
+
+		typedef iterator< int > int_viter;
+		typedef iterator< const int > const_int_viter;
+
+		int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
+		std::vector< int > example( begin(data) , end(data) );
+
+		int_viter begin(example.begin());
+		int_viter i5(example.begin());
+		std::advance(i5,5);
+		BOOST_CHECK_EQUAL( int(i5 - begin) , +5 );
+		BOOST_CHECK_EQUAL( int(begin - i5) , -5 );
+		BOOST_CHECK( begin < i5 );
+		BOOST_CHECK( i5 > begin );
+		BOOST_CHECK_EQUAL( i5[2] , example[5+2] );
+		
+		int_viter i7(example.begin());
+		std::advance(i7,7);
+		BOOST_CHECK(( i5+2 == i7 ));
+		BOOST_CHECK(( i7+1 == int_viter(example.begin()+8) ));
+		BOOST_CHECK(( i7-2 == i5 ));
+		
+		BOOST_CHECK_EQUAL( i7[-2] , example[7-2] );
+		int_viter i = i7;
+		i -= 4;
+		BOOST_CHECK_EQUAL( *i , example[7-4] );
+	}
 }
 
 void test_iterator_virtual() {
 	test_forward_iteration      < ::industry::virtual_forward_iterator >();
 	test_forward_iteration      < ::industry::virtual_bidirectional_iterator >();
 	test_bidirectional_iteration< ::industry::virtual_bidirectional_iterator >();
+	test_bidirectional_iteration< ::industry::virtual_random_access_iterator >();
+	test_random_access_iteration< ::industry::virtual_random_access_iterator >();
+	test_forward_iteration      < ::industry::virtual_random_access_iterator >();
 }
