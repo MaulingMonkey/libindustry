@@ -26,7 +26,6 @@ void test_template_tt() {
 	foo1_group_2 test2;
 	foo2_group   test3;
 	foo3_group   test4;
-#ifdef __GNUC__
+
 	test1 = test1, test2 = test2, test3 = test3, test4 = test4;
-#endif
 }

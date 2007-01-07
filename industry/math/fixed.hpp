@@ -252,7 +252,7 @@ namespace industry {
 					                            ? (storage_max/2>=numer)
 					                            : (storage_min/2<=numer)
 					                            ;
-					const bool denom_pos_locked = (denom%2);
+					const bool denom_pos_locked = (denom%2) == 1;
 					
 					if ( remaining_shift && inadequate_ratio && numer_pos_locked && denom_pos_locked ) {
 						if (is_positive(denom)) denom = (denom+1)/2;

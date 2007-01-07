@@ -28,7 +28,5 @@ void test_template_group() {
 	group1 b;
 	group2 c;
 	
-#ifdef __GNUC__
 	a = a , b = b , c = c; //quash "unused" warnings
-#endif
 }
