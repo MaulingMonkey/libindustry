@@ -37,26 +37,32 @@ namespace industry {
 				virtual void move_by( ptrdiff_t ) = 0;
 			};
 			
+			template < typename Value , typename Category , typename Iterator > struct virtual_impl;
+			template < typename Value , typename Category > struct virtual_impl_interface;
 			
-			template < typename Self , typename Value , typename Category > struct virtual_impl_interface;
-			
-			template < typename Self , typename Value > struct virtual_impl_interface< Self , Value , std::forward_iterator_tag >
-				: public virtual_basic_impl_interface< Self , Value >
+			template < typename Value > struct virtual_impl_interface< Value , std::forward_iterator_tag >
+				: public virtual_basic_impl_interface< virtual_impl_interface< Value , std::forward_iterator_tag > , Value >
 				, public virtual_forward_impl_interface
-			{};
+			{
+				template < typename Iterator > struct with_iterator { typedef virtual_impl< Value , std::forward_iterator_tag , Iterator > type; };
+			};
 			
-			template < typename Self , typename Value > struct virtual_impl_interface< Self , Value , std::bidirectional_iterator_tag >
-				: public virtual_basic_impl_interface< Self , Value >
+			template < typename Value > struct virtual_impl_interface< Value , std::bidirectional_iterator_tag >
+				: public virtual_basic_impl_interface< virtual_impl_interface< Value , std::bidirectional_iterator_tag > , Value >
 				, public virtual_forward_impl_interface
 				, public virtual_bidirectional_impl_interface
-			{};
+			{
+				template < typename Iterator > struct with_iterator { typedef virtual_impl< Value , std::bidirectional_iterator_tag , Iterator > type; };
+			};
 			
-			template < typename Self , typename Value > struct virtual_impl_interface< Self , Value , std::random_access_iterator_tag >
-				: public virtual_basic_impl_interface< Self , Value >
+			template < typename Value > struct virtual_impl_interface< Value , std::random_access_iterator_tag >
+				: public virtual_basic_impl_interface< virtual_impl_interface< Value , std::random_access_iterator_tag > , Value >
 				, public virtual_forward_impl_interface
 				, public virtual_bidirectional_impl_interface
 				, public virtual_random_access_impl_interface
-			{};
+			{
+				template < typename Iterator > struct with_iterator { typedef virtual_impl< Value , std::random_access_iterator_tag , Iterator > type; };
+			};
 		}
 	}
 }

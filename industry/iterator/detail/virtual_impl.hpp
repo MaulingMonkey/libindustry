@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_ITERATOR_DETAIL_VIRTUAL_IMPL
 
 #include <industry/iterator/detail/virtual_impl_interfaces.hpp>
+#include <cassert>
 #include <cstddef>
 
 #ifdef _DEBUG
@@ -21,17 +22,17 @@ namespace industry {
 		namespace detail {
 			template < typename Self , typename Value , typename Category , typename Iterator >
 			struct virtual_impl_base_basic
-				: public virtual_impl_interface< Self , Value , Category >
+				: public virtual_impl_interface< Value , Category >
 			{
 			protected:
 				Iterator i;
 			public:
-				virtual Self*  clone() const { return new Self(static_cast< const Self& >( *this )); }
+				virtual virtual_impl_interface< Value , Category >*  clone() const { return new Self(static_cast< const Self& >( *this )); }
 				virtual Value& reference() const { return  *i; }
 				virtual Value* pointer  () const { return &*i; }
-				virtual bool   equals( const virtual_basic_impl_interface< Self , Value > & other ) {
+				virtual bool   equals( const virtual_basic_impl_interface< virtual_impl_interface< Value , Category > , Value > & other ) {
 					assert(typeid(other)==typeid(*this));
-					return static_cast< const Self& >(other).i == this->i;
+					return static_cast< const virtual_impl_base_basic<Self,Value,Category,Iterator> & >(other).i == this->i;
 				}
 			};
 			
@@ -65,19 +66,38 @@ namespace industry {
 				virtual void move_by( ptrdiff_t d ) { i += d; }
 			};
 			
-			template < typename Self , typename Value , typename Category , typename Iterator > struct virtual_impl;
+			template < typename Value , typename Category , typename Iterator > struct virtual_impl;
 			
-			template < typename Self , typename Value , typename Iterator >
-			struct virtual_impl< Self , Value , std::forward_iterator_tag , Iterator >
-			: public virtual_impl_base_forward< Self , Value , std::forward_iterator_tag , Iterator > {};
+			#define SUPER virtual_impl_base_forward< virtual_impl< Value , std::forward_iterator_tag , Iterator > , Value , std::forward_iterator_tag , Iterator >
+			template < typename Value , typename Iterator >
+			struct virtual_impl< Value , std::forward_iterator_tag , Iterator > : public SUPER {
+			protected:
+				using SUPER::i;
+			public:
+				virtual_impl( const Iterator & new_i ) { i = new_i; }
+			};
+			#undef SUPER
 			
-			template < typename Self , typename Value , typename Iterator >
-			struct virtual_impl< Self , Value , std::bidirectional_iterator_tag , Iterator >
-			: public virtual_impl_base_bidirectional< Self , Value , std::bidirectional_iterator_tag , Iterator > {};
+			#define SUPER virtual_impl_base_bidirectional< virtual_impl< Value , std::bidirectional_iterator_tag , Iterator > , Value , std::bidirectional_iterator_tag , Iterator >
+			template < typename Value , typename Iterator >
+			struct virtual_impl< Value , std::bidirectional_iterator_tag , Iterator > : public SUPER {
+			protected:
+				using SUPER::i;
+			public:
+				virtual_impl( const Iterator & new_i ) { i = new_i; }
+			};
+			#undef SUPER
 			
-			template < typename Self , typename Value , typename Iterator >
-			struct virtual_impl< Self , Value , std::random_access_iterator_tag , Iterator >
-			: public virtual_impl_base_random_access< Self , Value , std::random_access_iterator_tag , Iterator > {};
+			#define SUPER virtual_impl_base_random_access< virtual_impl< Value , std::random_access_iterator_tag , Iterator > , Value , std::random_access_iterator_tag , Iterator >
+			template < typename Value , typename Iterator >
+			struct virtual_impl< Value , std::random_access_iterator_tag , Iterator >
+			: public SUPER {
+			protected:
+				using SUPER::i;
+			public:
+				virtual_impl( const Iterator & new_i ) { i = new_i; }
+			};
+			#undef SUPER
 		}
 	}
 }

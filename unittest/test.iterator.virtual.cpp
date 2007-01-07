@@ -7,13 +7,6 @@
 // Jan  5, 2007 - virtual_forward => virtual
 // Dec 31, 2006 - Created
 
-#if 1
-#include <industry/iterator/detail/virtual_impl.hpp>
-
-void test_iterator_virtual () {}
-
-#else // Previous old code -- being replaced
-
 #include <industry/iterator/virtual_bidirectional.hpp>
 #include <industry/iterator/virtual_forward.hpp>
 #include <industry/arrays.hpp>
@@ -45,11 +38,38 @@ namespace {
 		std::advance( iv_5 , 3 );
 		BOOST_CHECK_EQUAL( *iv_5 , 6 );
 	}
+	template < template < typename > class iterator >
+	void test_bidirectional_iteration() {
+		using namespace industry;
+		
+		typedef iterator< int >        int_viter;
+		typedef iterator< const int >  const_int_viter;
+
+		int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
+		std::vector< int > example( begin(data) , end(data) );
+		
+		const_int_viter fwd8back3( example.begin() );
+		std::advance( fwd8back3 , +8 );
+		std::advance( fwd8back3 , -3 );
+		
+		const_int_viter fwd7back2( example.begin() );
+		std::advance( fwd7back2 , +7 );
+		std::advance( fwd7back2 , -2 );
+		
+		BOOST_CHECK(( fwd8back3 == fwd7back2 ));
+		BOOST_CHECK(( *fwd8back3 == 6 ));
+
+		int_viter i5( example.begin() );
+		std::advance( i5 , 5 );
+
+		BOOST_CHECK(( *i5 == 6 ));
+		*i5 = 42;
+		BOOST_CHECK(( *fwd8back3 == 42 ));
+	}
 }
 
 void test_iterator_virtual() {
-	test_forward_iteration< ::industry::virtual_forward_iterator >();
-	test_forward_iteration< ::industry::virtual_bidirectional_iterator >();
+	test_forward_iteration      < ::industry::virtual_forward_iterator >();
+	test_forward_iteration      < ::industry::virtual_bidirectional_iterator >();
+	test_bidirectional_iteration< ::industry::virtual_bidirectional_iterator >();
 }
-
-#endif
