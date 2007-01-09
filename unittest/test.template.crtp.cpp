@@ -14,7 +14,7 @@
 
 #if defined( _MSC_EXTENSIONS )
 void test_template_crtp() {
-	BOOST_CHECK((!"template/crtp.hpp --- test disabled (does not work on MSVC)"));
+	BOOST_CHECK((!"template/crtp.hpp --- test disabled (does not work on MSVC with extensions enabled)"));
 }
 
 #else

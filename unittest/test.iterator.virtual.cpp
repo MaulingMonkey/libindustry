@@ -54,7 +54,7 @@ namespace {
 
 		int data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 		std::vector< int > example( begin(data) , end(data) );
-		const std::vector< int > & const_example = example;
+		//const std::vector< int > & const_example = example;
 		
 		const_int_viter fwd8back3( example.begin() );
 		std::advance( fwd8back3 , +8 );
