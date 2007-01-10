@@ -36,8 +36,8 @@ void test_api_windows_registry() {
 	BOOST_CHECK_THROW( registry[ L"HKEY_LOCAL_MACHINE" ] / L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" / L"Courier New (TrueType)" == L"COUR.TTF" , missing_registry_key ); //We differentiate between values and keys, to prevent arbitration of semantics where a key and value of the same name both exist.
 
 	registry_key_reference fonts = registry[ "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" ];
-	BOOST_CHECK_EQUAL( find_value( fonts , "Courier New" ).size() , 4 );
-	BOOST_CHECK_EQUAL( find_value( fonts , "Courier" ).size() , 5 );
+	BOOST_CHECK_EQUAL( find_value( fonts , "Courier New" ).size() , 4u );
+	BOOST_CHECK_EQUAL( find_value( fonts , "Courier" ).size() , 5u );
 }
 
 #undef CHECK_NO_THROW_AND_EQUAL
