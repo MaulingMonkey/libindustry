@@ -16,16 +16,18 @@
 #include <industry/api/windows/import.hpp>
 
 namespace industry {
-	namespace windows {
-		class registry_key_wrapper {
-		public:
-			HKEY key;
-			bool cleanup;
+	namespace api {
+		namespace windows {
+			class registry_key_wrapper {
+			public:
+				HKEY key;
+				bool cleanup;
 
-			registry_key_wrapper() : key() , cleanup( false ) {}
-			registry_key_wrapper( HKEY key , bool cleanup ) : key( key ) , cleanup( cleanup ) {}
-			~registry_key_wrapper() { if ( cleanup ) ::RegCloseKey( key ); }
-		};
+				registry_key_wrapper() : key() , cleanup( false ) {}
+				registry_key_wrapper( HKEY key , bool cleanup ) : key( key ) , cleanup( cleanup ) {}
+				~registry_key_wrapper() { if ( cleanup ) ::RegCloseKey( key ); }
+			};
+		}
 	}
 }
 
