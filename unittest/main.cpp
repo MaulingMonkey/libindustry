@@ -31,10 +31,8 @@ using boost::unit_test::test_suite;
 
 typedef void (*test_function_ptr)();
 
-//A lot of currently not-fixed tests/etc
 void test_algorithm();
 void test_factory();
-//void test_freetype();
 //void test_image();
 void test_inherit();
 void test_iterator_cast();
@@ -45,7 +43,6 @@ void test_math_fixed();
 void test_math_vector();
 void test_multitype();
 void test_multi_iterator();
-//void test_nmap();
 void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
