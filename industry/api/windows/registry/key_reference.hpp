@@ -35,10 +35,10 @@ namespace industry {
 				registry_value_reference operator% ( const std::string & name ) const;
 				registry_key_reference   operator/ ( const std::string & name ) const;
 				registry_key_reference & operator/=( const std::string & name ) { return *this = *this / name; }
-				friend std::vector< registry_key_reference   > find         ( const registry_key_reference & , const std::string & key_name   );
-				friend std::vector< registry_value_reference > find_value   ( const registry_key_reference & , const std::string & value_name );
-				friend std::vector< registry_key_reference   > find_if      ( const registry_key_reference & , const boost::function< bool ( const char* , const char* ) > & key_name   );
-				friend std::vector< registry_value_reference > find_value_if( const registry_key_reference & , const boost::function< bool ( const char* , const char* ) > & value_name );
+				friend std::vector< registry_key_reference   > find_         ( const registry_key_reference & , const std::string & key_name   );
+				friend std::vector< registry_value_reference > find_value_   ( const registry_key_reference & , const std::string & value_name );
+				friend std::vector< registry_key_reference   > find_if_      ( const registry_key_reference & , const boost::function< bool ( const char* , const char* ) > & key_name   );
+				friend std::vector< registry_value_reference > find_value_if_( const registry_key_reference & , const boost::function< bool ( const char* , const char* ) > & value_name );
 
 #if defined( INDUSTRY_UNICODE_ENABLED )
 				registry_key_reference( const registry_key_reference & parent , const std::wstring & name );
@@ -46,10 +46,10 @@ namespace industry {
 				registry_value_reference operator% ( const std::wstring & name ) const;
 				registry_key_reference   operator/ ( const std::wstring & name ) const;
 				registry_key_reference & operator/=( const std::wstring & name ) { return *this = *this / name; }
-				friend std::vector< registry_key_reference   > find         ( const registry_key_reference & , const std::wstring & key_name   );
-				friend std::vector< registry_value_reference > find_value   ( const registry_key_reference & , const std::wstring & value_name );
-				friend std::vector< registry_key_reference   > find_if      ( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & key_name   );
-				friend std::vector< registry_value_reference > find_value_if( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & value_name );
+				friend std::vector< registry_key_reference   > find_         ( const registry_key_reference & , const std::wstring & key_name   );
+				friend std::vector< registry_value_reference > find_value_   ( const registry_key_reference & , const std::wstring & value_name );
+				friend std::vector< registry_key_reference   > find_if_      ( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & key_name   );
+				friend std::vector< registry_value_reference > find_value_if_( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & value_name );
 #endif
 			};
 			template < typename T > bool operator==( const registry_key_reference & registry_key , const T & value ) { return registry_key % "" == value; }

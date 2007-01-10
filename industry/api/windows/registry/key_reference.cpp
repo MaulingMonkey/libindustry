@@ -118,7 +118,7 @@ namespace industry {
 				};
 			}
 
-			std::vector< registry_key_reference   > find         ( const registry_key_reference & key , const std::string & key_name   ) {
+			std::vector< registry_key_reference   > find_         ( const registry_key_reference & key , const std::string & key_name   ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumKeyExCaller enum_key( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -133,7 +133,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_value_reference > find_value   ( const registry_key_reference & key , const std::string & value_name ) {
+			std::vector< registry_value_reference > find_value_   ( const registry_key_reference & key , const std::string & value_name ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumValueCaller enum_value( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -148,7 +148,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_key_reference   > find_if      ( const registry_key_reference & key , const boost::function< bool ( const char* , const char* ) > & predicate ) {
+			std::vector< registry_key_reference   > find_if_      ( const registry_key_reference & key , const boost::function< bool ( const char* , const char* ) > & predicate ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumKeyExCaller enum_key( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -167,7 +167,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_value_reference > find_value_if( const registry_key_reference & key , const boost::function< bool ( const char* , const char* ) > & predicate ) {
+			std::vector< registry_value_reference > find_value_if_( const registry_key_reference & key , const boost::function< bool ( const char* , const char* ) > & predicate ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumValueCaller enum_value( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -212,7 +212,7 @@ namespace industry {
 			//friend std::vector< registry_value_reference > find_value   ( const registry_key_reference & , const std::wstring & value_name );
 			//friend std::vector< registry_key_reference   > find_if      ( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & key_name   );
 			//friend std::vector< registry_value_reference > find_value_if( const registry_key_reference & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & value_name );
-			std::vector< registry_key_reference   > find         ( const registry_key_reference & key , const std::wstring & key_name   ) {
+			std::vector< registry_key_reference   > find_         ( const registry_key_reference & key , const std::wstring & key_name   ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumKeyExCaller enum_key( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -227,7 +227,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_value_reference > find_value   ( const registry_key_reference & key , const std::wstring & value_name ) {
+			std::vector< registry_value_reference > find_value_   ( const registry_key_reference & key , const std::wstring & value_name ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumValueCaller enum_value( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -242,7 +242,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_key_reference   > find_if      ( const registry_key_reference & key , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & predicate ) {
+			std::vector< registry_key_reference   > find_if_      ( const registry_key_reference & key , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & predicate ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumKeyExCaller enum_key( key.key->key );
 				LONG error = ERROR_SUCCESS;
@@ -261,7 +261,7 @@ namespace industry {
 				if ( error != ERROR_NO_MORE_ITEMS ) throw_registry_error( error );
 				return results;
 			}
-			std::vector< registry_value_reference > find_value_if( const registry_key_reference & key , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & predicate ) {
+			std::vector< registry_value_reference > find_value_if_( const registry_key_reference & key , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & predicate ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumValueCaller enum_value( key.key->key );
 				LONG error = ERROR_SUCCESS;
