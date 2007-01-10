@@ -13,6 +13,6 @@
 #ifndef IG_INDUSTRY_API_WINDOWS_REGISTRY_CONFIG
 #define IG_INDUSTRY_API_WINDOWS_REGISTRY_CONFIG
 
-#include <industry/windows/config.hpp>
+#include <industry/api/windows/config.hpp>
 
 #endif //ndef IG_INDUSTRY_API_WINDOWS_REGISTRY_CONFIG
