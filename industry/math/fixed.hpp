@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.math.fixed.hpp => industry/math/fixed.hpp
 // Dec  1, 2006 - industry.fixed => industry.math.fixed
 // Nov 30, 2006 - Did a lot of work, finally got div working - renabled.

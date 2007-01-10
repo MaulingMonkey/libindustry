@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 31, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Dec 31, 2006 - Created
 
 #ifndef IG_INDUSTRY_TEMPLATE_CRTP
 #define IG_INDUSTRY_TEMPLATE_CRTP

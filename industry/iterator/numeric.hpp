@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 26, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Dec 26, 2006 - Created
 
 #ifndef IG_INDUSTRY_RANGE_NUMERIC_ITERATOR
 #define IG_INDUSTRY_RANGE_NUMERIC_ITERATOR

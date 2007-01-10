@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 29, 2006 - fixes, refactoring
 // Dec 25, 2006 - industry.iterator.n.hpp => industry/iterator/n.hpp
 // Nov 12, 2006 - Created

@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Jan  1, 2007 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Jan  1, 2007 - Created
 
 #ifndef INDUSTRY_TEMPLATE_TT_LIMIT
 #define INDUSTRY_TEMPLATE_TT_LIMIT 10

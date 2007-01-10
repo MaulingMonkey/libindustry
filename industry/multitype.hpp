@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.multitype.hpp => industry/multitype.hpp
 // May 27, 2006 - Changed from forwarding operator=s (caused multidef errors in VS2k5) to CRTP + using statements.
 // May 20, 2006 - Created

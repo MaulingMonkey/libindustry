@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 26, 2006 - industry.factory.hpp => industry/factory.hpp
 // Jun 17, 2006 - Added key to template param list (compatibility break!)
 // May 27, 2006 - Changed factory to factory_base, new factory allows more syntax & interface options

@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.config.hpp => industry/config.hpp
 // Aug 17, 2006 - INDUSTRY_OS_APPLE => INDUSTRY_OS_X
 // May 27, 2006 - Added explanitory examples

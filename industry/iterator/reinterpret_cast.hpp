@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.iterator.cast.reinterpret.hpp => industry/iterator/reinterpret_cast.hpp
 // Nov 11, 2006 - Reimplemented in terms of cast_iterator_base
 // Nov 10, 2006 - Created

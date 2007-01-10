@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 31, 2006 - Refactorings
 // Dec 25, 2006 - industry.inherit.hpp => industry/inherit.hpp
 // May 20, 2006 - Created

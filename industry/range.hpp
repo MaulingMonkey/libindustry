@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.range.hpp => industry/range.hpp
 // Nov 11, 2006 - Created
 

@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 26, 2006 - industry.concept.is_a_range.hpp => industry/concept/is_a_range.hpp
 // Nov 12, 2006 - Created
 

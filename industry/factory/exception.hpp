@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 26, 2006 - industry.factory.exception.hpp => industry/factory/exception.hpp
 // May 31, 2006 - invalid_factory_type => bad_factory_type, implemented thrower
 // May 27, 2006 - Created

@@ -4,8 +4,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 27, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Dec 27, 2006 - Created
+//
 // NOTE:  Only forward, bidirectional, and random access iterators are compatible currently.
 
 #ifndef IG_INDUSTRY_ITERATOR_MULTI
