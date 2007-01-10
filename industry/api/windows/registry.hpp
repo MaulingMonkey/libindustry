@@ -16,9 +16,9 @@
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/errors.hpp>
 #include <industry/api/windows/registry/key_reference.hpp>
-#include <industry/api/windows/registry/key_wrapper.hpp>
-#include <industry/api/windows/registry/value_reference.hpp>
-#include <industry/api/windows/registry/value_wrapper.hpp>
+//#include <industry/api/windows/registry/key_wrapper.hpp>
+//#include <industry/api/windows/registry/value_reference.hpp>
+//#include <industry/api/windows/registry/value_wrapper.hpp>
 #include <industry/api/windows/import.hpp>
 #include <string>
 
