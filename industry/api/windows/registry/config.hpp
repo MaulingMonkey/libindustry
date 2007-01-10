@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Jan  9, 2007 - Added to SVN, cleaned up
 // Oct 26, 2006 - "win32" replaced with "windows" - should be mostly architecture independant
 // Aug 17, 2006 - Created
