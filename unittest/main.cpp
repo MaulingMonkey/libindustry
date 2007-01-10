@@ -59,7 +59,8 @@ void test_container_default_allocation_policy();
 
 
 #if defined( INDUSTRY_OS_WINDOWS )
-//void test_win32_registry();
+void test_api_windows_registry();
+
 #endif
 
 test_suite * init_unit_test_suite( int , char *[] ) {
@@ -89,9 +90,8 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test->add(BOOST_TEST_CASE(test_template_group));
 	test->add(BOOST_TEST_CASE(test_template_tt));
 
-	//OS specific cases:
 #if defined( INDUSTRY_OS_WINDOWS )
-	//test->add( BOOST_TEST_CASE( & test_win32_registry ) );
+	test->add(BOOST_TEST_CASE(test_api_windows_registry));
 
 #elif defined( INDUSTRY_OS_X )
 	//....
