@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 26, 2006 - Dot to directory filename categorization fixes for SVN
 // Sep 22, 2006 - Added ctor-selection checks ("ctor_method[_used]")
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework

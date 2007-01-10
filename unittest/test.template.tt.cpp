@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Jan  1, 2007 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Jan  1, 2007 - Created
 
 #include <industry/template/group.hpp>
 #include <industry/template/tt.hpp>

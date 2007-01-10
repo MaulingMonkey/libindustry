@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 27, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Dec 27, 2006 - Created
 
 #include <industry/algorithm.hpp>
 #include <industry/iterator/multi.hpp>

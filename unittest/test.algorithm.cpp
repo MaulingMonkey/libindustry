@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Adopted changes from deffer (GDNet) 
 
 #include <iostream>

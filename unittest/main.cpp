@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - Many disabled tests (changing to using a directory structure once more for libindustry SVN on sourceforge)
 // Jul 08, 2006 - Switched to using the Boost Unit Test Framework
 // May 20, 2006 - Created

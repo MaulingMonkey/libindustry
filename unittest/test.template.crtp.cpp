@@ -4,9 +4,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Jan  2, 2007 - Created
 // $LastChangedBy$ - $LastChangedDate$
-
+//
+// Jan  2, 2007 - Created
+//
 // FIXME:  Adding " , crtp_self< user >" to user results in ambiguity errors
 
 #include <industry/template/crtp.hpp>

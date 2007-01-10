@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Jan  5, 2007 - virtual_forward => virtual
 // Dec 31, 2006 - Created
 

@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - dot names to directory based name fixes
 // Dec  1, 2006 - Created
 
