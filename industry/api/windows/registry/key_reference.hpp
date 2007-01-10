@@ -9,8 +9,8 @@
 // Jan  9, 2007 - Added to SVN, cleaned up
 // Oct 27, 2006 - Created
 
-#ifndef IG_INDUSTRY_WINDOWS_REGISTRY_KEY_REFERENCE
-#define IG_INDUSTRY_WINDOWS_REGISTRY_KEY_REFERENCE
+#ifndef IG_INDUSTRY_API_WINDOWS_REGISTRY_KEY_REFERENCE
+#define IG_INDUSTRY_API_WINDOWS_REGISTRY_KEY_REFERENCE
 
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/key_wrapper.hpp>
@@ -63,4 +63,4 @@ namespace industry {
 	}
 }
 
-#endif //ndef IG_INDUSTRY_WINDOWS_REGISTRY_KEY_REFERENCE
+#endif //ndef IG_INDUSTRY_API_WINDOWS_REGISTRY_KEY_REFERENCE
