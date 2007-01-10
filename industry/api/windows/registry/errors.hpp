@@ -8,6 +8,10 @@
 //
 // Jan  9, 2007 - Added to SVN, cleaned up
 // Oct 27, 2006 - Created
+//
+// FIXME: Diamond inheritence totally screws with catching.  Reimplement exception matrix to O(N) implementations & remove warning #pragmas
+#pragma warning( disable: 4672 )
+#pragma warning( disable: 4673 )
 
 #ifndef IG_INDUSTRY_API_WINDOWS_REGISTRY_ERRORS
 #define IG_INDUSTRY_API_WINDOWS_REGISTRY_ERRORS
