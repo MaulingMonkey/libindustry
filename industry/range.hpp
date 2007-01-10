@@ -45,7 +45,7 @@ namespace industry {
 
 		template < typename OIt >
 		friend bool operator==( const range & lhs , const range< OIt > & rhs ) {
-			return (lhs.empty() && rhs.empty()) || (lhs.size() == rhs.size()) && std::equal( lhs.begin() , lhs.end() , rhs.begin() );
+			return (lhs.empty() && rhs.empty()) || ((lhs.size() == rhs.size()) && std::equal( lhs.begin() , lhs.end() , rhs.begin() ));
 		}
 		template < typename OIt >
 		friend bool operator!=( const range & lhs , const range< OIt > & rhs ) {
