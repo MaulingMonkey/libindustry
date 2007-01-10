@@ -193,8 +193,8 @@ namespace industry {
 			assert( lhs.end2   == rhs.end2   );
 		}
 		static bool is_at_end( const this_t & t ) {
-			return t.iter_set == 0
-			    || t.iter_set == 2 && t.i2 == t.end2
+			return (t.iter_set == 0)
+			    || (t.iter_set == 2 && t.i2 == t.end2)
 				;
 		}
 	public:
