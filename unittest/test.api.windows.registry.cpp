@@ -15,7 +15,7 @@
 #include <boost/test/unit_test.hpp>
 
 #if defined( INDUSTRY_OS_WINDOWS )
-#include <industry/windows/registry.hpp>
+#include <industry/api/windows/registry.hpp>
 //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts [ Courier New (TrueType) = COUR.TTF ]
 
 void test_api_windows_registry() {
