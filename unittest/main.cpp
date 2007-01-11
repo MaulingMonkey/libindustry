@@ -17,7 +17,6 @@
 #pragma warning( disable : 4267 ) //possible argument       data loss conversion
 #endif
 
-#include <industry/arrays.hpp>
 #include <industry/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test_framework.hpp>
@@ -32,7 +31,7 @@ using boost::unit_test::test_suite;
 typedef void (*test_function_ptr)();
 
 void test_algorithm();
-viud test_container();
+void test_container();
 void test_factory();
 //void test_image();
 void test_inherit();
