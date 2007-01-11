@@ -8,45 +8,44 @@
 //
 // Jan 10, 2007 - Created
 
-#ifndef IG_INDUSTRY_CONTAINERS
-#define IG_INDUSTRY_CONTAINERS
+#ifndef IG_INDUSTRY_CONTAINER
+#define IG_INDUSTRY_CONTAINER
 
 #include <industry/traits/container.hpp>
-#include <industry/algorithm/push.hpp>
+#include <industry/range.hpp>
 
 namespace industry {
-	namespace containers {
-		template < typename StdContainer >
-		class container {
-			typedef container< StdContainer > self;
-		public:
-			//self& operator=( 
-		};
+	template < typename StdContainer >
+	class container {
+		typedef container< StdContainer > self;
+	public:
+		//self& operator=( 
+	};
 
-		template < typename StdContainer >
-		class container_reference {
-			typedef container_reference< StdContainer > self;
-			
-			StdContainer& reference;
-		public:
-			container_reference( StdContainer& reference ): reference(reference) {}
+	template < typename StdContainer >
+	class container_reference {
+		typedef container_reference< StdContainer > self;
+		
+		StdContainer& reference;
+	public:
+		container_reference( StdContainer& reference ): reference(reference) {}
 
-			template < typename Iterator >
-			self& operator=( const range< Iterator >& range ) {
-				container_traits< StdContainer >::assign( reference , range );
-			}
-		};
-
-		template < typename StdContainer >
-		container_reference< StdContainer > as_container( StdContainer& container ) {
-			return container_reference< StdContainer >( container );
+		template < typename Range >
+		self& operator=( const Range& range ) {
+			container_traits< StdContainer >::assign( reference , range );
+			return *this;
 		}
+	};
 
-		template < typename StdContainer >
-		container_reference< const StdContainer > as_container( const StdContainer& container ) {
-			return container_reference< const StdContainer >( container );
-		}
+	template < typename StdContainer >
+	container_reference< StdContainer > as_container( StdContainer& container ) {
+		return container_reference< StdContainer >( container );
+	}
+
+	template < typename StdContainer >
+	container_reference< const StdContainer > as_container( const StdContainer& container ) {
+		return container_reference< const StdContainer >( container );
 	}
 }
 
-#endif //ndef IG_INDUSTRY_CONTAINERS
+#endif //ndef IG_INDUSTRY_CONTAINER

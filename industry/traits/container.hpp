@@ -50,7 +50,7 @@ namespace industry {
 		: public associative_container_traits< std::map< Key , Value , Compare , Alloc > >
 	{};
 
-	template < typename Type , typename Compare , typename Alloc > class container_traits< std::set< Type , Compare , Alloc > >
+	template < typename Key , typename Compare , typename Alloc > class container_traits< std::set< Key , Compare , Alloc > >
 		: public associative_container_traits< std::set< Key , Compare , Alloc > >
 	{};
 
