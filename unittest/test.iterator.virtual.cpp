@@ -12,7 +12,7 @@
 #include <industry/iterator/virtual_bidirectional.hpp>
 #include <industry/iterator/virtual_forward.hpp>
 #include <industry/iterator/virtual_random_access.hpp>
-#include <industry/arrays.hpp>
+#include <industry/attributes/range.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
@@ -20,7 +20,8 @@ namespace {
 	template < template < typename > class iterator >
 	void test_forward_iteration() {
 		using namespace industry;
-		
+		using namespace industry::attributes::range;
+
 		typedef iterator< int >       int_viter;
 		typedef iterator< const int > const_int_viter;
 
@@ -50,6 +51,7 @@ namespace {
 	template < template < typename > class iterator >
 	void test_bidirectional_iteration() {
 		using namespace industry;
+		using namespace industry::attributes::range;
 		
 		typedef iterator< int >        int_viter;
 		typedef iterator< const int >  const_int_viter;
@@ -79,6 +81,7 @@ namespace {
 	template < template < typename > class iterator >
 	void test_random_access_iteration() {
 		using namespace industry;
+		using namespace industry::attributes::range;
 
 		typedef iterator< int > int_viter;
 		typedef iterator< const int > const_int_viter;

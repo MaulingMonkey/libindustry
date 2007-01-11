@@ -10,6 +10,7 @@
 // Dec  1, 2006 - test.fixed => test.math.fixed
 // Jul 13, 2006 - Created
 
+#include <industry/attributes/range.hpp>
 #include <industry/arrays.hpp>
 #include <industry/math/fixed.hpp>
 #include <boost/lexical_cast.hpp>
@@ -26,6 +27,8 @@ void test_fixed_unsigned_limits() {
 }
 
 void test_math_fixed() {
+	using namespace industry::attributes::range;
+
 	typedef industry::fixed< int , 6 > fp6;
 	typedef industry::fixed< int , 5 > fp5;
 	typedef industry::fixed< int , 2 > fp2;
@@ -140,7 +143,7 @@ void test_math_fixed() {
 	                                  , 1000 , 1024 , 4949 , 9999 , 9999 , 6666 , 0666 , 8393 , 1284 , 1378
 	                                  , 13903859.25 , 183794646.5 , 183794646.75 };
 	
-	using namespace industry::arrays;
+
 	for ( const double * a = begin( constants ) ; a != end( constants ) ; ++a ) {
 		for ( const double * b = begin( constants ) ; b != end( constants ) ; ++b ) {
 			if ( *b * double(std::numeric_limits< int >::max())/4.0 < +*a ) continue; //skip - would overflow
