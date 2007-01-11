@@ -11,7 +11,6 @@
 // Jul 13, 2006 - Created
 
 #include <industry/attributes/range.hpp>
-#include <industry/arrays.hpp>
 #include <industry/math/fixed.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>

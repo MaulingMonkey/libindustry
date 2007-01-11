@@ -10,7 +10,6 @@
 // Nov 12, 2006 - Created
 
 #include <industry/attributes/range.hpp>
-#include <industry/arrays.hpp>
 #include <industry/range.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
