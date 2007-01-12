@@ -9,13 +9,14 @@
 // Dec 25, 2006 - dot names to directory based name fixes
 // Nov 12, 2006 - Created
 
-#include <industry/arrays.hpp>
+#include <industry/attributes/range.hpp>
 #include <industry/range.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
 void test_range( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	const int data1[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 	int       data2[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };

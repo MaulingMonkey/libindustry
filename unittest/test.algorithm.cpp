@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include <industry/algorithm.hpp>
-#include <industry/arrays.hpp>
+#include <industry/attributes/range.hpp>
 #include <industry/range.hpp>
 #include <industry/math/vector.hpp>
 #include <boost/test/unit_test.hpp>
@@ -26,6 +26,7 @@ namespace {
 
 void test_algorithm( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	unsigned data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 	unsigned expected_results_odd[] = { 1 , 3 , 5 , 7 };
