@@ -1,4 +1,4 @@
-// Copyright (c) 2007 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -6,7 +6,7 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 //
-// Jan 13, 2006 - Created
+// Jan 13, 2007 - Created, incorperates some code from key_reference.cpp (2006)
 //
 // FIXME:  Error handling, you stupid git!
 

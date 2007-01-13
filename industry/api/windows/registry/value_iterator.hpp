@@ -6,7 +6,7 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 //
-// Jan 13, 2006 - Created
+// Jan 13, 2007 - Created
 
 #ifndef IG_INDUSTRY_API_WINDOWS_REGISTRY_VALUE_ITERATOR
 #define IG_INDUSTRY_API_WINDOWS_REGISTRY_VALUE_ITERATOR
