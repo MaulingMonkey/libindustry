@@ -23,7 +23,7 @@ namespace industry {
 		template < typename Range >
 		static void assign( Container& container , const Range& range ) {
 			using namespace industry::attributes::range;
-			container.resize(0);
+			container.clear();
 			container.insert(container.end(),begin(range),end(range));
 		}
 	};
@@ -33,7 +33,7 @@ namespace industry {
 		template < typename Range >
 		static void assign( Container& container , const Range& range ) {
 			using namespace industry::attributes::range;
-			container.resize(0);
+			container.clear();
 			container.insert(begin(range),end(range));
 		}
 	};

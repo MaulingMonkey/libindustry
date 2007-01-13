@@ -15,10 +15,12 @@
 #include <boost/test/unit_test.hpp>
 
 #if defined( INDUSTRY_OS_WINDOWS )
+#include <industry/container.hpp>
 #include <industry/api/windows/registry.hpp>
 //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts [ Courier New (TrueType) = COUR.TTF ]
 
 void test_api_windows_registry() {
+	using namespace industry;
 	using namespace industry::api::windows;
 
 	BOOST_CHECK_EQUAL( registry[ "HKEY_LOCAL_MACHINE" ] / "SOFTWARE" / "Microsoft" / "Windows NT" / "CurrentVersion" / "Fonts" % "Courier New (TrueType)" , "COUR.TTF" );
@@ -39,9 +41,9 @@ void test_api_windows_registry() {
 	BOOST_CHECK_EQUAL( find_value_( fonts , "Courier New" ).size() , 4u );
 	BOOST_CHECK_EQUAL( find_value_( fonts , "Courier" ).size() , 5u );
 	
-	//std::vector< registry_key > keys;
-	//as_container(keys) = find_value( fonts , "Courier New" );
-	//BOOST_CHECK_EQUAL( keys.size() , 4u );
+	std::vector< registry_value_reference > values;
+	as_container(values) = find_value_( fonts , "Courier New" );
+	BOOST_CHECK_EQUAL( keys.size() , 4u );
 }
 
 #undef CHECK_NO_THROW_AND_EQUAL

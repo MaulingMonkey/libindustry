@@ -22,6 +22,10 @@
 namespace industry {
 	namespace api {
 		namespace windows {
+			registry_key_reference::registry_key_reference()
+				: key()
+			{
+			}
 			registry_key_reference::registry_key_reference( HKEY unmanaged_key )
 				: key( new registry_key_wrapper( unmanaged_key , false ) )
 			{
