@@ -22,6 +22,8 @@ namespace industry {
 		namespace windows {
 			class registry_value_wrapper {
 			public:
+				registry_value_wrapper() {}
+
 				boost::shared_ptr< registry_key_wrapper > key;
 #if defined( INDUSTRY_UNICODE_ENABLED )
 				std::wstring name;
