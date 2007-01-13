@@ -26,6 +26,18 @@ namespace industry {
 				registry_key_wrapper() : key() , cleanup( false ) {}
 				registry_key_wrapper( HKEY key , bool cleanup ) : key( key ) , cleanup( cleanup ) {}
 				~registry_key_wrapper() { if ( cleanup ) ::RegCloseKey( key ); }
+
+				struct nullness_ { int valid; };
+				typedef int nullness_::*nullness;
+				operator nullness() const { return key == NULL ? 0 : &nullness_::valid; }
+				bool operator!() const { return key == NULL; }
+				
+				friend bool operator==( const registry_key_wrapper & lhs , const registry_key_wrapper & rhs ) {
+					return lhs.key == rhs.key;
+				}
+				friend bool operator!=( const registry_key_wrapper & lhs , const registry_key_wrapper & rhs ) {
+					return lhs.key != rhs.key;
+				}
 			};
 		}
 	}

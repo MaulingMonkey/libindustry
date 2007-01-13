@@ -43,7 +43,7 @@ void test_api_windows_registry() {
 	
 	std::vector< registry_value_reference > values;
 	as_container(values) = find_value_( fonts , "Courier New" );
-	BOOST_CHECK_EQUAL( keys.size() , 4u );
+	BOOST_CHECK_EQUAL( values.size() , 4u );
 }
 
 #undef CHECK_NO_THROW_AND_EQUAL
