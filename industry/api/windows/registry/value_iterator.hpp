@@ -30,6 +30,7 @@ namespace industry {
 				typedef std::forward_iterator_tag  iterator_category;
 				typedef DWORD                      size_type;
 				typedef LONG                       difference_type;
+				typedef registry_value_reference   value_type;
 				typedef registry_value_reference   reference;
 				typedef registry_value_reference   pointer; //sic
 
@@ -40,7 +41,7 @@ namespace industry {
 
 				friend bool operator==( const registry_value_iterator & lhs , const registry_value_iterator & rhs ) {
 					assert( lhs.key == rhs.key || !lhs.key || !rhs.key || !"Tried to compare registry_value_iterators of different ranges (keys)" );
-					return (lhs.index == rhs.index) || (!lhs.key == !rhs.key);
+					return ( lhs.key && rhs.key && (lhs.index == rhs.index) ) || (!lhs.key == !rhs.key);
 				}
 				friend bool operator!=( const registry_value_iterator & lhs , const registry_value_iterator & rhs ) {
 					return !(lhs==rhs);

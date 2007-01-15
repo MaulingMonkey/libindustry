@@ -122,6 +122,10 @@ namespace industry {
 				};
 			}
 
+			industry::range< registry_value_iterator > each_value ( const registry_key_reference & key ) {
+				return industry::range< registry_value_iterator >( registry_value_iterator( key.key ) , registry_value_iterator() );
+			}
+
 			std::vector< registry_key_reference   > find_         ( const registry_key_reference & key , const std::string & key_name   ) {
 				//FIXME:  OMGWTFBBQrefactorme before applying changes plox
 				RegEnumKeyExCaller enum_key( key.key->key );

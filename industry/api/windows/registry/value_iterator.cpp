@@ -44,8 +44,10 @@ namespace industry {
 										);
 					if ( buffer.size() == 0 && buffer_size != 0 && error == ERROR_SUCCESS ) error = ERROR_MORE_DATA;
 				}
-				if ( error == ERROR_SUCCESS ) buffer.resize( buffer_size );
+				if ( error == ERROR_SUCCESS ) buffer.resize( buffer_size ), ++index;
+				else if ( error == ERROR_NO_MORE_ITEMS ) key.reset();
 				//else ERROR HANDLING HERE
+				++index;
 				return *this;
 			}
 			registry_value_iterator  registry_value_iterator::operator++( /* postfix */ int ) {

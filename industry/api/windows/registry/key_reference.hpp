@@ -15,6 +15,8 @@
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/key_wrapper.hpp>
 #include <industry/api/windows/registry/value_reference.hpp>
+#include <industry/api/windows/registry/value_iterator.hpp>
+#include <industry/range.hpp>
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -37,6 +39,8 @@ namespace industry {
 				registry_key_reference   operator/ ( const std::string & name ) const;
 				registry_key_reference & operator/=( const std::string & name ) { return *this = *this / name; }
 
+				friend industry::range< registry_value_iterator > each_value ( const registry_key_reference & );
+				
 				//Unimplemented:
 
 				//Depreciated:
