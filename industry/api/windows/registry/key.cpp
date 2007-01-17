@@ -12,7 +12,13 @@
 
 #include <industry/config.hpp>
 
-#if defined( INDUSTRY_OS_WINDOWS )
+#if !defined( INDUSTRY_OS_WINDOWS )
+//Nothing
+
+#elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
+#pragma message( __FILE__ " : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
+
+#else
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/errors.hpp>
 #include <industry/api/windows/registry/key.hpp>

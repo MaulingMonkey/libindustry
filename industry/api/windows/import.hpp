@@ -17,7 +17,11 @@
 #if !defined( INDUSTRY_OS_WINDOWS )
 #error "Cannot import the windows API when not building for windows"
 
-#else //defined( INDUSTRY_OS_WINDOWS )
+
+#elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
+#error "Language extensions must be enabled for anything involving windows.h to compile"
+
+#else //defined( INDUSTRY_OS_WINDOWS ) && (!defined( _MSC_VER ) || defined( _MSC_EXTENSIONS))
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 //#define WIN32_WINNT 0x600

@@ -14,7 +14,20 @@
 #include <industry/config.hpp>
 #include <boost/test/unit_test.hpp>
 
-#if defined( INDUSTRY_OS_WINDOWS )
+#if !defined( INDUSTRY_OS_WINDOWS )
+void test_api_windows_registry() {
+	BOOST_ERROR( "INDUSTRY_OS_WINDOWS not defined but test run anyways - unable to test" );
+}
+
+#elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
+#pragma message( __FILE__ " : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
+#pragma oijfoasijdf
+void test_api_windows_registry() {
+	BOOST_ERROR( "Compiler extensions not enabled - unable to test" );
+}
+
+#else
+
 #include <industry/container.hpp>
 #include <industry/api/windows/registry.hpp>
 //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts [ Courier New (TrueType) = COUR.TTF ]
@@ -48,10 +61,4 @@ void test_api_windows_registry() {
 }
 
 #undef CHECK_NO_THROW_AND_EQUAL
-
-#else //!defined( INDUSTRY_OS_WINDOWS )
-void test_api_windows_registry() {
-	BOOST_ERROR( "INDUSTRY_OS_WINDOWS not defined but test run anyways - unable to test" );
-}
-
 #endif
