@@ -46,6 +46,12 @@ namespace industry {
 					template < typename CharT > key   operator/ ( const std::basic_string< CharT > & name ) const { return select_key  (to_tstring(name)); }
 					template < typename CharT > key & operator/=( const std::basic_string< CharT > & name ) { return *this = *this / name; }
 
+					template < typename CharT > key( const key & parent , const CharT* name ) { initialize(parent,to_tstring(name)); }
+					template < typename CharT > value operator[]( const CharT* name ) const { return select_value(to_tstring(name)); }
+					template < typename CharT > value operator% ( const CharT* name ) const { return select_value(to_tstring(name)); }
+					template < typename CharT > key   operator/ ( const CharT* name ) const { return select_key  (to_tstring(name)); }
+					template < typename CharT > key & operator/=( const CharT* name ) { return *this = *this / name; }
+
 					//friend industry::range< key_iterator   > each_key   ( const key & );
 					friend industry::range< value_iterator > each_value ( const key & );
 
