@@ -21,39 +21,41 @@
 namespace industry {
 	namespace api {
 		namespace windows {
-			registry_value_iterator& registry_value_iterator::operator++( /* prefix  */     ) {
-				LONG error        = ERROR_MORE_DATA;
-				DWORD buffer_size = 15; //arbitrary, suggest a power of 2 minus 1
+			namespace registry {
+				value_iterator& value_iterator::operator++( /* prefix  */     ) {
+					LONG error        = ERROR_MORE_DATA;
+					DWORD buffer_size = 15; //arbitrary, suggest a power of 2 minus 1
 
-				while ( error == ERROR_MORE_DATA ) {
-					buffer_size += 1; //when [out], dosn't include the terminating _T('\0') - hoever [in] expects it, compensate for this Win32 API idiotcyncracy.
-					buffer.resize( buffer_size );
-					if ( buffer.capacity() > buffer.size() ) buffer.resize( buffer.capacity() );
-					assert( buffer.size() >= buffer_size );
-					assert( buffer.size() <= std::numeric_limits< DWORD >::max() );
-					buffer_size = DWORD( buffer.size() );
+					while ( error == ERROR_MORE_DATA ) {
+						buffer_size += 1; //when [out], dosn't include the terminating _T('\0') - hoever [in] expects it, compensate for this Win32 API idiotcyncracy.
+						buffer.resize( buffer_size );
+						if ( buffer.capacity() > buffer.size() ) buffer.resize( buffer.capacity() );
+						assert( buffer.size() >= buffer_size );
+						assert( buffer.size() <= std::numeric_limits< DWORD >::max() );
+						buffer_size = DWORD( buffer.size() );
 
-					error = RegEnumValue( /* hKey                  */ key->key
-										, /* dwIndex               */ index
-										, /* lpValueName           */ buffer.empty() ? NULL : &buffer[0]
-										, /* lpcValueName [in/out] */ &buffer_size
-										, /* lpReserved            */ NULL
-										, /* lpType                */ NULL
-										, /* lpData                */ NULL
-										, /* lpcbData              */ NULL
-										);
-					if ( buffer.size() == 0 && buffer_size != 0 && error == ERROR_SUCCESS ) error = ERROR_MORE_DATA;
+						error = RegEnumValue( /* hKey                  */ *key
+											, /* dwIndex               */ index
+											, /* lpValueName           */ buffer.empty() ? NULL : &buffer[0]
+											, /* lpcValueName [in/out] */ &buffer_size
+											, /* lpReserved            */ NULL
+											, /* lpType                */ NULL
+											, /* lpData                */ NULL
+											, /* lpcbData              */ NULL
+											);
+						if ( buffer.size() == 0 && buffer_size != 0 && error == ERROR_SUCCESS ) error = ERROR_MORE_DATA;
+					}
+					if ( error == ERROR_SUCCESS ) buffer.resize( buffer_size ), ++index;
+					else if ( error == ERROR_NO_MORE_ITEMS ) key.reset();
+					//else ERROR HANDLING HERE
+					++index;
+					return *this;
 				}
-				if ( error == ERROR_SUCCESS ) buffer.resize( buffer_size ), ++index;
-				else if ( error == ERROR_NO_MORE_ITEMS ) key.reset();
-				//else ERROR HANDLING HERE
-				++index;
-				return *this;
-			}
-			registry_value_iterator  registry_value_iterator::operator++( /* postfix */ int ) {
-				registry_value_iterator copy(*this);
-				++*this;
-				return copy;
+				value_iterator  value_iterator::operator++( /* postfix */ int ) {
+					value_iterator copy(*this);
+					++*this;
+					return copy;
+				}
 			}
 		}
 	}

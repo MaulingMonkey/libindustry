@@ -6,6 +6,7 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 //
+// Jan 15, 2007 - Eliminiated INDUSTRY_UNICODE_* in favor of the plain UNICODE define.
 // Dec 25, 2006 - industry.config.hpp => industry/config.hpp
 // Aug 17, 2006 - INDUSTRY_OS_APPLE => INDUSTRY_OS_X
 // May 27, 2006 - Added explanitory examples
@@ -44,15 +45,6 @@
 #else
 #define INDUSTRY_OS_UNKNOWN
 
-#endif
-
-//INDUSTRY_UNICODE_DEFAULT - Defacto i/o mode (e.g. TCHAR type, streams to use, etc)
-//INDUSTRY_UNICODE_ENABLED - Wheither or not unicode is available
-#if defined( _MSC_VER )
-	#define INDUSTRY_UNICODE_ENABLED
-	#if defined( UNICODE )
-		#define INDUSTRY_UNICODE_DEFAULT
-	#endif
 #endif
 
 //INDUSTRY_TYPEOF - The typeof keyword extension (if supported by the current compiler)

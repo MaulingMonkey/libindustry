@@ -25,21 +25,16 @@ namespace industry {
 	namespace api {
 		namespace windows {
 			typedef std::basic_string< TCHAR > tstring;
-#if !defined( INDUSTRY_UNICODE_ENABLED )
+
+#if !defined( UNICODE )
 			inline const tstring &      to_tstring( const std::string  & string ) { return string; }
 			inline const std::string &  to_string ( const tstring      & string ) { return string; }
-#elif defined( INDUSTRY_UNICODE_DEFAULT )
+#else
 			inline tstring              to_tstring( const std::string  & string ) { return tstring( string.begin() , string.end() ); }
 			inline const tstring &      to_tstring( const std::wstring & string ) { return string; }
 
 			inline std::string          to_string ( const tstring      & string ) { return std::string( string.begin() , string.end() ); }
 			inline const std::wstring & to_wstring( const tstring      & string ) { return string; }
-#else //!defined( UNICODE )
-			inline const tstring &      to_tstring( const std::string  & string ) { return string; }
-			inline tstring              to_tstring( const std::wstring & string ) { return tstring( string.begin() , string.end() ); }
-
-			inline const std::string &  to_string ( const tstring      & string ) { return string; }
-			inline std::wstring         to_wstring( const tstring      & string ) { return std::wstring( string.begin() , string.end() ); }
 #endif
 		}
 	}

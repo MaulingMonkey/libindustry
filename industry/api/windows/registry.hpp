@@ -6,6 +6,7 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 //
+// Jan 15, 2007 - Eliminiated INDUSTRY_UNICODE_* in favor of the plain UNICODE define.
 // Jan  9, 2007 - Added to SVN, cleaned up
 // Oct 26, 2006 - "win32" replaced with "windows" - should be mostly architecture independant
 // Aug 17, 2006 - Created
@@ -15,42 +16,40 @@
 
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/errors.hpp>
-#include <industry/api/windows/registry/key_reference.hpp>
-//#include <industry/api/windows/registry/key_wrapper.hpp>
-//#include <industry/api/windows/registry/value_reference.hpp>
-//#include <industry/api/windows/registry/value_wrapper.hpp>
+#include <industry/api/windows/registry/key.hpp>
 #include <industry/api/windows/import.hpp>
 #include <string>
 
 namespace industry {
 	namespace api {
 		namespace windows {
-			class registry_reference {
-			public:
-				registry_reference();
+			namespace registry {
+				class registry_reference {
+				public:
+					registry_reference();
 
-				registry_key_reference operator[]( const std::string & name ) const;
-				registry_key_reference operator/ ( const std::string & name ) const;
-			private:
-				registry_key_reference lookup_root_key( const std::string & name ) const;
-			public:
-#if defined( INDUSTRY_UNICODE_ENABLED )
-				registry_key_reference operator[]( const std::wstring & name ) const;
-				registry_key_reference operator/ ( const std::wstring & name ) const;
-			private:
-				registry_key_reference lookup_root_key( const std::wstring & name ) const;
-			public:
+					key operator[]( const std::string & name ) const;
+					key operator/ ( const std::string & name ) const;
+				private:
+					key lookup_root_key( const std::string & name ) const;
+#if defined( UNICODE )
+				public:
+					key operator[]( const std::wstring & name ) const;
+					key operator/ ( const std::wstring & name ) const;
+				private:
+					key lookup_root_key( const std::wstring & name ) const;
 #endif
+				public:
+					const key
+						hkey_classes_root   ,
+						hkey_current_user   ,
+						hkey_local_machine  ,
+						hkey_users          ,
+						hkey_current_config ;
+				};
 
-				const registry_key_reference
-					hkey_classes_root   ,
-					hkey_current_user   ,
-					hkey_local_machine  ,
-					hkey_users          ,
-					hkey_current_config ;
-			};
-
-			extern const registry_reference registry;
+				extern const registry_reference registry;
+			}
 		}
 	}
 }
