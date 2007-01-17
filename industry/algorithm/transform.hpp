@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <iterator>
 #include <boost/iterator.hpp>
+#include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits.hpp>
 #include <industry/traits/range.hpp>
 
@@ -183,6 +184,11 @@ namespace industry {
 		template< typename R, typename C >
 		transform_proxy<R (C&)> transform(R (C::*function)()) {
 			return transform_proxy<R (C&)>(function);
+		}
+
+		template< typename R, typename C >
+		transform_proxy<R (const C&)> transform(R (C::*function)() const) {
+			return transform_proxy<R (const C&)>(function);
 		}
 	}
 
