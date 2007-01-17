@@ -141,6 +141,7 @@ namespace industry {
 						}
 					};
 				}
+
 				std::vector< char >         value::to_data     () const { return registry_reader_f< std::vector< char >         >()( *impl->key , impl->name ); }
 				DWORD                       value::to_dword    () const { return registry_reader_f< DWORD                       >()( *impl->key , impl->name ); }
 				QWORD                       value::to_qword    () const { return registry_reader_f< QWORD                       >()( *impl->key , impl->name ); }

@@ -36,6 +36,10 @@ namespace industry {
 					value( const detail::key_data_ptr     & key_data   , const tstring & name ): impl( new detail::value_data( key_data , name ) ) {}
 					~value() {}
 
+					const std::string   name() const { return windows::to_string ( impl->name ); }
+					const std::wstring wname() const { return windows::to_wstring( impl->name ); }
+					const tstring &    tname() const { return                      impl->name  ; }
+
 					std::vector< char >          to_data     () const;
 					DWORD                        to_dword    () const;
 					QWORD                        to_qword    () const;
