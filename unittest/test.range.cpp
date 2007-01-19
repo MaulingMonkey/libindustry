@@ -23,6 +23,19 @@ void test_range( void ) {
 	int       data3[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 1000 };
 	int       small[] = { 1 , 2 , 3 };
 
+	BOOST_CHECK(( is_a_range<       int     >::value == false ));
+	BOOST_CHECK(( is_a_range<       int []  >::value == false ));
+	BOOST_CHECK(( is_a_range<       int [5] >::value == true  ));
+	BOOST_CHECK(( is_a_range< const int     >::value == false ));
+	BOOST_CHECK(( is_a_range< const int []  >::value == false ));
+	BOOST_CHECK(( is_a_range< const int [5] >::value == true  ));
+	BOOST_CHECK(( is_a_range< std::vector<int> >::value == true ));
+	BOOST_CHECK(( is_a_range< const std::vector<int> >::value == true ));
+	BOOST_CHECK(( is_a_range<       range<      int*> >::value == true ));
+	BOOST_CHECK(( is_a_range<       range<const int*> >::value == true ));
+	BOOST_CHECK(( is_a_range< const range<      int*> >::value == true ));
+	BOOST_CHECK(( is_a_range< const range<const int*> >::value == true ));
+
 	BOOST_CHECK( begin(data1) == make_range(data1).begin() );
 	BOOST_CHECK( end(data1)   == make_range(data1).end  () );
 	BOOST_CHECK( size(data1)  == make_range(data1).size () );
