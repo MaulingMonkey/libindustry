@@ -31,7 +31,14 @@ namespace industry {
 		template < typename Processor > struct processor_traits_default_iterators< bound_processor_tag , Processor > { typedef typename range_traits< Processor >::iterator iterator; };
 
 		template < typename Category , typename Processor > struct processor_traits_default_after {};
-		template < typename Processor > struct processor_traits_default_after< unbound_processor_tag , Processor > { template < typename Preceeding > struct after { typedef typename Processor::template after< Preceeding >::type type; }; };
+		template < typename Processor > struct processor_traits_default_after< unbound_processor_tag , Processor > {
+		private:
+			// STATIC ASSERTION CHECKS:
+			typedef typename Processor::template after< const int [42] >::type ensure_valid_after_template_exists_; //TODO:  Turn into a nice clean BOOST_STATIC_ASSERT(( ))
+			// If you get an error pointing to the above line, it's because you've passed a malformed unbound_processor (lacks an appropriate after<> template) to processor_traits
+		public:
+			template < typename Preceeding > struct after { typedef typename Processor::template after< Preceeding >::type type; };
+		};
 	}
 
 	template < typename Processor > struct processor_traits

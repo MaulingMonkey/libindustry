@@ -29,10 +29,10 @@ void test_traits_processor() {
 
 	// Compile failure tests (should be checked 1 by 1):
 	// Note:  Uncommented lines indicate currently failing-to-fail code
-	// Last Tested:  Jan 19, 2007 @ 8:14pm by pandamojo
+	// Last Tested:  Jan 20, 2007 @ 12:44am by pandamojo
 	//
 	// processor_traits< int[] > err_1; err_1=err_1;
-	processor_traits< malformed_processor_1 > err_2; err_2=err_2; //FIXME
+	// processor_traits< malformed_processor_1 > err_2; err_2=err_2;
 	// processor_traits< malformed_processor_2 > err_3; err3=err_3;
 	//
 	// Note:  End of uncommented-as-failing-to-fail code section
