@@ -22,8 +22,8 @@ void test_traits_processor() {
 	// Bound processor compile-and-verification checks:
 	BOOST_CHECK(( typeid(processor_traits<       std::vector<      int> >::processor_category) == typeid(bound_processor_tag) ));
 	BOOST_CHECK(( typeid(processor_traits< const std::vector<      int> >::processor_category) == typeid(bound_processor_tag) ));
-	BOOST_CHECK(( typeid(processor_traits<       std::vector<const int> >::processor_category) == typeid(bound_processor_tag) ));
-	BOOST_CHECK(( typeid(processor_traits< const std::vector<const int> >::processor_category) == typeid(bound_processor_tag) ));
+	//BOOST_CHECK(( typeid(processor_traits<       std::vector<const int> >::processor_category) == typeid(bound_processor_tag) )); //Illegal?  GCC does not grok
+	//BOOST_CHECK(( typeid(processor_traits< const std::vector<const int> >::processor_category) == typeid(bound_processor_tag) )); //Illegal?  GCC does not grok
 
 	BOOST_CHECK(( typeid(processor_traits<       int[5] >::processor_category) == typeid(bound_processor_tag) ));
 	BOOST_CHECK(( typeid(processor_traits< const int[5] >::processor_category) == typeid(bound_processor_tag) ));

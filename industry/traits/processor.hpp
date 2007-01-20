@@ -34,7 +34,7 @@ namespace industry {
 		template < typename Category , typename Processor > struct processor_traits_default_after {};
 		template < typename Processor > struct processor_traits_default_after< unbound_processor_tag , Processor > {
 		private:
-			INDUSTRY_STATIC_ASSERT_TEMPLATE1_EXISTS(( Processor::template after )); // If you get an error pointing to the above line, it's because you've passed a malformed unbound_processor (lacks an appropriate after<> template) to processor_traits
+			INDUSTRY_STATIC_ASSERT_TEMPLATE1_EXISTS(( Processor::after )); // If you get an error pointing to the above line, it's because you've passed a malformed unbound_processor (lacks an appropriate after<> template) to processor_traits
 		public:
 			template < typename Preceeding > struct after {
 				typedef typename Processor::template after< Preceeding >::compose_result_type compose_result_type;
