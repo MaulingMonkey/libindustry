@@ -47,6 +47,19 @@ namespace industry {
 		static size_type      size (const RangeT& range_) { return size_type(range_.end()-range_.begin()); }
 	};
 
+	namespace detail {
+		template < typename Range > sfinae::one is_a_range_helper
+			( typename Range::iterator*
+			, typename Range::const_iterator* = 0
+			, typename Range::difference_type* = 0
+			, typename Range::size_type* = 0
+			);
+		template < typename Range > sfinae::two is_a_range_helper( ... );
+	}
+	template < typename Range > struct is_a_range {
+		static const bool value = (sizeof(detail::is_a_range_helper<Range>(0)) == sizeof(sfinae::one));
+	};
+
 	template < typename RangeT, size_t S >
 	struct range_traits< RangeT[S] > {
 		typedef RangeT*                 iterator;
@@ -71,19 +84,6 @@ namespace industry {
 		static const_iterator begin(const RangeT (&range_)[S]) { return range_;     }
 		static const_iterator end  (const RangeT (&range_)[S]) { return range_ + S; }
 		static size_type      size (const RangeT (&      )[S]) { return S; }
-	};
-
-	namespace detail {
-		template < typename Range > sfinae::one is_a_range_helper
-			( typename Range::iterator*
-			, typename Range::const_iterator* = 0
-			, typename Range::difference_type* = 0
-			, typename Range::size_type* = 0
-			);
-		template < typename Range > sfinae::two is_a_range_helper( ... );
-	}
-	template < typename Range > struct is_a_range {
-		static const bool value = (sizeof(detail::is_a_range_helper<Range>(0)) == sizeof(sfinae::one));
 	};
 	template < typename Value , std::size_t N > struct is_a_range< Value [N] > {
 		static const bool value = true;
