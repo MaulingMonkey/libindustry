@@ -12,13 +12,14 @@
 #include <vector>
 
 namespace {
-	struct malformed_processor_1 { typedef industry::unbound_processor_tag processor_category; };
-	struct malformed_processor_2 { typedef industry::bound_processor_tag   processor_category; };
+	struct malformed_processor_1 { typedef industry::unbound_processor_tag processor_category; /* missing after<> template */ };
+	struct malformed_processor_2 { typedef industry::bound_processor_tag   processor_category; /* missing iterator */ };
 }
 
 void test_traits_processor() {
 	using namespace industry;
 
+	// Bound processor compile-and-verification checks:
 	BOOST_CHECK(( typeid(processor_traits<       std::vector<      int> >::processor_category) == typeid(bound_processor_tag) ));
 	BOOST_CHECK(( typeid(processor_traits< const std::vector<      int> >::processor_category) == typeid(bound_processor_tag) ));
 	BOOST_CHECK(( typeid(processor_traits<       std::vector<const int> >::processor_category) == typeid(bound_processor_tag) ));
