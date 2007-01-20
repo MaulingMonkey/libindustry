@@ -9,12 +9,6 @@
 #ifndef IG_INDUSTRY_SFINAE
 #define IG_INDUSTRY_SFINAE
 
-#include <algorithm>
-#include <iterator>
-#include <industry/traits/range.hpp>
-#include <boost/function.hpp>
-#include <boost/functional.hpp>
-
 namespace industry {
 	template<typename T>
 	struct wrap {};
