@@ -20,8 +20,8 @@ void test_api_windows_registry() {
 }
 
 #elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
-#pragma message( __FILE__ " : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
-#pragma oijfoasijdf
+#pragma message( __FILE__ "(23) : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
+
 void test_api_windows_registry() {
 	BOOST_ERROR( "Compiler extensions not enabled - unable to test" );
 }
