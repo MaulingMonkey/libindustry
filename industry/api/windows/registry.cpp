@@ -15,7 +15,8 @@
 //Nothing
 
 #elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
-#pragma message( __FILE__ " : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
+#include <boost/preprocessor/stringize.hpp>
+#pragma message( __FILE__ "(" BOOST_PP_STRINGIZE(__LINE__) ") : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
 
 #else
 #include <industry/api/windows/registry/config.hpp>
