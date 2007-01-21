@@ -34,9 +34,11 @@ namespace industry {
 		range()                                                  : begin_()               , end_()             {}
 		range( const IteratorT & begin , const IteratorT & end ) : begin_( begin )        , end_( end )        {}
 		range( const range & other )                             : begin_( other.begin_ ) , end_( other.end_ ) {}
-		template < typename O >              range( const range<O>   & other     ) : begin_( other.begin_ )      , end_( other.end_ )      {}
-		template < typename ContainerT >     range( ContainerT       & container ) : begin_( container.begin() ) , end_( container.end() ) {}
-		template < typename T , std::size_t N > range( T (&array)[N]                ) : begin_( array )             , end_( array + N )       {}
+		template < typename O >                 range( const range<O>   & other     ) : begin_( other.begin_ )      , end_( other.end_ )      {}
+		template < typename ContainerT >        range( ContainerT       & container ) : begin_( container.begin() ) , end_( container.end() ) {}
+		template < typename ContainerT >        range( const ContainerT & container ) : begin_( container.begin() ) , end_( container.end() ) {}
+		template < typename T , std::size_t N > range(       T (&array)[N]          ) : begin_( array )             , end_( array + N )       {}
+		template < typename T , std::size_t N > range( const T (&array)[N]          ) : begin_( array )             , end_( array + N )       {}
 
 		IteratorT begin() const { return begin_; }
 		IteratorT end()   const { return end_; }

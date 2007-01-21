@@ -8,6 +8,9 @@
 //
 // Jan 10, 2007 - Created
 
+#ifndef IG_INDUSTRY_TRAITS_CONTAINER
+#define IG_INDUSTRY_TRAITS_CONTAINER
+
 #include <industry/attributes/range.hpp>
 #include <deque>
 #include <list>
@@ -58,3 +61,5 @@ namespace industry {
 		: public sequence_container_traits< std::vector< Type , Alloc > >
 	{};
 }
+
+#endif //ndef IG_INDUSTRY_TRAITS_CONTAINER
