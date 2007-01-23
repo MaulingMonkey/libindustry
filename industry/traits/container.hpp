@@ -46,7 +46,7 @@ namespace industry {
 			 * please specialize industry::is_a_container< C >, with the static boolean ::value representing
 			 * wheither or not C is in fact a container.  Thanks!
 			 */
-			, typename void (C::*)()        = & C::clear
+			, void (C::*)()        = & C::clear
 			, typename C::iterator (C::*)() = & C::begin
 			, typename C::iterator (C::*)() = & C::end
 			/* End of function signature check area */
