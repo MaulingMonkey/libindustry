@@ -39,6 +39,7 @@ void test_traits_container() {
 	BOOST_STATIC_ASSERT((  is_a_container< const std::map< char , int > >::value ));
 	BOOST_STATIC_ASSERT(( !is_a_container< int >::value ));
 	BOOST_STATIC_ASSERT(( !is_a_container< not_a_container1 >::value ));
+	BOOST_STATIC_ASSERT(( !is_a_container< range< int* > >::value ));
 
 	// Compile failure tests (should be checked 1 by 1):
 	// Note:  Uncommented lines indicate currently failing-to-fail code

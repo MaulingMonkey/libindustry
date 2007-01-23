@@ -57,6 +57,9 @@ namespace industry {
 	template < typename Container > struct is_a_container {
 		static const bool value = (sizeof(sfinae::one) == sizeof(detail::is_a_container_helper<Container>()));
 	};
+	template < typename Iterator > class range;
+	template < typename Iterator > struct is_a_container<       range< Iterator > > { static const bool value = false; };
+	template < typename Iterator > struct is_a_container< const range< Iterator > > { static const bool value = false; };
 
 	template < typename Container > class container_traits;
 
