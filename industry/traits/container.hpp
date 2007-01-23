@@ -15,6 +15,7 @@
 #include <industry/sfinae.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <deque>
@@ -46,7 +47,7 @@ namespace industry {
 			 * please specialize industry::is_a_container< C >, with the static boolean ::value representing
 			 * wheither or not C is in fact a container.  Thanks!
 			 */
-			, void (C::*)()        = & C::clear
+			, void (C::*)()                 = & C::clear
 			, typename C::iterator (C::*)() = & C::begin
 			, typename C::iterator (C::*)() = & C::end
 			/* End of function signature check area */
@@ -55,7 +56,7 @@ namespace industry {
 	}
 
 	template < typename Container > struct is_a_container {
-		static const bool value = (sizeof(sfinae::one) == sizeof(detail::is_a_container_helper<Container>()));
+		static const bool value = (sizeof(sfinae::one) == sizeof(detail::is_a_container_helper<typename boost::remove_const<Container>::type >(0)));
 	};
 	template < typename Iterator > class range;
 	template < typename Iterator > struct is_a_container<       range< Iterator > > { static const bool value = false; };
