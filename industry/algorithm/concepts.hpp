@@ -37,8 +37,8 @@ namespace industry {
 		 *
 		 * Other concepts that map to algorithm concepts:
 		 *
-		 * - Range      is-a        UnboundProcessor
-		 * - Container  converts-to Range             is-a UnboundProcessor
+		 * - Range      is-a        BoundProcessor
+		 * - Container  converts-to Range             is-a BoundProcessor
 		 *
 		 * Other concepts that map to specific algorithm items:
 		 *
