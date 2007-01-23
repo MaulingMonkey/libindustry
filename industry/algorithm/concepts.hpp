@@ -16,15 +16,24 @@ namespace industry {
 		 * - UnboundProcessor
 		 *   A processor not bound to an input range -- used for secondary processor inputs
 		 *   UnboundProcessor | UnboundProcessor results in another UnboundProcessor (a "chained" processor)
-		 *   Examples:  filter, transform
+		 *   Example:  Result of "filter", or "transform"
 		 *
 		 * - BoundProcessor
 		 *   A processor bound to an input range
-		 *   Examples:  each
+		 *   Example:  Result of "each"
+		 *
+		 * - ActiveProcessor
+		 *   A processor with iteration state data -- invokation of a BoundProcessor chain -- actual processor logic here.
+		 *   Interface:
+		 *      reference get() const; //current element
+		 *      void advance(); //advance to next position
+		 *      bool end(); //get() no longer valid
 		 *
 		 * - EndpointProcessor
-		 *   A processor which when concatonated to a BoundProcessor chain invokes an operation upon the iterated over elements
-		 *   Examples:  call, push_back
+		 *   A processor which when concatonated to a BoundProcessor chain invokes an operation upon the iterated over elements.
+		 *   Takes a BoundProcessor, converts to an ActiveProcessor, and uses said chain.
+		 *
+		 *   Examples:  Result of "call", or "push_back"
 		 *
 		 * Other concepts that map to algorithm concepts:
 		 *
