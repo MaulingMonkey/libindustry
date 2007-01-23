@@ -50,6 +50,8 @@ namespace industry {
 			, void (C::*)()                 = & C::clear
 			, typename C::iterator (C::*)() = & C::begin
 			, typename C::iterator (C::*)() = & C::end
+			, typename C::const_iterator (C::*)() const = & C::begin
+			, typename C::const_iterator (C::*)() const = & C::end
 			/* End of function signature check area */
 			);
 		template < typename C > static sfinae::two is_a_container_helper( ... );
