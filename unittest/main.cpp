@@ -49,6 +49,7 @@ void test_range_numeric_iterator();
 void test_template_crtp();
 void test_template_group();
 void test_template_tt();
+void test_traits_container();
 void test_traits_processor();
 void test_algorithm_call();
 void test_algorithm_transform();
@@ -88,6 +89,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test->add(BOOST_TEST_CASE(test_template_crtp));
 	test->add(BOOST_TEST_CASE(test_template_group));
 	test->add(BOOST_TEST_CASE(test_template_tt));
+	test->add(BOOST_TEST_CASE(test_traits_container));
 	test->add(BOOST_TEST_CASE(test_traits_processor));
 
 #if defined( INDUSTRY_OS_WINDOWS )

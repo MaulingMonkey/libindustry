@@ -12,6 +12,11 @@
 #define IG_INDUSTRY_TRAITS_CONTAINER
 
 #include <industry/attributes/range.hpp>
+#include <industry/sfinae.hpp>
+#include <boost/concept_check.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <deque>
 #include <list>
 #include <map>
@@ -19,6 +24,40 @@
 #include <vector>
 
 namespace industry {
+	namespace detail {
+		template < typename C > static sfinae::one is_a_container_helper
+			( typename C::container_category* = 0
+			);
+		template < typename C > static sfinae::one is_a_container_helper
+			/* If you've got an error for any of the following lines, it's likely because one of the typedefs
+			 * of C was unexpectedly a reference.  Please specialize industry::is_a_container< C >, with the
+			 * static boolean ::value representing wheither or not C is in fact a container.  Thanks!
+			 */
+			( typename C::value_type*       = 0
+			, typename C::iterator*         = 0
+			, typename C::const_iterator*   = 0
+			, typename boost::remove_reference< typename C::reference       >::type* = 0
+			, typename boost::remove_reference< typename C::const_reference >::type* = 0
+			, typename C::pointer*          = 0
+			, typename C::difference_type*  = 0
+			, typename C::size_type*        = 0
+			/* If you've got an error for any of the following lines, it's because you have all the typedefs
+			 * of a container, but are missing one of the required functions, or it is of an unexpected type.
+			 * please specialize industry::is_a_container< C >, with the static boolean ::value representing
+			 * wheither or not C is in fact a container.  Thanks!
+			 */
+			, typename void (C::*)()        = & C::clear
+			, typename C::iterator (C::*)() = & C::begin
+			, typename C::iterator (C::*)() = & C::end
+			/* End of function signature check area */
+			);
+		template < typename C > static sfinae::two is_a_container_helper( ... );
+	}
+
+	template < typename Container > struct is_a_container {
+		static const bool value = (sizeof(sfinae::one) == sizeof(detail::is_a_container_helper<Container>()));
+	};
+
 	template < typename Container > class container_traits;
 
 	template < typename Container > class sequence_container_traits {
