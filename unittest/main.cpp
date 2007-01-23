@@ -31,6 +31,7 @@ using boost::unit_test::test_suite;
 typedef void (*test_function_ptr)();
 
 void test_algorithm();
+void test_algorithm_concepts();
 void test_container();
 void test_factory();
 //void test_image();
