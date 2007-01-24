@@ -112,6 +112,7 @@ struct func_wrapper_helper<T, Fn, N, BOOST_PP_ITERATION()> {
 		return Qnil;
 	}
 };
-
+#undef I
+#undef FUNCTION_ARG_TYPE
 #undef DO_WRAP_VALUE
 #endif
