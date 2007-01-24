@@ -14,15 +14,15 @@
 
 
 namespace industry { namespace languages { namespace ruby {
-#define INDUSTRY_RUBY_MODULE(name) void Do_##name_Init(); \
+#define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init(); \
 	extern "C" void __declspec(dllexport) Init_##name() { \
 		ruby_init(); \
-		Do_##name_Init(); \
+		Do_##name##_Init(); \
 	} \
-	void Do_##name_Init()
+	void Do_##name##_Init()
 
 	namespace detail {
-		template<class F>
+		template<class T, class F, unsigned int N>
 		struct func_wrapper {
 			static boost::function<F> get_f(F* f = 0) { static F* fn; if(f) fn = f; return boost::function<F>(fn); }
 			static VALUE func_call(int argc, VALUE *argv, VALUE self) {
@@ -37,10 +37,14 @@ namespace industry { namespace languages { namespace ruby {
 
 			template<class Fn>
 			class_n<N+1, T> def(std::string const& name, Fn* f) {
-				typedef func_wrapper<Fn> func_w;
+				typedef func_wrapper<T, Fn, N> func_w;
 				func_w::get_f(f);
 				rb_define_method(klass, name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
 				return class_n<N+1, T>(klass);
+			}
+
+			class_n<N, T>* operator->() {
+				return this;
 			}
 		private:
 			VALUE klass;
