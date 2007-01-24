@@ -18,7 +18,7 @@ using namespace industry::languages::ruby;
 
 namespace {
 	struct Empty {
-		int print_two(int j) {
+		int print_two(int j) const {
 			std::cout<<"two! "<<j<<" "<<2+j<<std::endl;
 			return 2 * j;
 		}

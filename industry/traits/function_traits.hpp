@@ -51,6 +51,11 @@ struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A))> {
 #define n BOOST_PP_ITERATION()
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A)) const> {
+	typedef R (signature)(const C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A));
+};
+
+template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
 struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 	typedef R (signature)(C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A)) ;
 };

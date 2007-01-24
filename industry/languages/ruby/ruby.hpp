@@ -129,7 +129,7 @@ struct func_wrapper_helper<Cl, Fn, N, BOOST_PP_ITERATION()> {
 	template<unsigned int C> struct dispatcher {
 		template<typename T>
 		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
-			return dispatcher_util<boost::is_same<Cl, typename boost::remove_pointer<typename boost::remove_reference<typename func_type::arg1_type>::type>::type>::value>::call(f, self, argc, argv, p);
+			return dispatcher_util<boost::is_same<Cl, boost::remove_const<typename boost::remove_pointer<typename boost::remove_reference<typename func_type::arg1_type>::type>::type>::type>::value>::call(f, self, argc, argv, p);
 		}
 	};
 
