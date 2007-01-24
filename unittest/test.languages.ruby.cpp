@@ -30,8 +30,8 @@ namespace {
 
 	INDUSTRY_RUBY_MODULE(MyTestModule) {
 		class_<Empty>("MyTestClass").
-			def("Work", print_hello);/*.
-			def("WorkOther", &Empty::print_two);*/
+			def("Work", print_hello).
+			def("WorkOther", &Empty::print_two);
 	}
 }
 
