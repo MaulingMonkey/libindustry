@@ -23,27 +23,27 @@
 namespace industry { namespace languages { namespace ruby {
 #define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init(); \
 	extern "C" void __declspec(dllexport) Init_##name() { \
-		ruby_init(); \
-		Do_##name##_Init(); \
-	} \
+	ruby_init(); \
+	Do_##name##_Init(); \
+} \
 	void Do_##name##_Init()
 
-	template<class T>
-	struct ruby_value { };
-
-	template<> struct ruby_value<char> { VALUE to_value(char value) { return CHR2FIX(value); } char from_value(VALUE v) { return NUM2CHR(v); } };
-	template<> struct ruby_value<short> { VALUE to_value(short value) { return INT2NUM(value); } short from_value(VALUE v) { return NUM2INT(v); } };
-	template<> struct ruby_value<int> { VALUE to_value(int value) { return INT2NUM(value); } int from_value(VALUE v) { return NUM2INT(v); } };
-	template<> struct ruby_value<long> { VALUE to_value(long value) { return LONG2NUM(value); } long from_value(VALUE v) { return NUM2INT(v); } };
-	template<> struct ruby_value<unsigned char> { VALUE to_value(char value) { return UINT2NUM(value); } unsigned char from_value(VALUE v) { return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned short> { VALUE to_value(short value) { return UINT2NUM(value); } unsigned short from_value(VALUE v) { return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned int> { VALUE to_value(int value) { return UINT2NUM(value); } unsigned int from_value(VALUE v) { return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned long> { VALUE to_value(long value) { return ULONG2NUM(value); } unsigned long from_value(VALUE v) { return NUM2ULONG(v); } };
-	template<> struct ruby_value<char*> { VALUE to_value(char* value) { return rb_str_new2(value); } char* from_value(VALUE v) { return STR2CSTR(v); } };
-	template<> struct ruby_value<const char*> { VALUE to_value(const char* value) { return rb_str_new2(value); } const char* from_value(VALUE v) { return STR2CSTR(v); } };
-	template<> struct ruby_value<std::string> { VALUE to_value(std::string const& value) { return rb_str_new2(value.c_str()); } std::string from_value(VALUE v) { return std::string(STR2CSTR(v)); } };
-
 	namespace detail {
+		template<class T>
+		struct ruby_value { };
+
+		template<> struct ruby_value<char> { VALUE to_value(char value) { return CHR2FIX(value); } char from_value(VALUE v) { return NUM2CHR(v); } };
+		template<> struct ruby_value<short> { VALUE to_value(short value) { return INT2NUM(value); } short from_value(VALUE v) { return NUM2INT(v); } };
+		template<> struct ruby_value<int> { VALUE to_value(int value) { return INT2NUM(value); } int from_value(VALUE v) { return NUM2INT(v); } };
+		template<> struct ruby_value<long> { VALUE to_value(long value) { return LONG2NUM(value); } long from_value(VALUE v) { return NUM2INT(v); } };
+		template<> struct ruby_value<unsigned char> { VALUE to_value(char value) { return UINT2NUM(value); } unsigned char from_value(VALUE v) { return NUM2UINT(v); } };
+		template<> struct ruby_value<unsigned short> { VALUE to_value(short value) { return UINT2NUM(value); } unsigned short from_value(VALUE v) { return NUM2UINT(v); } };
+		template<> struct ruby_value<unsigned int> { VALUE to_value(int value) { return UINT2NUM(value); } unsigned int from_value(VALUE v) { return NUM2UINT(v); } };
+		template<> struct ruby_value<unsigned long> { VALUE to_value(long value) { return ULONG2NUM(value); } unsigned long from_value(VALUE v) { return NUM2ULONG(v); } };
+		template<> struct ruby_value<char*> { VALUE to_value(char* value) { return rb_str_new2(value); } char* from_value(VALUE v) { return STR2CSTR(v); } };
+		template<> struct ruby_value<const char*> { VALUE to_value(const char* value) { return rb_str_new2(value); } const char* from_value(VALUE v) { return STR2CSTR(v); } };
+		template<> struct ruby_value<std::string> { VALUE to_value(std::string const& value) { return rb_str_new2(value.c_str()); } std::string from_value(VALUE v) { return std::string(STR2CSTR(v)); } };
+
 		template<class T, class Fn, unsigned int N, unsigned int Ac>
 		struct func_wrapper_helper {
 			static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv) {
@@ -74,6 +74,33 @@ namespace industry { namespace languages { namespace ruby {
 				func_w::get_f(f);
 				rb_define_method(klass, name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
 				return class_n<N+1, T>(klass);
+			}
+		private:
+			VALUE klass;
+		};
+
+		template<class T>
+		struct class_n<0, T> {
+			class_n(VALUE klass) : klass(klass) {
+				rb_define_singleton_method(klass, "new", RUBY_METHOD_FUNC(class_n_new_default), 0);
+			}
+
+			static VALUE class_n_new_default(VALUE klass) {
+				T* ptr = new T();
+				VALUE pdata = Data_Wrap_Struct(klass, 0, class_n_free_default, ptr);
+				rb_obj_call_init(pdata, 0, 0);
+				return pdata;
+			}
+
+			static void class_n_free_default(T* p) {
+				delete p;
+			}
+			template<class Fn>
+			class_n<1, T> def(std::string const& name, Fn* f) {
+				typedef func_wrapper<T, Fn, 1> func_w;
+				func_w::get_f(f);
+				rb_define_method(klass, name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
+				return class_n<1, T>(klass);
 			}
 		private:
 			VALUE klass;
