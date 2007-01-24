@@ -19,6 +19,7 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/to_list.hpp>
 #include <ruby.h>
+#include <industry/traits/function_traits.hpp>
 
 namespace industry { namespace languages { namespace ruby {
 #define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init(); \
@@ -44,7 +45,7 @@ namespace industry { namespace languages { namespace ruby {
 		template<> struct ruby_value<const char*> { VALUE to_value(const char* value) { return rb_str_new2(value); } const char* from_value(VALUE v) { return STR2CSTR(v); } };
 		template<> struct ruby_value<std::string> { VALUE to_value(std::string const& value) { return rb_str_new2(value.c_str()); } std::string from_value(VALUE v) { return std::string(STR2CSTR(v)); } };
 
-		template<class T, class Fn, unsigned int N, unsigned int Ac>
+		template<class Cl, class Fn, unsigned int N, unsigned int Ac>
 		struct func_wrapper_helper {
 			static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv) {
 				return Qnil;
@@ -55,9 +56,9 @@ namespace industry { namespace languages { namespace ruby {
 #		define BOOST_PP_FILENAME_1       "ruby.hpp"
 #		include BOOST_PP_ITERATE()
 
-		template<class T, class Fn, unsigned int N>
-		struct func_wrapper : func_wrapper_helper<T, Fn, N, boost::function<Fn>::arity> {
-			static boost::function<Fn> get_f(Fn* f = 0) { static Fn* fn; if(f) fn = f; return boost::function<Fn>(fn); }
+		template<class Cl, class Fn, unsigned int N>
+		struct func_wrapper : func_wrapper_helper<Cl, Fn, N, boost::function<Fn>::arity> {
+			static boost::function<Fn> get_f(boost::function<Fn> f = boost::function<Fn>(0)) { static boost::function<Fn> fn; if(f) fn = boost::function<Fn>(f); return fn; }
 			static VALUE func_call(int argc, VALUE *argv, VALUE self) {
 				typedef boost::function<Fn> func_type;
 				return dispatch(get_f(), self, argc, argv);
@@ -69,12 +70,13 @@ namespace industry { namespace languages { namespace ruby {
 			class_n(VALUE klass) : klass(klass) {}
 
 			template<class Fn>
-			class_n<N+1, T> def(std::string const& name, Fn* f) {
-				typedef func_wrapper<T, Fn, N> func_w;
+			class_n<N+1, T> def(std::string const& name, Fn f) {
+				typedef func_wrapper<T, typename function_traits<Fn>::signature, N> func_w;
 				func_w::get_f(f);
 				rb_define_method(klass, name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
 				return class_n<N+1, T>(klass);
 			}
+
 		private:
 			VALUE klass;
 		};
@@ -95,6 +97,7 @@ namespace industry { namespace languages { namespace ruby {
 			static void class_n_free_default(T* p) {
 				delete p;
 			}
+
 			template<class Fn>
 			class_n<1, T> def(std::string const& name, Fn* f) {
 				typedef func_wrapper<T, Fn, 1> func_w;
@@ -114,31 +117,80 @@ namespace industry { namespace languages { namespace ruby {
 }}}
 #endif //IG_INDUSTRY_LANGUAGES_RUBY
 #else
+
 #define I BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(I) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(I),_type))
 #define DO_WRAP_VALUE(z, n, data) ruby_value<FUNCTION_ARG_TYPE(n)>().from_value(argv[##n])
-template<class T, class Fn, unsigned int N>
-struct func_wrapper_helper<T, Fn, N, BOOST_PP_ITERATION()> {
+#define DO_WRAP_VALUE_2(z, n, data) ruby_value<FUNCTION_ARG_TYPE(BOOST_PP_INC(n))>().from_value(argv[n])
+template<class Cl, class Fn, unsigned int N>
+struct func_wrapper_helper<Cl, Fn, N, BOOST_PP_ITERATION()> {
+	typedef boost::function<Fn> func_type;
+
+	template<unsigned int C> struct dispatcher {
+		template<typename T>
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
+			return dispatcher_util<boost::is_same<Cl, typename boost::remove_pointer<typename boost::remove_reference<typename func_type::arg1_type>::type>::type>::value>::call(f, self, argc, argv, p);
+		}
+	};
+
+	template<bool B> struct dispatcher_util {
+		template<typename T>
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
+			if(argc < func_type::arity)
+				rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
+			return ruby_value<typename boost::function<Fn>::result_type>().to_value(f(BOOST_PP_ENUM(I, DO_WRAP_VALUE, BOOST_PP_EMPTY)));
+		}
+
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, void* p) {
+			if(argc < func_type::arity)
+				rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
+			f(BOOST_PP_ENUM(I, DO_WRAP_VALUE, BOOST_PP_EMPTY));
+			return Qnil;
+		}
+	};
+
+	template<> struct dispatcher_util<true> {
+		template<typename T>
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
+			if(argc < func_type::arity - 1)
+				rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
+			Cl* ptr;
+			Data_Get_Struct(self, Cl, ptr);
+			return ruby_value<typename boost::function<Fn>::result_type>().to_value(f(ptr, BOOST_PP_ENUM(BOOST_PP_DEC(I), DO_WRAP_VALUE_2, BOOST_PP_EMPTY)));
+		}
+
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, void* p) {
+			if(argc < func_type::arity - 1)
+				rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
+			Cl* ptr;
+			Data_Get_Struct(self, Cl, ptr);
+			f(ptr, BOOST_PP_ENUM(BOOST_PP_DEC(I), DO_WRAP_VALUE_2, BOOST_PP_EMPTY));
+			return Qnil;
+		}
+	};
+
+	template<> struct dispatcher<0> {
+		template<typename T>
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
+			return ruby_value<typename boost::function<Fn>::result_type>().to_value(f());
+		}
+
+		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, void* p) {
+			f();
+			return Qnil;
+		}
+	};
+
 	static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv) {
 		return dispatch(f, self, argc, argv, (boost::function<Fn>::result_type*)(0));
 	}
 
 	template<typename T>
 	static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
-		typedef boost::function<Fn> func_type;
-		if(argc < func_type::arity)
-			rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
-		return ruby_value<typename boost::function<Fn>::result_type>().to_value(f(BOOST_PP_ENUM(I, DO_WRAP_VALUE, BOOST_PP_EMPTY)));
-	}
-
-	static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, void* p) {
-		typedef boost::function<Fn> func_type;
-		if(argc < func_type::arity)
-			rb_bug("Argument count mismatch. Expected %d found %d", func_type::arity, argc);
-		f(BOOST_PP_ENUM(I, DO_WRAP_VALUE, BOOST_PP_EMPTY));
-		return Qnil;
+		return dispatcher<func_type::arity>::call(f, self, argc, argv, p);
 	}
 };
+#undef DO_WRAP_VALUE_2
 #undef I
 #undef FUNCTION_ARG_TYPE
 #undef DO_WRAP_VALUE

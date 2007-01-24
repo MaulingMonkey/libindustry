@@ -17,15 +17,21 @@ void test_languages_ruby() {}
 using namespace industry::languages::ruby;
 
 namespace {
+	struct Empty {
+		int print_two(int j) {
+			std::cout<<"two! "<<j<<" "<<2+j<<std::endl;
+			return 2 * j;
+		}
+	};
+
 	void print_hello() {
-		std::cout<<"Hello world";
+		std::cout<<"Hello world"<<std::endl;
 	}
 
-	struct t {};
-
-	INDUSTRY_RUBY_MODULE(TestModule) {
-		class_<t>("MyTest").
-			def("work", &print_hello);
+	INDUSTRY_RUBY_MODULE(MyTestModule) {
+		class_<Empty>("MyTestClass").
+			def("Work", print_hello);/*.
+			def("WorkOther", &Empty::print_two);*/
 	}
 }
 
