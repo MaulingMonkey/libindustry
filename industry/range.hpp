@@ -27,9 +27,12 @@ namespace industry {
 		typedef IteratorT                                                        const_iterator;
 		typedef IteratorT                                                        iterator;
 		typedef typename std::iterator_traits< IteratorT >::difference_type      difference_type;
+		typedef typename std::iterator_traits< IteratorT >::pointer              pointer;
+		typedef typename std::iterator_traits< IteratorT >::reference            reference;
 		typedef typename std::allocator<
 			typename std::iterator_traits<iterator>::value_type
 		>::size_type                                                             size_type;
+		typedef typename std::iterator_traits< IteratorT >::value_type           value_type;
 
 		range()                                                  : begin_()               , end_()             {}
 		range( const IteratorT & begin , const IteratorT & end ) : begin_( begin )        , end_( end )        {}
