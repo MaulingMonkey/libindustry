@@ -58,7 +58,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Cl, class Fn, unsigned int N>
 		struct func_wrapper : func_wrapper_helper<Cl, Fn, N, boost::function<Fn>::arity> {
-			static boost::function<Fn> get_f(boost::function<Fn> f = boost::function<Fn>(0)) { static boost::function<Fn> fn; if(f) fn = boost::function<Fn>(f); return fn; }
+			static boost::function<Fn> const& get_f(boost::function<Fn> f = boost::function<Fn>(0)) { static boost::function<Fn> fn; if(f) fn = boost::function<Fn>(f); return fn; }
 			static VALUE func_call(int argc, VALUE *argv, VALUE self) {
 				typedef boost::function<Fn> func_type;
 				return dispatch(get_f(), self, argc, argv);
