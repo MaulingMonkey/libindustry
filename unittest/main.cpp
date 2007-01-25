@@ -32,7 +32,6 @@ typedef void (*test_function_ptr)();
 
 void test_algorithm();
 void test_algorithm_concepts();
-void test_container();
 void test_factory();
 //void test_image();
 void test_inherit();
@@ -55,8 +54,6 @@ void test_traits_processor();
 void test_algorithm_call();
 void test_algorithm_transform();
 void test_algorithm_transform_memberptr();
-void test_container_default_allocation_policy();
-
 
 #if defined( INDUSTRY_OS_WINDOWS )
 void test_api_windows_registry();
@@ -69,8 +66,6 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
 
-	test->add(BOOST_TEST_CASE(test_container));
-	test->add(BOOST_TEST_CASE(test_container_default_allocation_policy));
 	test->add(BOOST_TEST_CASE(test_algorithm_transform_memberptr));
 	test->add(BOOST_TEST_CASE(test_algorithm_transform));
 	test->add(BOOST_TEST_CASE(test_algorithm_call));
