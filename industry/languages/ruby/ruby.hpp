@@ -33,6 +33,8 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T>
 		struct ruby_value { };
 
+		template<class T> struct ruby_value<T*> { VALUE to_value(T* ptr) { return Data_Wrap_Struct(class_n<0, T>::get(), 0, RUBY_METHOD_FUNC(class_n_free_default), ptr); } T* from_value(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; } };
+
 		template<> struct ruby_value<char> { VALUE to_value(char value) { return CHR2FIX(value); } char from_value(VALUE v) { return NUM2CHR(v); } };
 		template<> struct ruby_value<short> { VALUE to_value(short value) { return INT2NUM(value); } short from_value(VALUE v) { return NUM2INT(v); } };
 		template<> struct ruby_value<int> { VALUE to_value(int value) { return INT2NUM(value); } int from_value(VALUE v) { return NUM2INT(v); } };
@@ -83,8 +85,9 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class T>
 		struct class_n<0, T> {
-			class_n(VALUE klass) : klass(klass) {
-				rb_define_singleton_method(klass, "new", RUBY_METHOD_FUNC(class_n_new_default), 0);
+			class_n(VALUE klass) {
+				get(klass);
+				rb_define_singleton_method(get(), "new", RUBY_METHOD_FUNC(class_n_new_default), 0);
 			}
 
 			static VALUE class_n_new_default(VALUE klass) {
@@ -102,11 +105,11 @@ namespace industry { namespace languages { namespace ruby {
 			class_n<1, T> def(std::string const& name, Fn* f) {
 				typedef func_wrapper<T, Fn, 1> func_w;
 				func_w::get_f(f);
-				rb_define_method(klass, name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
-				return class_n<1, T>(klass);
+				rb_define_method(get(), name.c_str(), RUBY_METHOD_FUNC(func_w::func_call), -1);
+				return class_n<1, T>(get());
 			}
-		private:
-			VALUE klass;
+
+			static VALUE get(VALUE v = VALUE()) { static VALUE klass; if(v) klass = v; return klass; }
 		};
 	}
 
@@ -129,7 +132,7 @@ struct func_wrapper_helper<Cl, Fn, N, BOOST_PP_ITERATION()> {
 	template<unsigned int C> struct dispatcher {
 		template<typename T>
 		static VALUE call(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv, T* p) {
-			return dispatcher_util<boost::is_same<Cl, boost::remove_const<typename boost::remove_pointer<typename boost::remove_reference<typename func_type::arg1_type>::type>::type>::type>::value>::call(f, self, argc, argv, p);
+			return dispatcher_util<boost::is_same<Cl, typename boost::remove_const<typename boost::remove_pointer<typename boost::remove_reference<typename func_type::arg1_type>::type>::type>::type>::value>::call(f, self, argc, argv, p);
 		}
 	};
 
@@ -182,7 +185,7 @@ struct func_wrapper_helper<Cl, Fn, N, BOOST_PP_ITERATION()> {
 	};
 
 	static VALUE dispatch(boost::function<Fn> const& f, VALUE self, int argc, VALUE* argv) {
-		return dispatch(f, self, argc, argv, (boost::function<Fn>::result_type*)(0));
+		return dispatch(f, self, argc, argv, (typename boost::function<Fn>::result_type*)(0));
 	}
 
 	template<typename T>
