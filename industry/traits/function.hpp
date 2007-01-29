@@ -23,20 +23,20 @@ namespace industry {
 #define IG_INDUSTRY_FUNCTION_TRAIT_ITOR
 
 #define BOOST_PP_ITERATION_LIMITS (0, 25)
-#define BOOST_PP_FILENAME_1       "function.hpp"
+#define BOOST_PP_FILENAME_1       <industry/traits/function.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef IG_INDUSTRY_FUNCTION_TRAIT_ITOR
 #define IG_INDUSTRY_FUNCTION_TRAIT_ITOR2
 
 #define BOOST_PP_ITERATION_LIMITS (0, 25)
-#define BOOST_PP_FILENAME_1       "function.hpp"
+#define BOOST_PP_FILENAME_1       <industry/traits/function.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef IG_INDUSTRY_FUNCTION_TRAIT_ITOR2
 
 #define BOOST_PP_ITERATION_LIMITS (0, 25)
-#define BOOST_PP_FILENAME_1       "function.hpp"
+#define BOOST_PP_FILENAME_1       <industry/traits/function.hpp>
 #include BOOST_PP_ITERATE()
 
 }

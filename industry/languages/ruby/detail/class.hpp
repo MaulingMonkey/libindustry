@@ -5,7 +5,7 @@
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 #include <cstdio>
-#include "detail/do_call.hpp"
+#include <industry/languages/ruby/detail/do_call.hpp>
 
 namespace industry { namespace languages { namespace ruby {
 	template<class T>

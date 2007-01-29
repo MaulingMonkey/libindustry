@@ -25,7 +25,7 @@ namespace industry { namespace languages { namespace ruby {
 		};
 
 #		define BOOST_PP_ITERATION_LIMITS (0, 17)
-#		define BOOST_PP_FILENAME_1       "detail/do_call.hpp"
+#		define BOOST_PP_FILENAME_1       <industry/languages/ruby/detail/do_call.hpp>
 #		include BOOST_PP_ITERATE()
 
 		template<class T, class Fn, unsigned int Params, bool IsMemberFunction>

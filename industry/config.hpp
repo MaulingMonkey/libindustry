@@ -38,13 +38,13 @@
 
 #if defined( _MSC_VER )
 #define INDUSTRY_OS_WINDOWS
-
+#define INDUSTRY_EXPORT __declspec(dllexport)
 #elif defined( __APPLE__ )
 #define INDUSTRY_OS_X
-
+#define INDUSTRY_EXPORT
 #else
 #define INDUSTRY_OS_UNKNOWN
-
+#define INDUSTRY_EXPORT
 #endif
 
 //INDUSTRY_TYPEOF - The typeof keyword extension (if supported by the current compiler)

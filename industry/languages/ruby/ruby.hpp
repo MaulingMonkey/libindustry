@@ -1,9 +1,9 @@
 #ifndef IG_LANGUAGES_RUBY_RUBY
 #define IG_LANGUAGES_RUBY_RUBY
 
-#include "detail/wrap_retarded_ruby.hpp"
-#include "detail/ruby_value.hpp"
-#include "detail/class.hpp"
+#include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
+#include <industry/languages/ruby/detail/ruby_value.hpp>
+#include <industry/languages/ruby/detail/class.hpp>
 #include <string>
 
 namespace industry { namespace languages { namespace ruby {
