@@ -23,25 +23,47 @@ namespace industry {
 #define IG_INDUSTRY_FUNCTION_TRAIT_ITOR
 
 #define BOOST_PP_ITERATION_LIMITS (0, 25)
-#define BOOST_PP_FILENAME_1       "function_traits.hpp"
+#define BOOST_PP_FILENAME_1       "function.hpp"
 #include BOOST_PP_ITERATE()
 
 #undef IG_INDUSTRY_FUNCTION_TRAIT_ITOR
+#define IG_INDUSTRY_FUNCTION_TRAIT_ITOR2
 
 #define BOOST_PP_ITERATION_LIMITS (0, 25)
-#define BOOST_PP_FILENAME_1       "function_traits.hpp"
+#define BOOST_PP_FILENAME_1       "function.hpp"
+#include BOOST_PP_ITERATE()
+
+#undef IG_INDUSTRY_FUNCTION_TRAIT_ITOR2
+
+#define BOOST_PP_ITERATION_LIMITS (0, 25)
+#define BOOST_PP_FILENAME_1       "function.hpp"
 #include BOOST_PP_ITERATE()
 
 }
-#endif //IG_INDUSTRY_FUNCTION_TRAITS
+#endif //IG_INDUSTRY_FUNCTION_TRAITS2
 
-#elif defined(IG_INDUSTRY_FUNCTION_TRAIT_ITOR)//BOOST_PP_IS_ITERATING
+#elif defined(IG_INDUSTRY_FUNCTION_TRAIT_ITOR2)
+
+#define n BOOST_PP_ITERATION()
+
+template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (*)(BOOST_PP_ENUM_PARAMS(n,A))> {
+	typedef R (signature)(BOOST_PP_ENUM_PARAMS(n,A)) ;
+	static const bool is_member_function = false;
+	static const unsigned int arity = n;
+};
+
+#undef n
+
+#elif defined(IG_INDUSTRY_FUNCTION_TRAIT_ITOR)
 
 #define n BOOST_PP_ITERATION()
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
 struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A))> {
 	typedef R (signature)(BOOST_PP_ENUM_PARAMS(n,A)) ;
+	static const bool is_member_function = false;
+	static const unsigned int arity = n;
 };
 
 #undef n
@@ -53,11 +75,15 @@ struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A))> {
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
 struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A)) const> {
 	typedef R (signature)(const C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A));
+	static const bool is_member_function = true;
+	static const unsigned int arity = n;
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
 struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 	typedef R (signature)(C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A)) ;
+	static const bool is_member_function = true;
+	static const unsigned int arity = n;
 };
 
 #undef n
