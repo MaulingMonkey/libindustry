@@ -4,11 +4,12 @@
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/class.hpp>
+#include <industry/config.hpp>
 #include <string>
 
 namespace industry { namespace languages { namespace ruby {
 #	define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init();\
-	extern "C" void  __declspec(dllexport) Init_##name () {\
+	extern "C" void  INDUSTRY_EXPORT Init_##name () {\
 		ruby_init();\
 		Do_##name##_Init();\
 	}\
