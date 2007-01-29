@@ -20,8 +20,6 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T, class Fn, unsigned int Params, bool IsMemberFunction, bool IsVoid>
 		struct do_call_is_void {
 			typedef boost::function<Fn> func_type;
-
-			static typename VALUE call(func_type const& f, VALUE self, va_list args);
 		};
 
 #		define BOOST_PP_ITERATION_LIMITS (0, 17)
@@ -32,7 +30,7 @@ namespace industry { namespace languages { namespace ruby {
 		struct do_call {
 			typedef boost::function<Fn> func_type;
 
-			static typename VALUE call(func_type const& f, VALUE self, va_list args) {
+			static VALUE call(func_type const& f, VALUE self, va_list args) {
 				return do_call_is_void<T, Fn, Params, IsMemberFunction, boost::is_same<void, typename func_type::result_type>::value>::call(f, self, args);
 			}
 		};
@@ -43,8 +41,8 @@ namespace industry { namespace languages { namespace ruby {
 
 #define n BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(i) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(i),_type))
-#define DO_WRAP_VALUE(x,i,d) (ruby_value<FUNCTION_ARG_TYPE(i)>::from((VALUE)args[##i]))
-#define DO_WRAP_VALUE_MEMBER(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(BOOST_PP_INC(i))>::from((VALUE)args[##i]))
+#define DO_WRAP_VALUE(x,i,d) (ruby_value<FUNCTION_ARG_TYPE(i)>::from((VALUE)*(args+i)))
+#define DO_WRAP_VALUE_MEMBER(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(BOOST_PP_INC(i))>::from((VALUE)*(args+i)))
 
 template<class T, class Fn>
 struct do_call_is_void<T, Fn, n, false, false> {
@@ -86,4 +84,5 @@ struct do_call_is_void<T, Fn, n, true, true> {
 #undef DO_WRAP_VALUE
 #undef DO_WRAP_VALUE_MEMBER
 #undef FUNCTION_ARG_TYPE
+
 #endif

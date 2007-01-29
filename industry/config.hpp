@@ -53,4 +53,10 @@
 
 #endif
 
+#if defined(INDUSTRY_OS_WINDOWS)
+#define INDUSTRY_EXPORT __declspec(dllexport)
+#else
+#define INDUSTRY_EXPORT
+#endif
+
 #endif //ndef IG_INDUSTRY_CONFIG

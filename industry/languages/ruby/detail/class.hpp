@@ -4,7 +4,7 @@
 #include <industry/traits/function.hpp>
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
-#include <cstdio>
+#include <stdarg.h>
 #include <industry/languages/ruby/detail/do_call.hpp>
 
 namespace industry { namespace languages { namespace ruby {
