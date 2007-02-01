@@ -6,11 +6,8 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 //
-// Jan 15, 2007 - Eliminiated INDUSTRY_UNICODE_* in favor of the plain UNICODE define.
-// Dec 25, 2006 - industry.config.hpp => industry/config.hpp
-// Aug 17, 2006 - INDUSTRY_OS_APPLE => INDUSTRY_OS_X
-// May 27, 2006 - Added explanitory examples
-// May 20, 2006 - Created
+// Outstanding Issues:
+// Feb 01, 2007 - Added INDUSTRY_EXPORT #define -- did Washu botch a commit?  (Ruby stuff fails compile without)
 
 #ifndef IG_INDUSTRY_CONFIG
 #define IG_INDUSTRY_CONFIG
@@ -52,5 +49,10 @@
 #define INDUSTRY_TYPEOF(x) __typeof__(x)
 
 #endif
+
+//INDUSTRY_EXPORT - ???
+#ifndef INDUSTRY_EXPORT
+#define INDUSTRY_EXPORT
+#endif //ndef INDUSTRY_EXPORT
 
 #endif //ndef IG_INDUSTRY_CONFIG
