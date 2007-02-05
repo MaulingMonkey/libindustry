@@ -31,6 +31,7 @@ using boost::unit_test::test_suite;
 typedef void (*test_function_ptr)();
 
 //void test_algorithm();
+void test_algorithm_call();
 void test_factory();
 //void test_image();
 void test_inherit();
@@ -62,6 +63,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test_suite * test = BOOST_TEST_SUITE( "libindustry master test suite" );
 
 	//test->add(BOOST_TEST_CASE(test_algorithm));
+	test->add(BOOST_TEST_CASE(test_algorithm_call));
 	test->add(BOOST_TEST_CASE(test_factory));
 	test->add(BOOST_TEST_CASE(test_inherit));
 	test->add(BOOST_TEST_CASE(test_iterator_cast));
