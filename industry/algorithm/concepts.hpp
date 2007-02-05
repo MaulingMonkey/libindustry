@@ -9,11 +9,70 @@
 #ifndef IG_INDUSTRY_ALGORITHM_CONCEPTS
 #define IG_INDUSTRY_ALGORITHM_CONCEPTS
 
+#include <industry/traits/processor.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <boost/static_assert.hpp>
 
 namespace industry {
 	namespace algorithm {
+		template < typename Processor > struct coerce_to_processor {
+			typedef typename boost::remove_const< Processor >::type type;
+		};
+
+		template < typename LHS , typename RHS > class   bound_processor_chain;
+		template < typename LHS , typename RHS > class unbound_processor_chain;
+		template < typename LHS , typename RHS , typename LHSType = typename LHS::processor_type , typename RHSType = typename RHS::processor_type >
+		struct coerce_to_processor_chain {
+			static const bool LHS_is_unbound_processor = boost::is_same< typename LHS::processor_type , unbound_processor_tag >::value;
+			static const bool LHS_is_bound_processor   = boost::is_same< typename LHS::processor_type ,   bound_processor_tag >::value;
+			BOOST_STATIC_ASSERT(( LHS_is_unbound_processor || LHS_is_bound_processor ));
+
+			static const bool RHS_is_unbound_processor = boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value;
+			BOOST_STATIC_ASSERT(( RHS_is_unbound_processor ));
+
+			BOOST_STATIC_ASSERT(( false )); //This class should never be instantiated... implementation for diagnostic errors only (one of the above should trip)
+		};
+
+		template < typename LHS , typename RHS > struct coerce_to_processor_chain< LHS , RHS , unbound_processor_tag , unbound_processor_tag > {
+			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type , unbound_processor_tag >::value ));
+			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+
+			typedef unbound_processor_chain< LHS , RHS > type;
+		};
+
+		template < typename LHS , typename RHS > struct coerce_to_processor_chain< LHS , RHS ,   bound_processor_tag , unbound_processor_tag > {
+			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type ,   bound_processor_tag >::value ));
+			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+
+			typedef bound_processor_chain< LHS , RHS > type;
+		};
+
 		template < typename Self >
 		class unbound_processor {
+		public:
+			template < typename PreceedingProcessor >
+			friend typename coerce_to_processor_chain< PreceedingProcessor , Self >::type
+				operator|( const PreceedingProcessor & preceeding , const Self & self )
+			{
+				return typename coerce_to_processor_chain< typename coerce_to_processor<PreceedingProcessor>::type , Self >
+					::type( typename coerce_to_processor<PreceedingProcessor>::type(lhs) , rhs );
+			}
+		};
+
+		template < typename LHS , typename RHS >
+		class unbound_processor_chain {
+			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type , unbound_processor_tag >::value ));
+			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+		public:
+			unbound_processor_chain( const LHS& , const RHS& ) {}
+		};
+		template < typename LHS , typename RHS >
+		class bound_processor_chain {
+			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type ,   bound_processor_tag >::value ));
+			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+		public:
+			bound_processor_chain( const LHS& , const RHS& ) {}
 		};
 	}
 }
