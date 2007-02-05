@@ -11,9 +11,42 @@
 #ifndef IG_INDUSTRY_ALGORITHM_FILTER
 #define IG_INDUSTRY_ALGORITHM_FILTER
 
-#if 1
+namespace industry {
+	namespace algorithm {
+		template < typename Self > class unbound_processor {};
 
-#else 0 //Old header -- for reference only:
+
+		template < typename PredicateProcessor >
+		class filter_processor : public unbound_processor< filter_processor< PredicateProcessor > > {
+			PredicateProcessor predicate;
+		public:
+			filter_processor( const PredicateProcessor & predicate ): predicate(predicate) {}
+
+			template < typename PreceedingActiveProcessor >
+			class activate {
+				typedef typename PredicateProcessor::template activate< PreceedingActiveProcessor > PredicateActiveProcessor;
+			public:
+				activate( const PreceedingActiveProcessor & preceeding , const filter_processor & self ) {}
+			};
+		};
+
+		template < typename PredicateProcessor >
+		filter_processor< PredicateProcessor > filter( const PredicateProcessor & predicate ) {
+			return filter_processor< PredicateProcessor >( predicate );
+		}
+	}
+}
+
+#endif //ndef IG_INDUSTRY_ALGORITHM_FILTER
+
+
+
+
+
+
+
+
+#if 0 //Old header -- for reference only:
 #include <industry/algorithm.hpp>
 #include <industry/range.hpp>
 #include <industry/traits/range.hpp>
@@ -58,5 +91,3 @@ namespace industry {
 	using namespace algorithm;
 }
 #endif
-
-#endif //ndef IG_INDUSTRY_ALGORITHM_FILTER
