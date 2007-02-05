@@ -9,6 +9,9 @@
 #ifndef IG_INDUSTRY_ALGORITHM_CONCEPTS
 #define IG_INDUSTRY_ALGORITHM_CONCEPTS
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <industry/range.hpp>
 
 namespace industry {
@@ -70,5 +73,6 @@ namespace industry {
 		 */
 	}
 }
+#endif
 
 #endif //ndef IG_INDUSTRY_ALGORITHM_CONCEPTS

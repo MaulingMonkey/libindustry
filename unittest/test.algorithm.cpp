@@ -8,6 +8,14 @@
 //
 // Adopted changes from deffer (GDNet) 
 
+#if 1
+
+void test_algorithm() {}
+void test_algorithm_call() {}
+void test_algorithm_transform() {}
+void test_algorithm_transform_memberptr() {}
+
+#else 0 //Old header -- for reference only:
 #include <iostream>
 
 #include <industry/algorithm.hpp>
@@ -170,3 +178,4 @@ void test_algorithm_transform_memberptr() {
 	ptr_vec | transform(&base1::n) | call(set_two);
 	val_tab | transform(&base1::n) | call(check_two);
 }
+#endif

@@ -11,6 +11,9 @@
 #ifndef IG_INDUSTRY_ALGORITHM_TRANSFORM
 #define IG_INDUSTRY_ALGORITHM_TRANSFORM
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <algorithm>
 #include <iterator>
 #include <boost/iterator.hpp>
@@ -194,5 +197,6 @@ namespace industry {
 
 	using namespace algorithm;
 }
+#endif //0
 
 #endif //ndef IG_INDUSTRY_ALGORITHM_TRANSFORM

@@ -11,6 +11,9 @@
 #ifndef IG_INDUSTRY_ALGORITHM_PUSH
 #define IG_INDUSTRY_ALGORITHM_PUSH
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <algorithm>
 #include <iterator>
 #include <industry/traits/range.hpp>
@@ -42,5 +45,6 @@ namespace industry {
 	}
 	using namespace algorithm;
 }
+#endif
 
 #endif //ndef IG_INDUSTRY_ALGORITHM_PUSH

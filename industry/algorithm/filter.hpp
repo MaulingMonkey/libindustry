@@ -11,6 +11,9 @@
 #ifndef IG_INDUSTRY_ALGORITHM_FILTER
 #define IG_INDUSTRY_ALGORITHM_FILTER
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <industry/algorithm.hpp>
 #include <industry/range.hpp>
 #include <industry/traits/range.hpp>
@@ -54,5 +57,6 @@ namespace industry {
 	}
 	using namespace algorithm;
 }
+#endif
 
 #endif //ndef IG_INDUSTRY_ALGORITHM_FILTER

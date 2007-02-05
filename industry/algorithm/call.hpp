@@ -9,6 +9,9 @@
 #ifndef IG_INDUSTRY_ALGORITHM_CALL
 #define IG_INDUSTRY_ALGORITHM_CALL
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <algorithm>
 #include <iterator>
 #include <boost/function.hpp>
@@ -52,5 +55,6 @@ namespace industry {
 	}
 	using namespace algorithm;
 }
+#endif
 
 #endif //ndef IG_INDUSTRY_ALGORITHM_CALL
