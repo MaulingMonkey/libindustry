@@ -51,6 +51,8 @@ namespace industry {
 		template < typename Self >
 		class unbound_processor {
 		public:
+			typedef unbound_processor_tag processor_type;
+
 			template < typename PreceedingProcessor >
 			friend typename coerce_to_processor_chain< PreceedingProcessor , Self >::type
 				operator|( const PreceedingProcessor & preceeding , const Self & self )
@@ -60,19 +62,67 @@ namespace industry {
 			}
 		};
 
+		template < typename Self >
+		class bound_processor {
+		public:
+			typedef bound_processor_tag processor_type;
+		};
+
 		template < typename LHS , typename RHS >
-		class unbound_processor_chain {
+		class unbound_processor_chain : public unbound_processor< unbound_processor_chain< LHS , RHS > > {
 			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type , unbound_processor_tag >::value ));
 			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+
+			LHS lhs;
+			RHS rhs;
 		public:
-			unbound_processor_chain( const LHS& , const RHS& ) {}
+			unbound_processor_chain( const LHS& lhs , const RHS& rhs ): lhs(lhs), rhs(rhs) {}
+
+			template < typename PREActiveProcessor > class activate;
+			template < typename PREActiveProcessor > friend class activate;
+
+			template < typename PREActiveProcessor > class activate {
+				typedef typename LHS::template activate< PREActiveProcessor > LHSActiveProcessor;
+				typedef typename RHS::template activate< LHSActiveProcessor > RHSActiveProcessor;
+
+				LHSActiveProcessor lhs;
+				RHSActiveProcessor rhs;
+			public:
+				activate( const PREActiveProcessor & preceeding , const unbound_processor_chain & self ): lhs(preceeding,self.lhs), rhs(lhs,self.rhs) {}
+				typedef typename RHSActiveProcessor::result_type result_type;
+
+				void        advance()   { rhs.advance(); }
+				bool        end() const { return rhs.end(); }
+				result_type get() const { return rhs.get(); }	
+			};
 		};
 		template < typename LHS , typename RHS >
 		class bound_processor_chain {
 			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type ,   bound_processor_tag >::value ));
 			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
+
+			LHS lhs;
+			RHS rhs;
 		public:
-			bound_processor_chain( const LHS& , const RHS& ) {}
+			bound_processor_chain( const LHS& lhs , const RHS& rhs ): lhs(lhs), rhs(rhs) {}
+
+			class activate;
+			friend class activate;
+
+			class activate {
+				typedef typename LHS::         activate /* original source */ LHSActiveProcessor;
+				typedef typename RHS::template activate< LHSActiveProcessor > RHSActiveProcessor;
+
+				LHSActiveProcessor lhs;
+				RHSActiveProcessor rhs;
+			public:
+				activate( const bound_processor_chain & self ): lhs(self.lhs), rhs(lhs,self.rhs) {}
+				typedef typename RHSActiveProcessor::result_type result_type;
+
+				void        advance()   { rhs.advance(); }
+				bool        end() const { return rhs.end(); }
+				result_type get() const { return rhs.get(); }
+			};
 		};
 	}
 }

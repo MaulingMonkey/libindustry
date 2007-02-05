@@ -27,7 +27,7 @@ namespace industry {
 				PredicateActiveProcessor predicate;
 			public:
 				activate( const PreceedingActiveProcessor & preceeding , const filter_processor & self ): predicate(preceeding,self.predicate) {}
-				typedef typename PredicateActiveProcessor::result_type result_type;
+				typedef typename PreceedingActiveProcessor::result_type result_type;
 
 				void        advance()   { while (!preceeding.end() && predicate.get()) preceeding.advance(); }
 				bool        end() const { return preceeding.end(); }
