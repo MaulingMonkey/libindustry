@@ -6,9 +6,12 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <functional>
+
 namespace industry {
 	namespace algorithm {
-		typedef void UNIMPLEMENTED; //temporary cruft
 		template < typename Self > class endpoint_processor {}; //temporary cruft
 
 		template < typename Functor >
@@ -19,15 +22,23 @@ namespace industry {
 
 			template < typename PreceedingProcessor >
 			void act( const PreceedingProcessor & p ) {
+				BOOST_STATIC_ASSERT(( boost::is_same< typename PreceedingProcessor::processor_type , active_processor_tag >::value ));
 				for ( ; !p.end() ; p.advance() ) f( p.get() );
 			}
 		};
 
-		template < typename R , typename A1 > UNIMPLEMENTED call( R (*)(A1)        ) {}
-		template < typename R , typename C  > UNIMPLEMENTED call( R (C::*)()       ) {}
-		template < typename R , typename C  > UNIMPLEMENTED call( R (C::*)() const ) {}
-		template < typename Functor >         UNIMPLEMENTED call( Functor          ) {
+		template < typename R , typename A1 > call_processor< std::pointer_to_unary_function<A1,R> > call( R(*f)(A1) ) {
+			return std::ptr_fun(f);
+		}
+		template < typename R , typename C  > call_processor< std::mem_fun_ref_t<R,C> > call( R (C::*f)() ) {
+			return std::mem_fun_ref(f);
+		}
+		template < typename R , typename C  > call_processor< std::const_mem_fun_ref_t<R,C> > call( R (C::*f)() const ) {
+			return std::mem_fun_ref(f);
+		}
+		template < typename Functor >         call_processor< Functor > call( Functor f        ) {
 			typedef typename Functor::result_type result_type;
+			return f;
 		}
 
 		//FUTURE: call( R(*)(A1,A2) ) dispatching from std::pairs? (A1,...An) from boost::tuples?
