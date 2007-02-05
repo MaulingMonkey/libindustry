@@ -25,8 +25,15 @@ namespace industry {
 			template < typename PreceedingActiveProcessor >
 			class activate {
 				typedef typename PredicateProcessor::template activate< PreceedingActiveProcessor > PredicateActiveProcessor;
+				PredicateActiveProcessor predicate;
 			public:
-				activate( const PreceedingActiveProcessor & preceeding , const filter_processor & self ) {}
+				activate( const PreceedingActiveProcessor & preceeding , const filter_processor & self ): predicate(preceeding,self.predicate) {}
+				typedef typename PredicateActiveProcessor::result_type result_type;
+
+				void        advance()   { while (!preceeding.end() && predicate.get()) preceeding.advance(); }
+				bool        end() const { return preceeding.end(); }
+				result_type get() const { return preceeding.get(); }
+				
 			};
 		};
 
