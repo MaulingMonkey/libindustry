@@ -8,7 +8,6 @@
 //
 // Dec 27, 2006 - Created
 
-#include <industry/algorithm.hpp>
 #include <industry/iterator/multi.hpp>
 #include <industry/range.hpp>
 #include <list>
