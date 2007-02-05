@@ -8,24 +8,23 @@
 
 #include <industry/algorithm/call.hpp>
 #include <boost/bind.hpp>
+#include <boost/test/unit_test.hpp>
 #include <functional>
 
 namespace {
 	//Some free functions to test with:
-	int fourty_two() { return 42; }
-	int& pass( int& a ) { return a; }
-	const int& cpass( int& a ) { return a; }
-	void prawn( int& changee ) { changee = 42; }
+	void expect_42( int v ) { BOOST_CHECK(( v == 42 )); }
 
 	//Some member functions to test with:
 	struct foo {
-		int bar( char v )       { return v; }
-		int baz( char v ) const { return v; }
+		void bar( void )       {}
+		void baz( void ) const {}
 	};
 }
 
 void test_algorithm_call() {
 	using namespace industry::algorithm;
-	call( fourty_two ), call( pass ), call( cpass ), call( prawn );
-	call( &foo::bar ), call( &foo::baz );
+
+	//Testing signature matching stuff:
+	call(expect_42), call(&foo::bar), call(&foo::baz), call(std::bind2nd(std::plus<int>(),42)), call(boost::bind(&foo::bar,_1));
 }
