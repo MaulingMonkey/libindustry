@@ -9,9 +9,19 @@
 #ifndef IG_INDUSTRY_TRAITS_PROCESSOR
 #define IG_INDUSTRY_TRAITS_PROCESSOR
 
-#if 1
+namespace industry {
+	namespace algorithm {
+		struct unbound_processor_tag {};
+		struct   bound_processor_tag {};
+		struct  active_processor_tag {};
+	}
+}
 
-#else 0 //Old header -- for reference only:
+#endif //ndef IG_INDUSTRY_TRAITS_PROCESSOR
+
+
+
+#if 0 //Old header -- for reference only:
 #include <industry/sfinae.hpp>
 #include <industry/static_assert.hpp>
 #include <industry/traits/range.hpp>
@@ -54,5 +64,3 @@ namespace industry {
 	};
 }
 #endif
-
-#endif //ndef IG_INDUSTRY_TRAITS_PROCESSOR
