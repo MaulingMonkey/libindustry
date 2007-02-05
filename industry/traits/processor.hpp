@@ -9,6 +9,9 @@
 #ifndef IG_INDUSTRY_TRAITS_PROCESSOR
 #define IG_INDUSTRY_TRAITS_PROCESSOR
 
+#if 1
+
+#else 0 //Old header -- for reference only:
 #include <industry/sfinae.hpp>
 #include <industry/static_assert.hpp>
 #include <industry/traits/range.hpp>
@@ -50,5 +53,6 @@ namespace industry {
 		typedef typename detail::get_processor_category< Processor >::type processor_category;
 	};
 }
+#endif
 
 #endif //ndef IG_INDUSTRY_TRAITS_PROCESSOR
