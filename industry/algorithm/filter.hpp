@@ -11,11 +11,10 @@
 #ifndef IG_INDUSTRY_ALGORITHM_FILTER
 #define IG_INDUSTRY_ALGORITHM_FILTER
 
+#include <industry/algorithm/concepts.hpp>
+
 namespace industry {
 	namespace algorithm {
-		template < typename Self > class unbound_processor {};
-
-
 		template < typename PredicateProcessor >
 		class filter_processor : public unbound_processor< filter_processor< PredicateProcessor > > {
 			PredicateProcessor predicate;
