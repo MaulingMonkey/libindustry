@@ -93,7 +93,7 @@ namespace industry {
 			};
 		};
 		template < typename LHS , typename RHS >
-		class bound_processor_chain {
+		class bound_processor_chain : bound_processor< bound_processor_chain< LHS , RHS > > {
 			BOOST_STATIC_ASSERT(( boost::is_same< typename LHS::processor_type ,   bound_processor_tag >::value ));
 			BOOST_STATIC_ASSERT(( boost::is_same< typename RHS::processor_type , unbound_processor_tag >::value ));
 
