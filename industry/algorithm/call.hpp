@@ -6,6 +6,9 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#ifndef IG_INDUSTRY_ALGORITHM_CALL
+#define IG_INDUSTRY_ALGORITHM_CALL
+
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <functional>
@@ -46,3 +49,5 @@ namespace industry {
 		//FUTURE: call( Functor ) with Functor::operator()(A1,A2) dispatching from std::pairs? (A1,...An) from boost::tuples?
 	}
 }
+
+#endif //ndef IG_INDUSTRY_ALGORITHM_CALL
