@@ -16,10 +16,6 @@
 
 namespace industry {
 	namespace algorithm {
-		template < typename Processor > struct coerce_to_processor {
-			typedef typename boost::remove_const< Processor >::type type;
-		};
-
 		template < typename LHS , typename RHS > class   bound_processor_chain;
 		template < typename LHS , typename RHS > class unbound_processor_chain;
 		template < typename LHS , typename RHS , typename LHSType = typename LHS::processor_type , typename RHSType = typename RHS::processor_type >
