@@ -30,16 +30,10 @@ namespace industry {
 			}
 		};
 
-		template < typename R , typename A1 > call_processor< std::pointer_to_unary_function<A1,R> > call( R(*f)(A1) ) {
-			return std::ptr_fun(f);
-		}
-		template < typename R , typename C  > call_processor< std::mem_fun_ref_t<R,C> > call( R (C::*f)() ) {
-			return std::mem_fun_ref(f);
-		}
-		template < typename R , typename C  > call_processor< std::const_mem_fun_ref_t<R,C> > call( R (C::*f)() const ) {
-			return std::mem_fun_ref(f);
-		}
-		template < typename Functor >         call_processor< Functor > call( Functor f        ) {
+		template < typename R , typename A1 > call_processor< std::pointer_to_unary_function<A1,R> > call( R(*f)(A1) )         { return std::ptr_fun(f); }
+		template < typename R , typename C  > call_processor< std::mem_fun_ref_t<R,C> >              call( R (C::*f)() )       { return std::mem_fun_ref(f); }
+		template < typename R , typename C  > call_processor< std::const_mem_fun_ref_t<R,C> >        call( R (C::*f)() const ) { return std::mem_fun_ref(f); }
+		template < typename Functor >         call_processor< Functor >                              call( Functor f ) {
 			typedef typename Functor::result_type result_type;
 			return f;
 		}
