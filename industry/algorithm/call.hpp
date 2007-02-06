@@ -23,7 +23,7 @@ namespace industry {
 			call_processor( const Functor & f ): f(f) {}
 
 			template < typename PreceedingProcessor >
-			void act( const PreceedingProcessor & p ) {
+			void act( const PreceedingProcessor & p ) const {
 				BOOST_STATIC_ASSERT(( boost::is_same< typename PreceedingProcessor::processor_type , active_processor_tag >::value ));
 				for ( ; !p.end() ; p.advance() ) f( p.get() );
 			}
