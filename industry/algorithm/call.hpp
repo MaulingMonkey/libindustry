@@ -9,14 +9,13 @@
 #ifndef IG_INDUSTRY_ALGORITHM_CALL
 #define IG_INDUSTRY_ALGORITHM_CALL
 
+#include <industry/algorithm/endpoint_processor.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <functional>
 
 namespace industry {
 	namespace algorithm {
-		template < typename Self > class endpoint_processor {}; //temporary cruft
-
 		template < typename Functor >
 		class call_processor : public endpoint_processor< call_processor< Functor > > {
 			Functor f;
