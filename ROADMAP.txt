@@ -1,0 +1,26 @@
+New build system with the following goals in mind:
+
+1)  Improved modularity:
+  - Directory recursion
+  - Toolchain independance (etensible system, should be able to use MS and GNU toolchains)
+How:
+  - BuildTool abstraction
+  - Multi-file config/project support
+  - Ruby scripting instead of hardcoded property sets
+
+2)  Improved flexibility:
+  - Multiple targets
+  - Programmable dependancies (e.g. no win32 code on Linux, etc)
+  - Ability to export IDE project files
+How:
+  - Target abstraction
+  - See #1
+  - Dependancy ID -> platform specific library path(s)/flag(s) support
+    (e.g. use -framework OpenGL on OS X)
+
+3)  Unit testing support
+  - Assert compile-fail tests
+  - Auto-test with Boost.Test (or other frameworks?)
+How:
+  - Minor "extensions" to the "C++ preprocessor" (e.g. #should-not-compile <statement>)
+  - Hooks for post-build events
