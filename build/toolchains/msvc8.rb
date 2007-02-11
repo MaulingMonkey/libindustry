@@ -6,19 +6,9 @@
 #
 # $LastChangedBy$ - $LastChangedDate$
 
+require 'toolchains/base'
+
 module Industry
-	class MSVC8_ToolChain
-		def build( *targets )
-			targets.each do |target|
-				if target.respond_to? :each then
-					build( *target )
-				else
-					build_target( target )
-				end
-			end
-		end
-		def build_target( target )
-			puts "I should build #{target.name}, but MSVC8_ToolChain isn't really implemented yet!"
-		end
+	class MSVC8_ToolChain < Base_ToolChain
 	end
 end

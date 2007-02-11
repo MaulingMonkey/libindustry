@@ -5,16 +5,10 @@
 # http://www.boost.org/LICENSE_1_0.txt ) 
 #
 # $LastChangedBy$ - $LastChangedDate$
-#
-# Temporary pile for testing out code...
 
-$: << "."
-
-require 'target'
-require 'toolchains/msvc8'
+require 'toolchains/base'
 
 module Industry
-	targets = (1..3).collect {|n| Target.new( "Program #{n}" ) }
-	toolchain = MSVC8_ToolChain.new
-	toolchain.build( targets )
+	class GNU_ToolChain < Base_ToolChain
+	end
 end
