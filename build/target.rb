@@ -19,5 +19,15 @@ module Industry
 				raise ArgumentError , "#{value} is not a valid Target type"
 			end
 		end
+
+		def initialize( *args )
+			case args.size
+			when 0
+			when 1
+				@name = args[0]
+			else
+				raise ArgumentError , "Expected [0..1] arguments, got #{args.size}"
+			end
+		end
 	end
 end
