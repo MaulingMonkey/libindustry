@@ -2,7 +2,7 @@
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
-# http://www.boost.org/LICENSE_1_0.txt ) 
+# http://www.boost.org/LICENSE_1_0.txt )
 #
 # $LastChangedBy$ - $LastChangedDate$
 #
@@ -14,7 +14,7 @@ require 'target'
 require 'toolchains/msvc8'
 
 module Industry
-	targets = (1..3).collect {|n| Target.new( "Program #{n}" ) }
+	targets = (1..3).collect {|n| t=Target.new("Program #{n}"); t.type=:program; t }
 	toolchain = MSVC8_ToolChain.new
 	toolchain.build( targets )
 end
