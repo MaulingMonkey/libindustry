@@ -8,8 +8,12 @@
 
 module Industry
 	class Target
-		# TODO: Add name validity checking
 		attr_accessor :name
+
+
+		# TODO: Add name validity checking
+		attr_writer :base_filename
+		def base_filename(); @base_filename || @name; end
 
 
 		# Conceptual target dependancies (e.g. program depends on source files, not
@@ -23,20 +27,16 @@ module Industry
 		attr_reader   :type
 		def type=( value )
 			case value
-			when :program , :staticlib , :dynamiclib
-				@type = value
-			else
-				raise ArgumentError , "#{value} is not a valid Target type"
+			when :program , :staticlib , :dynamiclib;   @type = value
+			else                                    ;   raise ArgumentError , "#{value} is not a valid Target type"
 			end
 		end
 
 		def initialize( *args )
 			case args.size
 			when 0
-			when 1
-				@name = args[0]
-			else
-				raise ArgumentError , "Expected [0..1] arguments, got #{args.size}"
+			when 1;  @name = args[0]
+			else;    raise ArgumentError , "Expected [0..1] arguments, got #{args.size}"
 			end
 
 			@dependancies = []
