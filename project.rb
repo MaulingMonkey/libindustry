@@ -1,41 +1,37 @@
-def target(name, &block)
-	block.call()
-end
-def targets(*names, &block)
-	names.each do |name|
-		target(name,&block)
-	end
-end
-def type(name); end
-def dependancies(*list); end
-def filename(name); end
+def dependancy(name_or_project); end
+def import(name,&block); end
+def projectgroup(name,&block); end
+def project(name,&block); end
+def msvc80_solution_filename(name); end
+def msvc80_project_filename(name); end
+def target(name,&block); end
 
-target("libindustry") {
-	type    :meta
-
-	dependancies "libindustry-static", "libindustry-dynamic", "libindustry-unittest"
+import("ruby") {
+	# add_include_directories ...
+	# add_library_directories
+	# add_library ruby-1.8.5.lib
 }
 
-target("libindustry-static") {
-	type    :staticlib
-	filename case $OS
-		when "Windows"; "libindustry.lib"
-		when "Linux";   "libindustry.a"
-		when "OS X";    "libindustry.a"
-		else;           nil
-	end
-}
+projectgroup("libindustry") {
+	msvc80_solution_filename 'projects\msvc80_libindustry.sln'
 
-target("libindustry-dynamic") {
-	type    :dynamiclib
-	filename case $OS
-		when "Windows"; "libindustry.dll"
-		when "Linux";   "libindustry.so"
-		when "OS X";    "libindustry.dylib"
-		else;           nil
-	end
-}
+	project("libindustry") {
+		dependancy import("ruby")
+		msvc80_project_filename 'projects\msvc80_libindustry.vcproj'
 
-targets("libindustry-static","libindustry-dynamic") {
-	dependancies "ruby"
+		mask "*.((c|h)pp)"
+		directories "industry"
+
+		target("Static Release") {
+		}
+		target("Static Debug") {
+		}
+	}
+	project("libindustry-unittest") {
+		dependancy project("libindustry")
+		msvc80_project_filename 'projects\msvc80_libindustry_unittest.vcproj'
+
+		mask "*.((c|h)pp)"
+		directories "unittest"
+	}
 }
