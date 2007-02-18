@@ -1,22 +1,12 @@
-def dependancy(name_or_project); end
-def import(name,&block); end
-def group(name,&block); end
-def project(name,&block); end
-def msvc80_solution_filename(name); end
-def msvc80_project_filename(name); end
-def target(name,&block); end
-
-def env( variable )
-	
-
 import("ruby") {
-	# add_include_directories `echo RUBYINCLUDE`
-	# add_library_directories $(RUBYLIB).split(';')
+	# add_include_directories env(RUBYINCLUDE)
+	# add_library_directories env(RUBYLIB).split(';')
 	# add_library ruby-1.8.5.lib
 }
 
 group("libindustry") {
 	msvc80_solution_filename 'projects\msvc80_libindustry.sln'
+	gnu_makefile_filename    'projects\Makefile'
 
 	project("libindustry") {
 		dependancy import("ruby")
@@ -52,9 +42,9 @@ group("libindustry") {
 			type      :dynamiclib
 		}
 	}
-	project("libindustry-unittest") {
+	project("unittest") {
 		dependancy project("libindustry")
-		msvc80_project_filename 'projects\msvc80_libindustry_unittest.vcproj'
+		msvc80_project_filename 'projects\msvc80_unittest.vcproj'
 
 		sources("unittest/*.((c|h)pp)") {
 			warnings :maximum
@@ -62,6 +52,7 @@ group("libindustry") {
 		}
 		sources("unittest/*ruby*.((c|h)pp)") {
 			warnings :none
+			# supress_msvc80_warnings 1, 2, 3
 		}
 
 		target("Release") {
