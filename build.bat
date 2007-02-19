@@ -1,2 +1,2 @@
 @ECHO OFF
-ruby builder/do-build.rb -- project.rb %*
+ruby builder/do-invoke.rb build %*
