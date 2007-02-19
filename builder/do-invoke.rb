@@ -12,6 +12,10 @@
 #  Purpouse:  Build the project.
 #
 
+require 'builder/multi-require'
+require 'builder/toolchains/*'
+require 'builder/platform/*'
+
 module Industry
 	class Project
 		def initialize( filename , target )
