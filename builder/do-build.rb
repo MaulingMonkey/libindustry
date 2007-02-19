@@ -14,26 +14,35 @@
 
 module Industry
 	class Project
-		def initialize( filename )
+		def initialize( filename , target )
+		end
+		def build()
+		end
+		def clean()
 		end
 	end
 	
-	command = nil
-	target  = nil
+	command  = nil
+	filename = nil
+	target   = nil
 		
 	case ARGV.size
-	when 1
-		command = "build"
-		target  = ARGV[0]
-	when 2
-		command = ARGV[0]
-		target  = ARGV[1]
+	when 0, 1, 2, 3
+		command  = ARGV[0] || "build"
+		target   = ARGV[1] || "all"
+		filename = ARGV[2] || "industry-project.rb"
 	else
-		puts "Expected 1 or 2 arguments -- got #{ARGV.size}"
+		puts "Error:  Expected 0..3 arguments, got #{ARGV.size}"
+		puts "Usage:"
+		puts "    #{$0} [command] [target] [filename]"
+		puts "Examples:"
+		puts "    #{$0} build"
+		puts "    #{$0} clean all"
+		puts "    #{$0} build all oddly-named.rb"
 		exit(-1)
 	end
 
-	project = Project.new(target)
+	project = Project.new(filename,target)
 
 	case command
 	when "build";   project.build
