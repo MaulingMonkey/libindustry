@@ -1,51 +1,45 @@
 #!/usr/bin/ruby
 #
-#  Purpouse:  Facilitate the creation and destruction of project build.rb chains
+#  Copyright (c) 2007 Michael B. Edwin Rickert
+#
+#  Distributed under the Boost Software License, Version 1.0.
+#  (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt )
+# 
+#  $LastChangedBy$
+#  $LastChangedDate$
+#
+#  Purpouse:  Build the project.
 #
 
 module Industry
 	class Project
-		def Project.create( name )
-			# create a new project
-			puts "UNIMPLEMENTED: Project.create"
-		end
-		def Project.destroy( name )
-			# destroy an existing project
-			puts "UNIMPLEMENTED: Project.destroy"
-		end
-		def Project.build( name )
-			# load and build an existing project
-			puts "UNIMPLEMENTED: Project.build"
+		def initialize( filename )
 		end
 	end
 	
-	
-	
-	mode = case File.basename( $0 , ".rb" )
-		   when "project"; :command
-		   else          ; :library
-		   end
-	
-	if mode == :command
-		command = nil
-		target  = nil
+	command = nil
+	target  = nil
 		
-		case ARGV.size
-		when 1
-			command = "build"
-			target  = ARGV[0]
-		when 2
-			command = ARGV[0]
-			target  = ARGV[1]
-		end
+	case ARGV.size
+	when 1
+		command = "build"
+		target  = ARGV[0]
+	when 2
+		command = ARGV[0]
+		target  = ARGV[1]
+	else
+		puts "Expected 1 or 2 arguments -- got #{ARGV.size}"
+		exit(-1)
+	end
 
-		case command
-		when "build";   Project.build(target)
-		when "create";  Project.create(target)
-		when "destroy"; Project.destroy(target)
-		else
-			puts "Unknown command: #{command}"
-			puts "Did not modify   #{target}"
-		end
+	project = Project.new(target)
+
+	case command
+	when "build";   project.build
+	when "clean";   project.clean
+	else
+		puts "Unknown command: #{command}"
+		puts "Did not modify   #{target}"
 	end
 end
