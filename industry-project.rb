@@ -1,6 +1,6 @@
 import("ruby") {
-	add_include_directories env_list(RUBYINCLUDE)
-	add_library_directories env_list(RUBYLIB)
+	add_include_directories *env_list(RUBYINCLUDE)
+	add_library_directories *env_list(RUBYLIB)
 	add_library_basename    "ruby-#{VERSION}"
 }
 
