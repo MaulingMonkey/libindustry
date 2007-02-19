@@ -1,7 +1,7 @@
 import("ruby") {
-	# add_include_directories env(RUBYINCLUDE)
-	# add_library_directories env(RUBYLIB).split(';')
-	# add_library ruby-1.8.5.lib
+	add_include_directories env_list(RUBYINCLUDE)
+	add_library_directories env_list(RUBYLIB)
+	add_library_basename    "ruby-#{VERSION}"
 }
 
 group("libindustry") {
