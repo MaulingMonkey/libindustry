@@ -19,6 +19,10 @@ require 'builder/platform/*'
 module Industry
 	class Project
 		def initialize( filename , target )
+			@filename = filename
+			@target   = target
+
+			$industry_builder_project = self
 		end
 		def build()
 		end
@@ -34,7 +38,7 @@ module Industry
 	when 0, 1, 2, 3
 		command  = ARGV[0] || "build"
 		target   = ARGV[1] || "all"
-		filename = ARGV[2] || "industry-project.rb"
+		filename = ARGV[2] || "industry-solution.rb"
 	else
 		puts "Error:  Expected 0..3 arguments, got #{ARGV.size}"
 		puts "Usage:"
