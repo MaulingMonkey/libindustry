@@ -6,8 +6,7 @@
 #
 # $LastChangedBy$ - $LastChangedDate$
 
-require 'target'
-require 'toolchains/base'
+require 'builder/toolchains/base'
 
 module Industry
 	class Target

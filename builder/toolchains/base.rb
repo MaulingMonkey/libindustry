@@ -8,6 +8,9 @@
 
 module Industry
 	class Base_ToolChain
+		def Base_ToolChain.inherited(inheritee)
+			# puts "Base_ToolChain inherited by #{inheritee}"
+		end
 		def build( *targets )
 			targets.each do |target|
 				if target.respond_to? :each then
