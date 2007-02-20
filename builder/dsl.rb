@@ -7,6 +7,12 @@
 #  $LastChangedBy$
 #  $LastChangedDate$
 
+
+#  These are used to dispatch various in-block statements
+$industry_builder_imports ||= {} # import ids => Import instances
+$industry_builder_focus   ||= [] # stack of project/solution/target (innermost == .last)
+
+
 module Kernel
 	[ :add_include_directories \
 	, :add_library_directories \
