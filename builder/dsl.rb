@@ -50,7 +50,7 @@ module Kernel
 	, :solution => Industry::Solution  \
 	}.each do |list,klass|
 		module_eval <<-"end_eval"
-			def #{list}
+			def #{list} (id)
 				if block_given? then
 					#  Fill out a new list entry definition, or extend an existing one:
 					$industry_builder_list_#{list} ||= {}
