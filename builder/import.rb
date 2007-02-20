@@ -7,8 +7,6 @@
 #  $LastChangedBy$
 #  $LastChangedDate$
 
-require 'builder/globals'
-
 module Industry
 	class Import
 		def initialize(id)
