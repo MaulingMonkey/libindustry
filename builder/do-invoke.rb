@@ -17,16 +17,23 @@ require 'builder/toolchains/*'
 require 'builder/platform/*'
 
 module Industry
-	class Project
+	class Solution
 		def initialize( filename , target )
 			@filename = filename
 			@target   = target
 
-			$industry_builder_project = self
+			$industry_builder_solution ||= self
+			raise ArgumentError, "Solution already exists" unless $industry_builder_solution == self
 		end
 		def build()
 		end
 		def clean()
+		end
+		def export()
+			# export for IDEs (standalone solution/project which does not depend on the ruby build system)
+		end
+		def test()
+			# Run tests (build unit tests, as well as test compile-fail tests)
 		end
 	end
 	
@@ -50,11 +57,13 @@ module Industry
 		exit(-1)
 	end
 
-	project = Project.new(filename,target)
+	solution = Solution.new(filename,target)
 
 	case command
-	when "build";   project.build
-	when "clean";   project.clean
+	when "build";   solution.build
+	when "clean";   solution.clean
+	when "export";  solution.export
+	when "test";    solution.test
 	else
 		puts "Unknown command: #{command}"
 		puts "Did not modify   #{target}"

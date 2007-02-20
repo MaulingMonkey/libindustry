@@ -7,5 +7,6 @@
 #  $LastChangedBy$
 #  $LastChangedDate$
 
-$industry_builder_imports ||= {}
-$industry_builder_focus   ||= []
+#  These are used to dispatch various in-block statements
+$industry_builder_imports ||= {} # import ids => Import instances
+$industry_builder_focus   ||= [] # stack of project/solution/target (innermost == .last)

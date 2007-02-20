@@ -4,7 +4,7 @@ import("ruby") {
 	add_library_basename    "ruby-#{VERSION}"
 }
 
-group("libindustry") {
+solution("libindustry") {
 	msvc80_solution_filename 'projects\msvc80_libindustry.sln'
 	gnu_makefile_filename    'projects\Makefile'
 
