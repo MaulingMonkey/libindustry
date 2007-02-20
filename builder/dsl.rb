@@ -39,7 +39,16 @@ module Kernel
 	].each do |accessor|
 		module_eval <<-"end_eval"
 			def #{accessor} (*args)
-				$industry_builder_focus.top.#{accessor}(*args)
+				focus = $industry_builder_focus.last
+
+				@industry_builder_recursing ||= false
+				if @industry_builder_recursing then
+					raise NoMethodError, \"undefined method `#{accessor}' for \#{focus.inspect}:\#{focus.class}\"
+				else
+					@industry_builder_recursing = true
+					focus.#{accessor}(*args)
+					@industry_builder_recursing = false
+				end
 			end
 		end_eval
 	end
