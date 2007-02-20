@@ -24,4 +24,23 @@ module Kernel
 			end
 		end_eval
 	end
+
+	{ :import  => Import    \
+	, :project => Project   \
+	}.each do |list,klass|
+		module_eval <<-"end_eval"
+			def #{list}
+				if block_given? then
+				#  Fill out a new list entry definition, or extend an existing one:
+				$industry_builder_list_#{list} ||= {}
+				$industry_builder_list_#{list}[id] ||= klass.new(id)
+				$industry_builder_focus.push $industry_builder_list_#{list}[id]
+				yield
+				$industry_builder_focus.pop
+			else
+				#  Return a reference to the existing import definition:
+				$industry_builder_list_#{list}[id]
+			end
+		end_eval
+	end
 end

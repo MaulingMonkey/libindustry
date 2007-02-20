@@ -38,18 +38,3 @@ module Industry
 		end
 	end
 end
-
-module Kernel
-	def import(id)
-		if block_given? then
-			#  Fill out a new import definition, or extend an existing one:
-			$industry_builder_imports[id] ||= Import.new(id)
-			$industry_builder_focus.push $industry_builder_imports[id]
-			yield
-			$industry_builder_focus.pop
-		else
-			#  Return a reference to the existing import definition:
-			$industry_builder_imports[id]
-		end
-	end
-end
