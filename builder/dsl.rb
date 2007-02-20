@@ -18,9 +18,24 @@ $industry_builder_focus   ||= [] # stack of project/solution/target (innermost =
 
 
 module Kernel
-	[ :add_include_directories \
-	, :add_library_directories \
-	, :add_library_basename    \
+	#  Unimplemented bin:
+	def target(name,&definition); end
+	def sources(*patterns,&statements); end
+
+
+	#  Maybe msvc80_*/gnu_* should be refactored elsewhere?
+	#  Maybe just def method_missing() instead?
+	[ :add_include_directories  \
+	, :add_library_directories  \
+	, :add_library_basename     \
+	, :basename                 \
+	, :dependancy               \
+	, :type                     \
+	, :warnings                 \
+                                  \
+	, :msvc80_solution_filename \
+	, :supress_msvc80_warnings  \
+	, :gnu_makefile_filename    \
 	].each do |accessor|
 		module_eval <<-"end_eval"
 			def #{accessor} (*args)
@@ -30,9 +45,9 @@ module Kernel
 	end
 
 	#  No, I'm not sure there's a reason this shouldn't just be made an array
-	{ :import   => Import    \
-	, :project  => Project   \
-	, :solution => Solution  \
+	{ :import   => Industry::Import    \
+	, :project  => Industry::Project   \
+	, :solution => Industry::Solution  \
 	}.each do |list,klass|
 		module_eval <<-"end_eval"
 			def #{list}
