@@ -54,7 +54,7 @@ module Kernel
 				if block_given? then
 					#  Fill out a new list entry definition, or extend an existing one:
 					$industry_builder_list_#{list} ||= {}
-					$industry_builder_list_#{list}[id] ||= klass.new(id)
+					$industry_builder_list_#{list}[id] ||= #{klass}.new(id)
 					$industry_builder_focus.push $industry_builder_list_#{list}[id]
 					yield
 					$industry_builder_focus.pop
