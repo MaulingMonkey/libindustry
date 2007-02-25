@@ -7,10 +7,13 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
-require 'ibs-lib/utility'
-require 'ibs-lib/toolchains/*'
-require 'ibs-lib/concepts/*'
-
 module Industry
-	load 'industry-solution.rb'
+	class Import
+		def initialize()
+			@include_directories ||= []
+			@library_directories ||= []
+			@library_basenames   ||= [] # alternatives
+		end
+		attr_accessor :include_directories , :library_directories , :library_basenames
+	end
 end

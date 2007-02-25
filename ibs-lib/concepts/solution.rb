@@ -7,10 +7,11 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
-require 'ibs-lib/utility'
-require 'ibs-lib/toolchains/*'
-require 'ibs-lib/concepts/*'
-
 module Industry
-	load 'industry-solution.rb'
+	class Solution
+		def initialize()
+			@projects ||= []
+		end
+		attr_accessor :projects
+	end
 end

@@ -7,10 +7,5 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
-require 'ibs-lib/utility'
-require 'ibs-lib/toolchains/*'
-require 'ibs-lib/concepts/*'
-
 module Industry
-	load 'industry-solution.rb'
 end
