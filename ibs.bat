@@ -1,2 +1,2 @@
 @ECHO OFF
-ruby ibs-libs/ibs.rb %*
+ruby ibs-lib/ibs.rb %*
