@@ -12,7 +12,7 @@ require 'ibs-lib/toolchains/*'
 require 'ibs-lib/concepts/*'
 
 module Industry
-	setttings = {
+	settings = {
 		#  Defaults:
 		:command  => 'update',
 		:filename => 'industry-solution.rb'

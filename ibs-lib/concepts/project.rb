@@ -8,8 +8,9 @@
 # $LastChangedDate$
 
 module Industry
+	class Solution; end
 	class Project
-		def initialize()
+		def initialize( id )
 			@dependancies   ||= []
 			@sources        ||= []
 		end
@@ -20,12 +21,12 @@ end
 
 module Kernel
 	def project( id )
-		ibs_projects = $ibs_focus.dependancies
+		ibs_projects = $ibs_focus.reverse.find { |s| s.kind_of? Industry::Solution }.projects
 		ibs_projects[id] ||= Industry::Project.new(id)
 		project = ibs_projects[id]
 
 		if block_given?
-			$ibs_focus.push import
+			$ibs_focus.push project
 			yield project
 			$ibs_focus.pop
 		end

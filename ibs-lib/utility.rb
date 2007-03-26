@@ -32,3 +32,11 @@ def require( *patterns )
 	end
 	return *results
 end
+
+def env_list( name )
+	ENV[name].split(';')
+end
+
+def env( name )
+	ENV[name]
+end
