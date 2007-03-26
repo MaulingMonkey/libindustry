@@ -12,27 +12,27 @@ module Industry
 		def initialize()
 			@dependancies   ||= []
 			@sources        ||= []
-			@targets        ||= []
 			@warnings_level ||= nil
-		end
-
-		# From least prefered to most
-		@@warning_level_ratings = \
-			{ :none    => 0   \
-			, :low     => 1   \
-			, :medium  => 2   \
-			, :high    => 3   \
-			, :maximum => 4   \
-			}
-		def warnings_level()
-			@warnings_level || :high
-		end
-		def warnings_level=( suggested )
-			existing_rank  = @@warning_level_ratings[ @warnings_level ]
-			suggested_rank = @@warning_level_ratings[ suggested ]
-			@warnings_level = suggested if suggested_rank > existing_rank
 		end
 
 		attr_accessor :dependancies, :sources, :targets
 	end
+end
+
+module Kernel
+	def project( id )
+		ibs_projects = $ibs_focus.dependancies
+		ibs_projects[id] ||= Industry::Project.new(id)
+		project = ibs_projects[id]
+
+		if block_given?
+			$ibs_focus.push import
+			yield project
+			$ibs_focus.pop
+		end
+
+		project
+	end
+	def dependancy( dep ); $ibs_focus.last.dependancies.push dep; end
+	def sources( expr ); $ibs_focus.last.sources.push *Dir[ expr ]; end
 end

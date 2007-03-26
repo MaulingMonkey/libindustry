@@ -14,35 +14,28 @@ require 'ibs-lib/concepts/*'
 module Industry
 	setttings = {
 		#  Defaults:
-		:command  => 'build',  #  Never really used (yet?) but this would be the default (?)
-		:target   => 'all',
+		:command  => 'update',
 		:filename => 'industry-solution.rb'
 	}
 
-	# ibs <command> [<target>] [<filename>]
+	# ibs <command>
 	case ARGV.size
-	when 1, 2, 3 # ibs <command> [<target> [<filename>]]
-		settings[:command ] = ARGV[0]
-		settings[:target  ] = ARGV[1] || settings[:target]
-		settings[:filename] = ARGV[2] || settings[:filename]
+	when 1
+		settings[:command] = ARGV[0]
 	else
 		puts ""
-		puts "Usage: #{$0} <command> [<target> [<filename>]]"
+		puts "Usage: #{$0} <command>"
 		puts ""
 		puts "  <command>"
-		puts "     build :  update any IDE files and build the project"
-		puts "     clean :  clean up temporary files"
-		puts "     export:  export IDE files for standalone building"
-		puts ""
-		puts "  <target>    (default 'all')"
-		puts "     all   :  all targets found in <filename>"
-		puts "     *     :  any valid project described in <filename>"
-		puts "     *:*   :  any valid project:target combination described in <filename>"
-		puts ""
-		puts "  <filename>  (default 'industry-solution.rb')"
-		puts "     The ruby script to load which describes the IBS project/solution"
+		# puts "     build :  build the entire project"  # not yet implemented
+		# puts "     test  :  do compile tests"          # not yet implemented
+		puts "     export:  update all IDE files without ibs hooks"
+		puts "     update:  update all IDE files with    ibs hooks"
+		puts "     verify:  error message & code if an update is required"
 		exit 1
 	end
 
-	load 'industry-solution.rb'
+	$ibs_focus = [] # focus stack, used by concepts/*
+
+	load settings[:filename]
 end
