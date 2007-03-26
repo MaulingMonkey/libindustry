@@ -12,10 +12,9 @@ module Industry
 		def initialize()
 			@dependancies   ||= []
 			@sources        ||= []
-			@warnings_level ||= nil
 		end
 
-		attr_accessor :dependancies, :sources, :targets
+		attr_accessor :dependancies, :sources
 	end
 end
 
