@@ -38,4 +38,11 @@ module Industry
 	$ibs_focus = [] # focus stack, used by concepts/*
 
 	load settings[:filename]
+
+	toolchain = MSVC80_Toolchain.new
+
+	$ibs_solutions.each do |name,solution|
+		puts "Exporting #{name}..."
+		toolchain.export_solution( solution )
+	end
 end

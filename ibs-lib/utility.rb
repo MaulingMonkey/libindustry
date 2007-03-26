@@ -7,6 +7,8 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
+require 'ibs-lib/uuid'
+
 def require( *patterns )
 	results = patterns.collect do |pattern|
 		paths = Dir[pattern.gsub(/\\/,'/')]
@@ -51,10 +53,10 @@ def attr_writer_once( name )
 end
 
 def attr_reader_defaults( name , &expr )
-	eval( "@@#{name}_default_ = Proc.new(&expr)" )
+	define_method( "#{name}_default_" , &expr )
 	class_eval <<-"end_eval"
 		def #{name}()
-			@#{name} || @@#{name}_default_.call
+			@#{name} || #{name}_default_
 		end
 	end_eval
 end
