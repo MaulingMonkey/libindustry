@@ -11,7 +11,7 @@
 module Industry
 	class MSVC80_Toolchain
 		def export_solution( solution )
-			File.new( solution.msvc80_solution_filename , "rw" ) do |file|
+			File.new( solution.msvc80_solution_filename ,  File::CREAT | File::TRUNC | File::WRONLY ) do |file|
 				file.puts "Microsoft Visual Studio Solution File, Format Version 9.00"
 
 				sln_uuid      = solution.uuid
