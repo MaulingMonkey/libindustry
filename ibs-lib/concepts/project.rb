@@ -10,20 +10,21 @@
 module Industry
 	class Solution; end
 	class Project
-		def initialize( id )
-			@dependancies   ||= []
-			@sources        ||= []
+		def initialize( name )
+			@name           = name
+			@dependancies   = []
+			@sources        = []
 		end
 
-		attr_accessor :dependancies, :sources
+		attr_accessor :name, :dependancies, :sources
 	end
 end
 
 module Kernel
-	def project( id )
+	def project( name )
 		ibs_projects = $ibs_focus.reverse.find { |s| s.kind_of? Industry::Solution }.projects
-		ibs_projects[id] ||= Industry::Project.new(id)
-		project = ibs_projects[id]
+		ibs_projects[name] ||= Industry::Project.new(name)
+		project = ibs_projects[name]
 
 		if block_given?
 			$ibs_focus.push project
