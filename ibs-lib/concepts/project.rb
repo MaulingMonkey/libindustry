@@ -7,6 +7,8 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
+require 'ibs-lib/uuid'
+
 module Industry
 	class Solution; end
 	class Project
@@ -14,9 +16,11 @@ module Industry
 			@name           = name
 			@dependancies   = []
 			@sources        = []
+			@uuid           = UUID.create #  TODO:  Scan files for UUID reuse
 		end
 
-		attr_accessor :name, :dependancies, :sources
+		attr_accessor :name, :dependancies, :sources , :msvc80_project_filename , :gnu_makefile_target
+		attr_reader :uuid
 	end
 end
 
@@ -36,4 +40,6 @@ module Kernel
 	end
 	def dependancy( dep ); $ibs_focus.last.dependancies.push dep; end
 	def sources( expr ); $ibs_focus.last.sources.push *Dir[ expr ]; end
+	def msvc80_project_filename( filename ); $ibs_focus.last.msvc80_project_filename=filename; end
+	def gnu_makefile_target( name ); $ibs_focus.last.gnu_makefile_target=name; end
 end

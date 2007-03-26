@@ -7,12 +7,23 @@
 # $LastChangedBy$
 # $LastChangedDate$
 
+require 'ibs-lib/utility'
+
 module Industry
 	class Solution
-		def initialize( id )
-			@projects ||= {}
+		def initialize( name )
+			@name           = name
+			@projects       = {}
+			@uuid           = UUID.create #  TODO:  Scan files for UUID reuse
 		end
+		attr_writer_once :msvc80_solution_filename
+		attr_writer_once :msvc80_solution_directory
+		attr_reader_defaults( :msvc80_solution_filename  ) { "#{@name}.sln" }
+		attr_reader_defaults( :msvc80_solution_directory ) { File.dirname( self.msvc80_solution_filename ) }
+
+
 		attr_accessor :projects , :msvc80_solution_filename , :gnu_makefile_filename
+		attr_reader :uuid
 	end
 end
 
