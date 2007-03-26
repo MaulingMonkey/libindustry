@@ -40,3 +40,21 @@ end
 def env( name )
 	ENV[name]
 end
+
+def attr_writer_once( name )
+	class_eval <<-"end_eval"
+		def #{name}=(value)
+			raise ArgumentError , \"#{name} already set\" if @#{name}
+			@#{name} = value
+		end
+	end_eval
+end
+
+def attr_reader_defaults( name , &expr )
+	eval( "@@#{name}_default_ = Proc.new(&expr)" )
+	class_eval <<-"end_eval"
+		def #{name}()
+			@#{name} || @@#{name}_default_.call
+		end
+	end_eval
+end
