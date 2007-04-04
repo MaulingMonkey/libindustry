@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="unittest"
-	ProjectGUID="{B8C5D270-C4AF-0129-0802-00508D642E22}"
+	ProjectGUID="{FB3B2FC0-C4BD-0129-0807-00508D642E22}"
 	RootNamespace="unittest"
 	Keyword="Win32Proj"
 	>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5;.."
+				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="msvcr80-ruby18.lib msvcr80-ruby18.lib"
+				AdditionalDependencies="msvcr80-ruby18.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest;C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
+				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5;.."
+				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -137,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="msvcr80-ruby18.lib msvcr80-ruby18.lib"
+				AdditionalDependencies="msvcr80-ruby18.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest;C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
+				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -174,7 +174,7 @@
 	</Configurations>
 	<References>
 		<ProjectReference
-			ReferencedProjectIdentifier="{B8C11782-C4AF-0129-0802-00508D642E22}"
+			ReferencedProjectIdentifier="{FB3674D4-C4BD-0129-0807-00508D642E22}"
 			RelativePathToProject=".\msvc8_libindustry.vcproj"
 		/>
 	</References>

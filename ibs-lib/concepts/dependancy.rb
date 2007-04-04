@@ -13,10 +13,10 @@ class Dependancy
 		@libraries     = []
 	end
 	attr_accessor :include_paths, :library_paths, :libraries
-	def all_include_paths(); @include_paths; end
-	def all_library_paths(); @library_paths; end
-	def all_libraries();     @libraries    ; end
-	def all_dependancies();  self          ; end
+	def all_include_paths(); @include_paths.uniq.flatten; end
+	def all_library_paths(); @library_paths.uniq.flatten; end
+	def all_libraries();         @libraries.uniq.flatten; end
+	def all_dependancies();            self             ; end
 end
 
 def dependancy( name )

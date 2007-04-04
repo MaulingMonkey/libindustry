@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="libindustry"
-	ProjectGUID="{B8C11782-C4AF-0129-0802-00508D642E22}"
+	ProjectGUID="{FB3674D4-C4BD-0129-0807-00508D642E22}"
 	RootNamespace="libindustry"
 	Keyword="Win32Proj"
 	>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5;.."
+				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -102,7 +102,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5;.."
+				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"

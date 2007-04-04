@@ -30,7 +30,7 @@ class MSVC8_Toolchain
 		
 		export_solution_file( File.expand_path( "msvc8.sln" , $project_root ) , list )
 	end
-	def project_filename( project )
+	def filename_of( project )
 		case project
 		when Program, Library
 			return "msvc8_#{project.name}.vcproj"
@@ -49,7 +49,7 @@ class MSVC8_Toolchain
 			file.puts "# Visual Studio 2005"
 			
 			list.each do |project|
-				project_filename = self.project_filename( project )
+				project_filename = filename_of( project )
 				next unless project_filename
 				project_uuid     = "\{#{project.uuid.to_s.upcase}\}"
 				file.puts "Project(\"#{@solution_uuid}\") = \"#{project.name}\", \"#{project_filename}\", \"#{project_uuid}\""

@@ -19,10 +19,10 @@ class Program
 		@uuid          = UUID.new
 	end
 	attr_accessor :include_paths, :library_paths, :libraries, :dependancies, :sources
-	def all_include_paths(); @include_paths + @dependancies.collect {|d| d.all_include_paths}; end
-	def all_library_paths(); @library_paths + @dependancies.collect {|d| d.all_library_paths}; end
-	def all_libraries();     @libraries     + @dependancies.collect {|d| d.all_libraries    }; end
-	def all_dependancies();  @dependancies  + @dependancies.collect {|d| d.all_dependancies }; end
+	def all_include_paths(); (@include_paths + self.all_dependancies.collect {|d| d.all_include_paths}).uniq.flatten; end
+	def all_library_paths(); (@library_paths + self.all_dependancies.collect {|d| d.all_library_paths}).uniq.flatten; end
+	def all_libraries();     (@libraries     + self.all_dependancies.collect {|d| d.all_libraries    }).uniq.flatten; end
+	def all_dependancies();  (@dependancies  +         @dependancies.collect {|d| d.all_dependancies }).uniq.flatten; end
 	attr_reader :name, :uuid
 end
 
