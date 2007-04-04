@@ -10,6 +10,7 @@ Dir[ "ibs-lib/toolchains/**/*.rb" ].each do |toolchain|
 	$programs     = {}
 	$libraries    = {}
 	$dependancies = {}
+	$scripts      = {}
 	
 	print "Exporting with: #{File.basename(toolchain)}..."
 	load toolchain

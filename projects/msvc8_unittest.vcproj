@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="unittest"
-	ProjectGUID="{0127F460-C48F-0129-07C1-00508D642E22}"
+	ProjectGUID="{EDFF55A0-C492-0129-07C4-00508D642E22}"
 	RootNamespace="unittest"
 	Keyword="Win32Proj"
 	>
@@ -174,7 +174,7 @@
 	</Configurations>
 	<References>
 		<ProjectReference
-			ReferencedProjectIdentifier="{01233972-C48F-0129-07C1-00508D642E22}"
+			ReferencedProjectIdentifier="{EDFA9AB2-C492-0129-07C4-00508D642E22}"
 			RelativePathToProject=".msvc8_libindustry.vcproj"
 		/>
 	</References>

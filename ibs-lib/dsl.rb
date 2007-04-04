@@ -1,5 +1,5 @@
 def add_include_paths( list )
-	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless $focus
+	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless ($focus && $focus.respond_to?('include_paths='))
 	
 	if list.kind_of? String
 		$focus.include_paths += list.split(';')
@@ -9,7 +9,7 @@ def add_include_paths( list )
 end
 
 def add_library_paths( list )
-	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless $focus
+	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless ($focus && $focus.respond_to?('library_paths='))
 	
 	if list.kind_of? String
 		$focus.library_paths += list.split(';')
@@ -19,7 +19,7 @@ def add_library_paths( list )
 end
 
 def add_library( name )
-	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless $focus
+	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless ($focus && $focus.respond_to?('libraries='))
 	
 	if name.kind_of? String
 		$focus.libraries += [ name ]
@@ -29,7 +29,7 @@ def add_library( name )
 end
 
 def sources( list )
-	raise ArgumentError , "Must be used in the context of a program or library" unless ($focus && !$focus.kind_of?(Dependancy))
+	raise ArgumentError , "Must be used in the context of a program or library" unless ($focus && $focus.respond_to?('sources='))
 	
 	if list.kind_of? String
 		$focus.sources += Dir[ list ]
@@ -38,4 +38,11 @@ def sources( list )
 	else
 		raise ArgumentError , "Expected a String or Array, got a #{list.class}"
 	end
+end
+
+
+def start( file )
+	raise ArgumentError , "Must be used in the context of a script" unless ($focus && $focus.respond_to?('start='))
+
+	$focus.start = file
 end

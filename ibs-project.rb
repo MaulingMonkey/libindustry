@@ -15,3 +15,8 @@ program( :unittest ) {
 	dependancy library(:libindustry)
 	sources "unittest/**/*.{c,h}pp"
 }
+
+script( :ibs , :ruby ) {
+	sources "ibs-lib/**/*.rb"
+	start   "ibs-lib/ibs.rb"
+}
