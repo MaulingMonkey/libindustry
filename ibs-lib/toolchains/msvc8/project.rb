@@ -9,7 +9,7 @@
 class MSVC8_Toolchain
 	def scan_cpp_project_file( filename , project )
 		raise ArgumentError , "#{filename} does not exist!" unless File.exists? filename
-		file.open( filename , File::RDONLY ) do |filename|
+		File.open( filename , File::RDONLY ) do |file|
 			scan_cpp_project_file_for_uuid        file, project
 		end
 	end
@@ -28,9 +28,10 @@ class MSVC8_Toolchain
 	private
 	
 	def scan_cpp_project_file_for_uuid( file , project )
-		line = file.readlines.find{|l|l.scan(/ProjectGUID/)}
-		uuid = line.scan(/"\{(.*?)\}"/).flatten[0] | UUID.new
-		project.uuid = uuid
+		lines = file.readlines
+		line = lines.find{|l|l.match(/ProjectGUID/)}
+		uuid = line.scan(/\"\{(.*?)\}\"/).flatten[0]
+		project.uuid = uuid || UUID.new
 		file.rewind
 	end
 	

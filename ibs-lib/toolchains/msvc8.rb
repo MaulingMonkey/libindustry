@@ -7,16 +7,16 @@
 #  $LastChangedBy$ - $LastChangedDate$
 
 require 'toolchains/msvc8/project.rb'
-#require 'toolchains/msvc8/ruby_in_steel.rb'
+# require 'toolchains/msvc8/ruby_in_steel.rb'
 require 'toolchains/msvc8/solution.rb'
 require 'toolchains/msvc8/utility.rb'
 require 'ftools'
 require 'uuid'
 
-[ Library , Program , Script ].each do |needs_uuid|
+[ Library , Program ].each do |needs_uuid|
 	needs_uuid.class_eval do
-		def uuid(); @uuid = UUID.new unless @uuid; @uuid; end
 		attr_writer :uuid
+		def uuid(); @uuid ||= UUID.new; @uuid; end
 	end
 end
 
@@ -26,6 +26,7 @@ class MSVC8_Toolchain
 		@solution_uuid = "\{#{UUID.new.to_s.upcase}\}"
 	end
 	def scan( *projects )
+		projects.flatten!
 		projects.each do |project|
 			case project
 			when Program, Library; scan_cpp_project_file( root_filename_of(project) , project )

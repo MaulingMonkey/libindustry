@@ -7,11 +7,11 @@
 #  $LastChangedBy$ - $LastChangedDate$
 
 class MSVC8_Toolchain
-	def scan_solution_file( file , project )
+	def scan_solution_file( filename , project )
 		File.open( filename , File::RDONLY ) do |file|
-			line = file.readlines.find{|l|l.scan(/Project/)}
-			uuid = line.scan(/Project\s*(\s*("\{.*?\}")\s*)/).flatten[0] | UUID.new
-			@solution_uuid = uuid
+			line = file.readlines.find{|l|l.match(/Project/)}
+			uuid = line.scan(/Project\("(\{.*?\})"\)/).flatten[0]
+			@solution_uuid = uuid || UUID.new
 			file.rewind
 		end
 	end
@@ -53,6 +53,11 @@ class MSVC8_Toolchain
 	def export_solution_file_project_config_list( file , list )
 		file.puts "\tGlobalSection(ProjectConfigurationPlatforms) = postSolution"
 		list.each do |project|
+			case project
+			when Program, Library
+			else
+				next # Skip
+			end
 			project_configs  = @solution_configs
 			project_uuid     = "\{#{project.uuid.to_s.upcase}\}"
 			

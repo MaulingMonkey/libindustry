@@ -19,10 +19,6 @@ Global
 		{C2AEEE30-C4D1-0129-082B-00508D642E22}.Debug|Win32.Build.0 = Debug|Win32
 		{C2AEEE30-C4D1-0129-082B-00508D642E22}.Release|Win32.ActiveCfg = Release|Win32
 		{C2AEEE30-C4D1-0129-082B-00508D642E22}.Release|Win32.Build.0 = Release|Win32
-		{C2AEEE31-C4D1-0129-082B-00508D642E22}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C2AEEE31-C4D1-0129-082B-00508D642E22}.Debug|Win32.Build.0 = Debug|Win32
-		{C2AEEE31-C4D1-0129-082B-00508D642E22}.Release|Win32.ActiveCfg = Release|Win32
-		{C2AEEE31-C4D1-0129-082B-00508D642E22}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
