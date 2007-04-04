@@ -33,7 +33,7 @@ Dir[ "ibs-lib/toolchains/**/*.rb" ].each do |toolchain|
 	raise "$project_root is not a directory (#{$project_root})" unless File.directory? $project_root
 	
 	begin
-		$toolchain.export( $programs.values + $libraries.values )
+		$toolchain.export( $programs.values + $libraries.values + $scripts.values )
 		puts "OK."
 	rescue StandardError => e
 		puts "ERROR."

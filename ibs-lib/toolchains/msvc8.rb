@@ -14,15 +14,33 @@ class MSVC8_Toolchain
 		@solution_configs = [ "Debug|Win32" , "Release|Win32" ]
 		@solution_uuid = "\{#{UUID.new.to_s.upcase}\}"
 	end
-	def export( *list )
-		
-		
+	def export( *list )		
 		list.flatten!
 		list.each do |exportee|
-			export_project_file( File.expand_path( "msvc8_#{exportee.name}.vcproj" , $project_root ) , exportee )
+			case exportee
+			when Program, Library
+				export_project_file( File.expand_path( "msvc8_#{exportee.name}.vcproj" , $project_root ) , exportee )
+			when Script
+				case exportee.language
+				when :ruby
+					# export_ruby_in_steel_project_file( File.expand_path( "msvc8_#{exportee.name}.stproj" , $project_root ) , exportee )
+				end
+			end
 		end
 		
 		export_solution_file( File.expand_path( "msvc8.sln" , $project_root ) , list )
+	end
+	def project_filename( project )
+		case project
+		when Program, Library
+			return "msvc8_#{project.name}.vcproj"
+		when Script
+			case project.language
+			when :ruby
+				# return "msvc8_#{project.name}.stproj"
+			end
+		end
+		nil
 	end
 	def export_solution_file( filename , list )
 		File.open( filename , File::CREAT | File::WRONLY | File::TRUNC ) do |file|
@@ -31,7 +49,8 @@ class MSVC8_Toolchain
 			file.puts "# Visual Studio 2005"
 			
 			list.each do |project|
-				project_filename = "msvc8_#{project.name}.vcproj"
+				project_filename = self.project_filename( project )
+				next unless project_filename
 				project_uuid     = "\{#{project.uuid.to_s.upcase}\}"
 				file.puts "Project(\"#{@solution_uuid}\") = \"#{project.name}\", \"#{project_filename}\", \"#{project_uuid}\""
 				file.puts "EndProject"
@@ -273,6 +292,98 @@ class MSVC8_Toolchain
 			
 			
 			file.puts "</VisualStudioProject>"
+		end
+	end
+
+	def export_ruby_in_steel_project_file( filename , project )
+		File.open( filename , File::CREAT | File::WRONLY | File::TRUNC ) do |file|
+			file.puts "<Project DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">"
+			%w[ Debug Release ].each do |config|
+				file.puts "  <PropertyGroup Condition=\" '$(Configuration)' == '#{config}' \">"
+				file.puts "    <Name>#{config}</Name>"
+				file.puts "  </PropertyGroup>"
+			end
+			lines = <<-END
+				  <UsingTask TaskName="RML.Steel.SteelRubyBuild" AssemblyName="SteelBuild, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a42f26dbbcba2be, processorArchitecture=MSIL" />
+				  <UsingTask TaskName="RML.Steel.SteelRailsBuild" AssemblyName="SteelBuild, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a42f26dbbcba2be, processorArchitecture=MSIL" />
+				  <Target Name="BuildRails" Inputs="@(EmbeddedRuby)" Outputs="$(MSBuildProjectDirectory)\\SyntaxCheck\\%(Identity)">
+				    <MakeDir Directories="SyntaxCheck" />
+				    <SteelRailsBuild ERBFile="@(EmbeddedRuby)" ProjectDirectory="$(MSBuildProjectDirectory)" ERBProcessor="$(ERBProcessor)" ERBFlags="$(ERBFlags)" ERBLibraryFiles="$(ERBLibraryFiles)" ERBTimeout="$(ERBTimeout)" />
+				  </Target>
+				  <Target Name="BuildRuby" Inputs="@(Ruby)" Outputs="$(MSBuildProjectDirectory)\\SyntaxCheck\\%(Identity)">
+				    <MakeDir Directories="SyntaxCheck" />
+				    <SteelRubyBuild RubyFile="@(Ruby)" ProjectDirectory="$(MSBuildProjectDirectory)" RubyInterpreter="$(RubyInterpreter)" RubyInterpreterFlags="$(RubyInterpreterFlags)" RubyLibraryFiles="$(RubyLibraryFiles)" RubyLibraryPaths="$(LibraryPath)" RubyTimeout="$(RubyTimeout)" />
+				  </Target>
+				  <Target Name="Clean">
+				    <RemoveDir Directories="$(MSBuildProjectDirectory)\\SyntaxCheck" />
+				  </Target>
+				  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" Inputs="@(Ruby); @(EmbeddedRuby)" Outputs="$(MSBuildProjectDirectory)\\SyntaxCheck\\%(Identity)">
+				  </Target>
+				  <Target Name="Clean">
+				    <RemoveDir Directories="$(MSBuildProjectDirectory)\\SyntaxCheck" />
+				  </Target>
+				  <PropertyGroup>
+				    <RebuildDependsOn>
+				      Clean;
+				      Build;
+				    </RebuildDependsOn>
+				    <BuildDependsOn>
+				      BeforeBuild;
+				      BuildRuby; 
+				      BuildRails;
+				      AfterBuild;
+				    </BuildDependsOn>
+			END
+			lines.each_line do |line|
+				file.puts line.gsub(/^\t\t\t\t/,'')
+			end
+			file.puts "    <ProjectGuid>\{#{project.uuid.to_s}\}</ProjectGuid>"
+			file.puts "    <AssemblyName>#{project.name}</AssemblyName>"
+			file.puts "    <Name>#{project.name}</Name>"
+			file.puts "    <RootNamespace>#{project.name}</RootNamespace>"
+			file.puts "    <SynchronizationExcludeHiddenFiles>True</SynchronizationExcludeHiddenFiles>"
+			file.puts "    <SynchronizeExcludeNoExtension>False</SynchronizeExcludeNoExtension>"
+			file.puts "    <RubyTimeout>60</RubyTimeout>"
+			file.puts "    <ERBTimeout>60</ERBTimeout>"
+			file.puts "  </PropertyGroup>"
+			directories = []
+			project.sources.each do |source|
+				source_dirs = []
+				dir = File.dirname( "#{source}" )
+				while dir != '.'
+					source_dirs.unshift dir
+					dir = File.dirname dir
+				end
+				directories += source_dirs
+			end
+			directories.uniq!
+
+			file.puts "  <ItemGroup>"
+			directories.each do |dir|
+				file.puts "    <Folder Include=\"#{dir}\" />"
+			end
+			file.puts "  </ItemGroup>"
+
+			file.puts "  <ItemGroup>"
+			project.sources.each do |source|
+				file.puts "    <Ruby Include=\"#{$inverse_project_root}/#{source}\" />"
+			end
+			file.puts "  </ItemGroup>"
+
+			lines = <<-END
+				  <Target Name="Rebuild" DependsOnTargets="$(RebuildDependsOn)" Inputs="@(Ruby)" Outputs="$(MSBuildProjectDirectory)\SyntaxCheck\%(Identity)">
+				  </Target>
+				  <Target Name="BeforeBuild" Condition="'$(PreBuildEvent)'!='' ">
+				    <Exec Command="$(PreBuildEvent)" />
+				  </Target>
+				  <Target Name="AfterBuild" Condition="'$(PostBuildEvent)'!='' ">
+				    <Exec Command="$(PostBuildEvent)" />
+				  </Target>
+				</Project>
+			END
+			lines.each_line do |line|
+				file.puts line.gsub(/^\t\t\t\t/,'')
+			end
 		end
 	end
 end

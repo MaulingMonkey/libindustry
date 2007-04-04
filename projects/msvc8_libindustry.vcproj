@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="libindustry"
-	ProjectGUID="{EDFA9AB2-C492-0129-07C4-00508D642E22}"
+	ProjectGUID="{F69FF100-C4A2-0129-07E1-00508D642E22}"
 	RootNamespace="libindustry"
 	Keyword="Win32Proj"
 	>
