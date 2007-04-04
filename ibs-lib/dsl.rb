@@ -54,3 +54,14 @@ def start( file )
 	
 	$focus.start = file
 end
+
+def msvc_supress_warnings( *list )
+	raise ArgumentError, "Must be used in the context of a Program or Library" unless ($focus && $focus.respond_to?('msvc_supressed_warnings='))
+	$focus.msvc_supressed_warnings += list.flatten
+end
+
+def msvc_warning_level( level )
+	raise ArgumentError, "Warning level should be between 1 and 4" unless (1..4) === level
+	raise ArgumentError, "Must be used in the context of a Program or Library" unless ($focus && $focus.respond_to?('msvc_warning_level='))
+	$focus.msvc_warning_level = level
+end

@@ -14,8 +14,11 @@ class Program
 		@libraries     = []
 		@dependancies  = []
 		@sources       = []
+		@msvc_warning_level      = 3
+		@msvc_supressed_warnings = []
 	end
 	attr_accessor :include_paths, :library_paths, :libraries, :dependancies, :sources
+	attr_accessor :msvc_warning_level, :msvc_supressed_warnings
 	def all_include_paths(); (@include_paths + self.all_dependancies.collect {|d| d.all_include_paths}).uniq.flatten; end
 	def all_library_paths(); (@library_paths + self.all_dependancies.collect {|d| d.all_library_paths}).uniq.flatten; end
 	def all_libraries();     (@libraries     + self.all_dependancies.collect {|d| d.all_libraries    }).uniq.flatten; end
