@@ -1,7 +1,0 @@
-#!/bin/bash
-
-RUBY=/opt/local/bin/ruby
-SCRIPT=~/Scripts/lib/maker/do-make.rb
-export RUBYLIB=~/Scripts/lib
-
-$RUBY $SCRIPT
