@@ -10,11 +10,11 @@ $: << 'ibs-lib'
 $toolchains = []
 require 'dsl'
 
-Dir[ "ibs-lib/concepts/**/*.rb" ].each do |concept|
+Dir[ "ibs-lib/concepts/*.rb" ].each do |concept|
 	load concept
 end
 
-Dir[ "ibs-lib/toolchains/**/*.rb" ].each do |toolchain|
+Dir[ "ibs-lib/toolchains/*.rb" ].each do |toolchain|
 	$programs     = {}
 	$libraries    = {}
 	$dependancies = {}

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="unittest"
-	ProjectGUID="{FB3B2FC0-C4BD-0129-0807-00508D642E22}"
+	ProjectGUID="{A4A6D180-C4CE-0129-0828-00508D642E22}"
 	RootNamespace="unittest"
 	Keyword="Win32Proj"
 	>
@@ -22,6 +22,9 @@
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
+			<Tool
+				Name="Debug|Win32"
+			/>
 			<Tool
 				Name="VCPreBuildEventTool"
 			/>
@@ -51,6 +54,9 @@
 				DebugInformationFormat="4"
 			/>
 			<Tool
+				Name="Debug|Win32"
+			/>
+			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -67,6 +73,9 @@
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="Debug|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -101,6 +110,9 @@
 			CharacterSet="1"
 			>
 			<Tool
+				Name="Release|Win32"
+			/>
+			<Tool
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
@@ -127,6 +139,9 @@
 				DebugInformationFormat="3"
 			/>
 			<Tool
+				Name="Release|Win32"
+			/>
+			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -145,6 +160,9 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="Release|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -174,7 +192,7 @@
 	</Configurations>
 	<References>
 		<ProjectReference
-			ReferencedProjectIdentifier="{FB3674D4-C4BD-0129-0807-00508D642E22}"
+			ReferencedProjectIdentifier="{A4A6D181-C4CE-0129-0828-00508D642E22}"
 			RelativePathToProject=".\msvc8_libindustry.vcproj"
 		/>
 	</References>

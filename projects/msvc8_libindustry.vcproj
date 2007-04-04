@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="libindustry"
-	ProjectGUID="{FB3674D4-C4BD-0129-0807-00508D642E22}"
+	ProjectGUID="{A4A6D181-C4CE-0129-0828-00508D642E22}"
 	RootNamespace="libindustry"
 	Keyword="Win32Proj"
 	>
@@ -22,6 +22,9 @@
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
+			<Tool
+				Name="Debug|Win32"
+			/>
 			<Tool
 				Name="VCPreBuildEventTool"
 			/>
@@ -51,6 +54,9 @@
 				DebugInformationFormat="4"
 			/>
 			<Tool
+				Name="Debug|Win32"
+			/>
+			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -61,6 +67,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+			/>
+			<Tool
+				Name="Debug|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -85,6 +94,9 @@
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
+			<Tool
+				Name="Release|Win32"
+			/>
 			<Tool
 				Name="VCPreBuildEventTool"
 			/>
@@ -112,6 +124,9 @@
 				DebugInformationFormat="3"
 			/>
 			<Tool
+				Name="Release|Win32"
+			/>
+			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -122,6 +137,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+			/>
+			<Tool
+				Name="Release|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
