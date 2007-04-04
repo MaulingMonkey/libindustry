@@ -133,7 +133,14 @@ class MSVC8_Toolchain
 				file.puts "\t\t\tName=\"#{config}\""
 				file.puts "\t\t\tOutputDirectory=\"$(SolutionDir)#{$inverse_project_root}\\$(ConfigurationName)\""
 				file.puts "\t\t\tIntermediateDirectory=\"$(ConfigurationName)\""
-				file.puts "\t\t\tConfigurationType=\"4\""
+				case project
+				when Program
+					file.puts "\t\t\tConfigurationType=\"1\""
+				when Library
+					file.puts "\t\t\tConfigurationType=\"4\""
+				else
+					raise ArgumentError, "Expected a Program or Library, got a #{project.class}."
+				end
 				file.puts "\t\t\tCharacterSet=\"1\""
 				file.puts "\t\t\t>"
 				
@@ -156,7 +163,7 @@ class MSVC8_Toolchain
 				compiler = []
 				compiler << %w[ Name          VCCLCompilerTool ]
 				compiler << %w[ Optimization  0                ] if config =~ /Debug/
-				compiler << [ 'AdditionalIncludeDirectories' , project.include_paths ]
+				compiler << [ 'AdditionalIncludeDirectories' , (project.all_include_paths+[$inverse_project_root]).join(';') ]
 				
 				defines = %w[ WIN32 ]
 				if config =~ /Debug/
@@ -210,13 +217,13 @@ class MSVC8_Toolchain
 					file.puts "\t\t\t/>"
 				elsif project.kind_of? Program
 					linker = [ %w[ Name VCLinkerTool ] ]
-					linker << [ 'AdditionalDependancies' , '' ]
+					linker << [ 'AdditionalDependencies' , project.all_libraries.join(' ') ]
 					if config =~ /Debug/
 						linker << %w[ LinkIncremental 2 ]
 					else
 						linker << %w[ LinkIncremental 1 ]
 					end
-					linker << [ 'AdditionalLibraryDirectories' , '' ]
+					linker << [ 'AdditionalLibraryDirectories' , project.all_library_paths.join(';') ]
 					linker << %w[ GenerateDebugInformation true ]
 					linker << %w[ SubSystem                1    ]
 					if !(config =~ /Debug/)
@@ -255,11 +262,11 @@ class MSVC8_Toolchain
 			
 			
 			file.puts "\t<References>"
-			project.dependancies.each do |dependancy|
+			project.all_dependancies.each do |dependancy|
 				next unless (dependancy.kind_of? Program) || (dependancy.kind_of? Library)
 				
 				dependancy_uuid = "\{#{dependancy.uuid.to_s.upcase}\}"
-				dependancy_path = ".\msvc8_#{dependancy.name}.vcproj"
+				dependancy_path = ".\\msvc8_#{dependancy.name}.vcproj"
 				
 				file.puts "\t\t<ProjectReference"
 				file.puts "\t\t\tReferencedProjectIdentifier=\"#{dependancy_uuid}\""

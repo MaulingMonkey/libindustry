@@ -51,6 +51,6 @@ end
 
 def start( file )
 	raise ArgumentError , "Must be used in the context of a script" unless ($focus && $focus.respond_to?('start='))
-
+	
 	$focus.start = file
 end

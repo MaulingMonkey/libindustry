@@ -13,6 +13,10 @@ class Dependancy
 		@libraries     = []
 	end
 	attr_accessor :include_paths, :library_paths, :libraries
+	def all_include_paths(); @include_paths; end
+	def all_library_paths(); @library_paths; end
+	def all_libraries();     @libraries    ; end
+	def all_dependancies();  self          ; end
 end
 
 def dependancy( name )
@@ -26,6 +30,9 @@ def dependancy( name )
 			$focus = nil
 		end
 	else
-		$focus.dependancies << name
+		dependancy = name
+		dependancy = ($dependancies[name] || $libraries[name] || $scripts[name] || $programs[name]) if name.kind_of? Symbol
+		raise ArgumentError, "Couldn't find dependancy: #{dependancy}" unless dependancy
+		$focus.dependancies << dependancy
 	end
 end

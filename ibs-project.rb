@@ -3,7 +3,7 @@ $project_root = './projects/'
 dependancy( :ruby ) {
 	add_include_paths ENV['RUBYINCLUDE']
 	add_library_paths ENV['RUBYLIB']
-	add_library       "ruby-#{VERSION}.lib"
+	add_library       "msvcr80-ruby#{VERSION.split('.')[0..1].join}.lib"
 }
 
 library( :libindustry ) {
@@ -12,7 +12,7 @@ library( :libindustry ) {
 }
 
 program( :unittest ) {
-	dependancy library(:libindustry)
+	dependancy :libindustry
 	sources "unittest/**/*.{c,h}pp"
 }
 

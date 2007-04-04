@@ -28,6 +28,7 @@ Dir[ "ibs-lib/toolchains/**/*.rb" ].each do |toolchain|
 	raise "Error:  $project_root contains filesystem dependant elements (..)" if tokenized_root.member? '..'
 	raise "Error:  $project_root contains environment dependant elements"     if tokenized_root.find {|e| e =~ /\$\(.*?\)/}
 	$inverse_project_root = tokenized_root.collect{|discarded| '..'}.join('/')
+	$inverse_project_root = '.' if $inverse_project_root.empty? # TODO:  Test effects of
 	
 	File.makedirs( $project_root ) unless File.exists? $project_root
 	raise "$project_root is not a directory (#{$project_root})" unless File.directory? $project_root
