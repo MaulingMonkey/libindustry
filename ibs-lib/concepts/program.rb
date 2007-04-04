@@ -6,8 +6,6 @@
 # 
 #  $LastChangedBy$ - $LastChangedDate$
 
-require 'uuid'
-
 class Program
 	def initialize( name )
 		@name          = name.to_s

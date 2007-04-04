@@ -6,8 +6,6 @@
 # 
 #  $LastChangedBy$ - $LastChangedDate$
 
-require 'uuid'
-
 class Script
 	def initialize( name , language )
 		@name         = name.to_s
