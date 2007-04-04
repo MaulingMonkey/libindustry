@@ -7,6 +7,12 @@
 #  $LastChangedBy$ - $LastChangedDate$
 
 class MSVC8_Toolchain
+	def scan_cpp_project_file( filename , project )
+		raise ArgumentError , "#{filename} does not exist!" unless File.exists? filename
+		file.open( filename , File::RDONLY ) do |filename|
+			scan_cpp_project_file_for_uuid        file, project
+		end
+	end
 	def export_cpp_project_file( filename , project )
 		File.open( filename , File::CREAT | File::WRONLY | File::TRUNC ) do |file|
 			export_cpp_project_file_header        file, project
@@ -20,6 +26,13 @@ class MSVC8_Toolchain
 	end
 	
 	private
+	
+	def scan_cpp_project_file_for_uuid( file , project )
+		line = file.readlines.find{|l|l.scan(/ProjectGUID/)}
+		uuid = line.scan(/"\{(.*?)\}"/).flatten[0] | UUID.new
+		project.uuid = uuid
+		file.rewind
+	end
 	
 	def export_cpp_project_file_header( file , project )
 		file.puts '<?xml version="1.0" encoding="Windows-1252"?>'

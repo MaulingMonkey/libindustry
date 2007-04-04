@@ -25,18 +25,25 @@ class MSVC8_Toolchain
 		@solution_configs = [ "Debug|Win32" , "Release|Win32" ]
 		@solution_uuid = "\{#{UUID.new.to_s.upcase}\}"
 	end
-	def export( *exports )		
-		exports.flatten!
-		exports.each do |project|
+	def scan( *projects )
+		projects.each do |project|
+			case project
+			when Program, Library; scan_cpp_project_file( root_filename_of(project) , project )
+			end
+		end
+		
+		scan_solution_file( root_filename_of("msvc8.sln") , projects )
+	end
+	def export( *projects )		
+		projects.flatten!
+		projects.each do |project|
 			case project
 			when Program, Library; export_cpp_project_file( root_filename_of(project) , project )
 			end
 		end
 		
-		export_solution_file( root_filename_of("msvc8.sln") , exports )
+		export_solution_file( root_filename_of("msvc8.sln") , projects )
 	end
-	
-
 end
 
 $toolchain = MSVC8_Toolchain.new

@@ -7,6 +7,14 @@
 #  $LastChangedBy$ - $LastChangedDate$
 
 class MSVC8_Toolchain
+	def scan_solution_file( file , project )
+		File.open( filename , File::RDONLY ) do |file|
+			line = file.readlines.find{|l|l.scan(/Project/)}
+			uuid = line.scan(/Project\s*(\s*("\{.*?\}")\s*)/).flatten[0] | UUID.new
+			@solution_uuid = uuid
+			file.rewind
+		end
+	end
 	def export_solution_file( filename , list )
 		File.open( filename , File::CREAT | File::WRONLY | File::TRUNC ) do |file|
 			export_solution_file_header                file
