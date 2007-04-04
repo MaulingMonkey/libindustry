@@ -148,6 +148,7 @@ class MSVC8_Toolchain
 	def export_cpp_project_configuration_compiler( file , project , config )
 		compiler = []
 		compiler << %w[  Name                             VCCLCompilerTool  ]
+		compiler <<   [ 'AdditionalOptions'            ,  project.msvc_supressed_warnings.collect{|w|"/wd#{w}"}.join(' ') ] unless project.msvc_supressed_warnings.empty?
 		compiler << %w[  Optimization                     0                 ] if config =~ /Debug/
 		compiler <<   [ 'AdditionalIncludeDirectories' , (project.all_include_paths+[$inverse_project_root]).join(';')           ]
 		compiler <<   [ 'PreprocessorDefinitions'      ,  export_cpp_project_configuration_defines( project , config ).join(';') ]
@@ -158,7 +159,7 @@ class MSVC8_Toolchain
 		else        ;%w[ RuntimeLibrary                   2                 ]
 		end
 		compiler << %w[  UsePrecompiledHeader             0                 ]
-		compiler << %w[  WarningLevel                     3                 ]
+		compiler <<   [ 'WarningLevel'                 , (project.msvc_warning_level).to_s ]
 		compiler << %w[  Detect64BitPortabilityProblems   true              ]
 		compiler << case config
 		when /Debug/;%w[ DebugInformationFormat           4                 ]

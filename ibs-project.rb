@@ -15,7 +15,7 @@ program( :unittest ) {
 	dependancy :libindustry
 	sources "unittest/**/*.{c,h}pp"
 	msvc_warning_level  4
-	msvc_supress_warnings  4512, 4127, 4189, 4701, 4180, 4224
+	msvc_supress_warnings  4100, 4512, 4127, 4189, 4701, 4180, 4224
 }
 
 script( :ibs , :ruby ) {
