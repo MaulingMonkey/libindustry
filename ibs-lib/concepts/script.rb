@@ -14,10 +14,9 @@ class Script
 		@language     = language
 		@dependancies = []
 		@sources      = []
-		@uuid         = UUID.new
 	end
 	attr_accessor :dependancies, :sources, :start
-	attr_reader :name, :language, :uuid
+	attr_reader :name, :language
 end
 
 def script( name , language )

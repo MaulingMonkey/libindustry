@@ -9,6 +9,12 @@
 require 'ftools'
 require 'uuid'
 
+[ Library , Program , Script ].each do |needs_uuid|
+	needs_uuid.class_eval do
+		def uuid(); @uuid |= UUID.new; end
+	end
+end
+
 class MSVC8_Toolchain
 	def initialize()
 		@solution_configs = [ "Debug|Win32" , "Release|Win32" ]

@@ -16,14 +16,13 @@ class Library
 		@libraries     = []
 		@dependancies  = []
 		@sources       = []
-		@uuid          = UUID.new
 	end
 	attr_accessor :include_paths, :library_paths, :libraries, :dependancies, :sources
 	def all_include_paths(); (@include_paths + self.all_dependancies.collect {|d| d.all_include_paths}).uniq.flatten; end
 	def all_library_paths(); (@library_paths + self.all_dependancies.collect {|d| d.all_library_paths}).uniq.flatten; end
 	def all_libraries();     (@libraries     + self.all_dependancies.collect {|d| d.all_libraries    }).uniq.flatten; end
 	def all_dependancies();  (@dependancies  +         @dependancies.collect {|d| d.all_dependancies }).uniq.flatten; end
-	attr_reader :name, :uuid
+	attr_reader :name
 end
 
 def library( name )
