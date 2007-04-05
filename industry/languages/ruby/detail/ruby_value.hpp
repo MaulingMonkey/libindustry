@@ -32,14 +32,14 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 		}
 	};
 
-	template<> struct ruby_value<char> { static VALUE to(char v) { return CHR2FIX(v); } static char from(VALUE v) {return NUM2CHR(v); } };
-	template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return NUM2INT(v); } };
-	template<> struct ruby_value<int> { static VALUE to(int v) { return INT2NUM(v); } static int from(VALUE v) {return NUM2INT(v); } };
-	template<> struct ruby_value<long> { static VALUE to(long v) { return LONG2NUM(v); } static long from(VALUE v) {return NUM2LONG(v); } };
-	template<> struct ruby_value<unsigned char> { static VALUE to(unsigned char v) { return UINT2NUM(v); } static unsigned char from(VALUE v) {return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned short> { static VALUE to(unsigned short v) { return UINT2NUM(v); } static unsigned short from(VALUE v) {return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned int> { static VALUE to(unsigned int v) { return UINT2NUM(v); } static unsigned int from(VALUE v) {return NUM2UINT(v); } };
-	template<> struct ruby_value<unsigned long> { static VALUE to(unsigned long v) { return ULONG2NUM(v); } static unsigned long from(VALUE v) {return NUM2ULONG(v); } };
+	template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
+	template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
+	template<> struct ruby_value<int>   { static VALUE to(int   v) { return INT2NUM(v); } static int   from(VALUE v) {return NUM2INT(v);  } };
+	template<> struct ruby_value<long>  { static VALUE to(long  v) { return LONG2NUM(v);} static long  from(VALUE v) {return NUM2LONG(v); } };
+	template<> struct ruby_value<unsigned char>  { static VALUE to(unsigned char  v) { return UINT2NUM(v); } static unsigned char  from(VALUE v) {return static_cast<unsigned char >(NUM2UINT(v)); } };
+	template<> struct ruby_value<unsigned short> { static VALUE to(unsigned short v) { return UINT2NUM(v); } static unsigned short from(VALUE v) {return static_cast<unsigned short>(NUM2UINT(v)); } };
+	template<> struct ruby_value<unsigned int>   { static VALUE to(unsigned int   v) { return UINT2NUM(v); } static unsigned int   from(VALUE v) {return NUM2UINT(v); } };
+	template<> struct ruby_value<unsigned long>  { static VALUE to(unsigned long  v) { return ULONG2NUM(v);} static unsigned long  from(VALUE v) {return NUM2ULONG(v); } };
 
 	template<> struct ruby_value<char*> { static VALUE to(char* v) { return rb_str_new2(v); } static char* from(VALUE v) {return STR2CSTR(v); } };
 	template<> struct ruby_value<const char*> { static VALUE to(const char* v) { return rb_str_new2(v); } static const char* from(VALUE v) {return STR2CSTR(v); } };

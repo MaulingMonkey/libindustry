@@ -1,6 +1,12 @@
 #ifndef IG_LANGUAGES_RUBY_RUBY
 #define IG_LANGUAGES_RUBY_RUBY
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable: 4312 ) // value -> pointer size warnings
+#pragma warning( disable: 4267 ) // pointer -> value size warnings
+#endif
+
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/class.hpp>
@@ -49,4 +55,9 @@ namespace industry { namespace languages { namespace ruby {
 		}
 	};
 }}}
+
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
+
 #endif//IG_LANGUAGES_RUBY_RUBY
