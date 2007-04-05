@@ -23,9 +23,6 @@
 			CharacterSet="1"
 			>
 			<Tool
-				Name="Debug|Win32"
-			/>
-			<Tool
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
@@ -55,9 +52,6 @@
 				DebugInformationFormat="4"
 			/>
 			<Tool
-				Name="Debug|Win32"
-			/>
-			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -74,9 +68,6 @@
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
-			/>
-			<Tool
-				Name="Debug|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -111,9 +102,6 @@
 			CharacterSet="1"
 			>
 			<Tool
-				Name="Release|Win32"
-			/>
-			<Tool
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
@@ -141,9 +129,6 @@
 				DebugInformationFormat="3"
 			/>
 			<Tool
-				Name="Release|Win32"
-			/>
-			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -162,9 +147,6 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
-			/>
-			<Tool
-				Name="Release|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -203,79 +185,7 @@
 			Name="unittest"
 			>
 			<File
-				RelativePath="..\unittest\test.multitype.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.iterator.traits.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.traits.container.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.template.crtp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.range.numeric_iterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.math.fixed.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.iterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.iterator.cast.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.inherit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.api.windows.registry.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.algorithm.standard_adaptors.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\unittest\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.traits.processor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.range.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.template.tt.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.math.vector.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.factory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.languages.ruby.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\unittest\test.algorithm.cpp"
 				>
 			</File>
 			<File
@@ -283,7 +193,39 @@
 				>
 			</File>
 			<File
-				RelativePath="..\unittest\test.template.group.cpp"
+				RelativePath="..\unittest\test.algorithm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.algorithm.standard_adaptors.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.api.windows.registry.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.factory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.inherit.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.iterator.cast.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.iterator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.iterator.multi.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.iterator.traits.cpp"
 				>
 			</File>
 			<File
@@ -291,7 +233,47 @@
 				>
 			</File>
 			<File
-				RelativePath="..\unittest\test.iterator.multi.cpp"
+				RelativePath="..\unittest\test.languages.ruby.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.math.fixed.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.math.vector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.multitype.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.range.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.range.numeric_iterator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.template.crtp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.template.group.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.template.tt.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.traits.container.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\unittest\test.traits.processor.cpp"
 				>
 			</File>
 		</Filter>
