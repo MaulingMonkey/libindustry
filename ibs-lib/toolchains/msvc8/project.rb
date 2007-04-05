@@ -97,7 +97,7 @@ class MSVC8_Toolchain
 		file.puts "\t\t<Configuration"
 		file.puts "\t\t\tName=\"#{config}\""
 		file.puts "\t\t\tOutputDirectory=\"$(SolutionDir)#{$inverse_project_root}\\$(ConfigurationName)\""
-		file.puts "\t\t\tIntermediateDirectory=\"$(ConfigurationName)\""
+		file.puts "\t\t\tIntermediateDirectory=\"$(ConfigurationName)-#{project.name}\""
 		case project
 		when Program
 			file.puts "\t\t\tConfigurationType=\"1\""

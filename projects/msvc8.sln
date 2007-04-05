@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
+Project("{C2A7C241-C4D1-0129-082B-00508D642E22}") = "demo-opengl1", "msvc8_demo-opengl1.vcproj", "{C00D5F80-C559-0129-4F6E-00508D642E22}"
+EndProject
 Project("{C2A7C241-C4D1-0129-082B-00508D642E22}") = "unittest", "msvc8_unittest.vcproj", "{C2AC7D30-C4D1-0129-082B-00508D642E22}"
 EndProject
 Project("{C2A7C241-C4D1-0129-082B-00508D642E22}") = "libindustry", "msvc8_libindustry.vcproj", "{C2AEEE30-C4D1-0129-082B-00508D642E22}"
@@ -11,6 +13,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C00D5F80-C559-0129-4F6E-00508D642E22}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C00D5F80-C559-0129-4F6E-00508D642E22}.Debug|Win32.Build.0 = Debug|Win32
+		{C00D5F80-C559-0129-4F6E-00508D642E22}.Release|Win32.ActiveCfg = Release|Win32
+		{C00D5F80-C559-0129-4F6E-00508D642E22}.Release|Win32.Build.0 = Release|Win32
 		{C2AC7D30-C4D1-0129-082B-00508D642E22}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C2AC7D30-C4D1-0129-082B-00508D642E22}.Debug|Win32.Build.0 = Debug|Win32
 		{C2AC7D30-C4D1-0129-082B-00508D642E22}.Release|Win32.ActiveCfg = Release|Win32

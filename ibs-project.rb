@@ -23,6 +23,15 @@ dependancy( :boost ) {
 	#  Assumed to be in your IDE paths already (for now)
 }
 
+dependancy( :opengl ) {
+	add_library "opengl32.lib"
+}
+
+dependancy( :sdl ) {
+	#  Assumed to be in your IDE paths already (for now)
+	add_library "SDL.lib"
+}
+
 library( :libindustry ) {
 	dependancy :boost
 	dependancy :ruby
@@ -34,6 +43,13 @@ program( :unittest ) {
 	sources "unittest/**/*.{c,h}pp"
 	msvc_warning_level  4
 	msvc_supress_warnings  4100, 4512, 4127, 4189, 4701, 4180, 4224
+}
+
+program( 'demo-opengl1' ) {
+	dependancy :libindustry
+	dependancy :sdl
+	dependancy :opengl
+	sources "demos/opengl1/**/*.{c,h}pp"
 }
 
 script( :ibs , :ruby ) {
