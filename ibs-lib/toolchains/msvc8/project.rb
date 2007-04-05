@@ -63,7 +63,7 @@ class MSVC8_Toolchain
 		project_configs = @solution_configs
 		project_configs.each do |config|
 			export_cpp_project_configuration_head      file , project , config
-			export_cpp_project_configuration_tool      file , project , config , *%w[
+			export_cpp_project_configuration_tool      file , project , *%w[
 				VCPreBuildEventTool
 				VCCustomBuildTool
 				VCXMLDataGeneratorTool
@@ -71,7 +71,7 @@ class MSVC8_Toolchain
 				VCMIDLTool
 			]
 			export_cpp_project_configuration_compiler  file , project , config
-			export_cpp_project_configuration_tool      file , project , config , *%w[
+			export_cpp_project_configuration_tool      file , project , *%w[
 				VCManagedResourceCompilerTool
 				VCResourceCompilerTool
 				VCPreLinkEventTool
@@ -82,9 +82,9 @@ class MSVC8_Toolchain
 			end
 			
 			case project
-			when Library; export_cpp_project_configuration_tool      file , project , config ,
+			when Library; export_cpp_project_configuration_tool      file , project ,
 				*%w[ VCALinkTool VCXDCMakeTool VCBscMakeTool VCFxCopTool VCPostBuildEventTool ]
-			when Program; export_cpp_project_configuration_tool      file , project , config ,
+			when Program; export_cpp_project_configuration_tool      file , project ,
 				*%w[ VCALinkTool VCManifestTool VCXDCMakeTool VCBscMakeTool VCFxCopTool
 					VCAppVerifierTool VCWebDeploymentTool VCPostBuildEventTool ]
 			end
@@ -231,7 +231,13 @@ class MSVC8_Toolchain
 	end
 	def export_cpp_project_file_tree( file , tree , parent , indent )
 		raise ArgumentError, "Expected a hash, got #{tree.inspect}" unless tree.kind_of? Hash
-		tree.each do |name,info|
+		tree.to_a.sort do |a,b|
+			case [ a[1].kind_of?(Hash ), b[1].kind_of?(Hash) ]
+			when [ true  , false ]; -1
+			when [ false , true  ]; +1
+			else; a[0] <=> b[0]
+			end
+		end.each do |name,info|
 			if info == :file then
 				file.puts "#{indent}<File"
 				file.puts "#{indent}\tRelativePath=\"#{parent}#{name}\""
