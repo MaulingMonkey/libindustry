@@ -29,11 +29,11 @@ class MSVC8_Toolchain
 		projects.flatten!
 		projects.each do |project|
 			case project
-			when Program, Library; scan_cpp_project_file( root_filename_of(project) , project )
+			when Program, Library; scan_cpp_project_file( root_filename_of(project) , project ) unless !File.exists? root_filename_of(project)
 			end
 		end
 		
-		scan_solution_file( root_filename_of("msvc8.sln") , projects )
+		scan_solution_file( root_filename_of("msvc8.sln") , projects ) unless !File.exists? root_filename_of("msvc8.sln")
 	end
 	def export( *projects )		
 		projects.flatten!
