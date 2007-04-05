@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2007 Michael B. Edwin Rickert
+// Copyright (c) 2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -6,11 +6,13 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
 #include <SDL/SDL.h>
-#include <SDL/SDL_Opengl.h>
 #undef main
+#include <industry/api/opengl/import.hpp>
+#include <industry/api/opengl/color.hpp>
+#include <industry/api/opengl/display_list.hpp>
+#include <industry/api/opengl/texture.hpp>
+#include <industry/api/opengl/vbo.hpp>
 
 int main () {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -20,11 +22,25 @@ int main () {
 		SDL_Event e;
 		while ( SDL_PollEvent( &e ) ) {
 			switch( e.type ) {
+				case SDL_KEYDOWN:
+					switch ( e.key.keysym.sym ) {
+						case SDLK_ESCAPE:
+							SDL_Quit();
+							return 0;
+						default:
+							break;
+					}
 				case SDL_QUIT:
 					SDL_Quit();
 					return 0;
+				default:
+					break;
 			}
 		}
+
+		glClearColor( 0.0, 0.0, 0.0, 0.0 );
+		glClear( GL_COLOR_BUFFER_BIT );
+
 		SDL_GL_SwapBuffers();
 	}
 }

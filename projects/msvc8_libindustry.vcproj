@@ -178,6 +178,30 @@
 				Name="api"
 				>
 				<Filter
+					Name="opengl"
+					>
+					<File
+						RelativePath="..\industry\api\opengl\color.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\display_list.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\import.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\texture.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\vbo.hpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="windows"
 					>
 					<Filter
