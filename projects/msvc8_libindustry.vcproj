@@ -23,9 +23,6 @@
 			CharacterSet="1"
 			>
 			<Tool
-				Name="Debug|Win32"
-			/>
-			<Tool
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
@@ -54,9 +51,6 @@
 				DebugInformationFormat="4"
 			/>
 			<Tool
-				Name="Debug|Win32"
-			/>
-			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -67,9 +61,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="Debug|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -94,9 +85,6 @@
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
-			<Tool
-				Name="Release|Win32"
-			/>
 			<Tool
 				Name="VCPreBuildEventTool"
 			/>
@@ -124,9 +112,6 @@
 				DebugInformationFormat="3"
 			/>
 			<Tool
-				Name="Release|Win32"
-			/>
-			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
@@ -137,9 +122,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="Release|Win32"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -165,39 +147,31 @@
 			Name="industry"
 			>
 			<File
-				RelativePath="..\industry\sfinae.hpp"
+				RelativePath="..\industry\algorithm.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\industry\nil.hpp"
+				RelativePath="..\industry\attributes.hpp"
 				>
 			</File>
-			<Filter
-				Name="math"
-				>
-				<File
-					RelativePath="..\industry\math\vector.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\math\fixed.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\math\utility.hpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="concept"
-				>
-				<File
-					RelativePath="..\industry\concept\is_a_range.hpp"
-					>
-				</File>
-			</Filter>
 			<File
-				RelativePath="..\industry\range.hpp"
+				RelativePath="..\industry\config.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\container.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\factory.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\inherit.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\member_function_ptr_traits.hpp"
 				>
 			</File>
 			<File
@@ -209,14 +183,58 @@
 				>
 			</File>
 			<File
-				RelativePath="..\industry\algorithm.hpp"
+				RelativePath="..\industry\nil.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\industry\nullptr.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\range.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\sfinae.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\static_assert.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\industry\type.hpp"
+				>
+			</File>
+			<Filter
+				Name="math"
+				>
+				<File
+					RelativePath="..\industry\math\fixed.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\math\utility.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\math\vector.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="concept"
+				>
+				<File
+					RelativePath="..\industry\concept\is_a_range.hpp"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="template"
 				>
 				<File
-					RelativePath="..\industry\template\tt.hpp"
+					RelativePath="..\industry\template\crtp.hpp"
 					>
 				</File>
 				<File
@@ -224,7 +242,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\industry\template\crtp.hpp"
+					RelativePath="..\industry\template\tt.hpp"
 					>
 				</File>
 			</Filter>
@@ -232,19 +250,7 @@
 				Name="algorithm"
 				>
 				<File
-					RelativePath="..\industry\algorithm\filter.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\industry\algorithm\call.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\algorithm\standard_algorithm_adaptors.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\algorithm\push.hpp"
 					>
 				</File>
 				<File
@@ -252,20 +258,40 @@
 					>
 				</File>
 				<File
+					RelativePath="..\industry\algorithm\filter.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\algorithm\push.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\algorithm\standard_algorithm_adaptors.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\industry\algorithm\transform.hpp"
 					>
 				</File>
 			</Filter>
-			<File
-				RelativePath="..\industry\factory.hpp"
-				>
-			</File>
 			<Filter
 				Name="api"
 				>
 				<Filter
 					Name="windows"
 					>
+					<File
+						RelativePath="..\industry\api\windows\config.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\windows\import.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\windows\registry.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\industry\api\windows\registry.hpp"
 						>
@@ -274,15 +300,11 @@
 						RelativePath="..\industry\api\windows\tstring.hpp"
 						>
 					</File>
-					<File
-						RelativePath="..\industry\api\windows\config.hpp"
-						>
-					</File>
 					<Filter
 						Name="registry"
 						>
 						<File
-							RelativePath="..\industry\api\windows\registry\value_iterator.hpp"
+							RelativePath="..\industry\api\windows\registry\config.hpp"
 							>
 						</File>
 						<File
@@ -290,7 +312,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\industry\api\windows\registry\errors.hpp"
+							>
+						</File>
+						<File
 							RelativePath="..\industry\api\windows\registry\key.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\industry\api\windows\registry\key.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\industry\api\windows\registry\value.cpp"
 							>
 						</File>
 						<File
@@ -298,19 +332,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\industry\api\windows\registry\errors.hpp"
-							>
-						</File>
-						<File
-							RelativePath="..\industry\api\windows\registry\config.hpp"
-							>
-						</File>
-						<File
 							RelativePath="..\industry\api\windows\registry\value_iterator.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\industry\api\windows\registry\key.hpp"
+							RelativePath="..\industry\api\windows\registry\value_iterator.hpp"
 							>
 						</File>
 						<Filter
@@ -325,30 +351,14 @@
 								>
 							</File>
 						</Filter>
-						<File
-							RelativePath="..\industry\api\windows\registry\value.cpp"
-							>
-						</File>
 					</Filter>
-					<File
-						RelativePath="..\industry\api\windows\registry.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\industry\api\windows\import.hpp"
-						>
-					</File>
 				</Filter>
 			</Filter>
 			<Filter
 				Name="traits"
 				>
 				<File
-					RelativePath="..\industry\traits\range.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\traits\processor.hpp"
+					RelativePath="..\industry\traits\container.hpp"
 					>
 				</File>
 				<File
@@ -356,7 +366,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\industry\traits\container.hpp"
+					RelativePath="..\industry\traits\processor.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\traits\range.hpp"
 					>
 				</File>
 			</Filter>
@@ -368,18 +382,6 @@
 					>
 				</File>
 			</Filter>
-			<File
-				RelativePath="..\industry\nullptr.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\industry\static_assert.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\industry\config.hpp"
-				>
-			</File>
 			<Filter
 				Name="range"
 				>
@@ -392,27 +394,7 @@
 				Name="iterator"
 				>
 				<File
-					RelativePath="..\industry\iterator\virtual_forward.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\numeric.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\n.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\virtual_bidirectional.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\dynamic_cast.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\const_cast.hpp"
+					RelativePath="..\industry\iterator\cast.hpp"
 					>
 				</File>
 				<File
@@ -420,11 +402,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\industry\iterator\cast.hpp"
+					RelativePath="..\industry\iterator\const_cast.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\industry\iterator\reinterpret_cast.hpp"
+					RelativePath="..\industry\iterator\dynamic_cast.hpp"
 					>
 				</File>
 				<File
@@ -432,7 +414,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\industry\iterator\n.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\numeric.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\reinterpret_cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\static_cast.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\industry\iterator\traits.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\virtual_bidirectional.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\virtual_forward.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\iterator\virtual_random_access.hpp"
 					>
 				</File>
 				<Filter
@@ -447,19 +457,7 @@
 						>
 					</File>
 				</Filter>
-				<File
-					RelativePath="..\industry\iterator\virtual_random_access.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\industry\iterator\static_cast.hpp"
-					>
-				</File>
 			</Filter>
-			<File
-				RelativePath="..\industry\member_function_ptr_traits.hpp"
-				>
-			</File>
 			<Filter
 				Name="languages"
 				>
@@ -482,33 +480,25 @@
 							>
 						</File>
 						<File
-							RelativePath="..\industry\languages\ruby\detail\wrap_retarded_ruby.hpp"
+							RelativePath="..\industry\languages\ruby\detail\ruby_value.hpp"
 							>
 						</File>
 						<File
-							RelativePath="..\industry\languages\ruby\detail\ruby_value.hpp"
+							RelativePath="..\industry\languages\ruby\detail\wrap_retarded_ruby.hpp"
 							>
 						</File>
 					</Filter>
 				</Filter>
 			</Filter>
-			<File
-				RelativePath="..\industry\type.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\industry\container.hpp"
-				>
-			</File>
 			<Filter
 				Name="factory"
 				>
 				<File
-					RelativePath="..\industry\factory\interface_aspect_gen.hpp"
+					RelativePath="..\industry\factory\exception.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\industry\factory\exception.hpp"
+					RelativePath="..\industry\factory\interface_aspect_gen.hpp"
 					>
 				</File>
 				<File
@@ -518,10 +508,6 @@
 				<Filter
 					Name="detail"
 					>
-					<File
-						RelativePath="..\industry\factory\detail\vtable.hpp"
-						>
-					</File>
 					<File
 						RelativePath="..\industry\factory\detail\aspect.hpp"
 						>
@@ -534,16 +520,12 @@
 						RelativePath="..\industry\factory\detail\coerce_methods.hpp"
 						>
 					</File>
+					<File
+						RelativePath="..\industry\factory\detail\vtable.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
-			<File
-				RelativePath="..\industry\inherit.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\industry\attributes.hpp"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
