@@ -6,23 +6,29 @@
 # 
 #  $LastChangedBy$ - $LastChangedDate$
 
-def add_include_paths( list )
+def add_include_paths( *lists )
 	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless ($focus && $focus.respond_to?('include_paths='))
 	
-	if list.kind_of? String
-		$focus.include_paths += list.split(';')
-	else
-		raise ArgumentError , "Expected a String, got a #{list.class}"
+	lists.flatten.each do |list|
+		case list
+		when String
+			$focus.include_paths += list.split(';')
+		else
+			raise ArgumentError , "Expected a String, got a #{list.class}"
+		end
 	end
 end
 
-def add_library_paths( list )
+def add_library_paths( *lists )
 	raise ArgumentError , "Must be used in the context of a dependancy, program, or library" unless ($focus && $focus.respond_to?('library_paths='))
 	
-	if list.kind_of? String
-		$focus.library_paths += list.split(';')
-	else
-		raise ArgumentError , "Expected a String, got a #{list.class}"
+	lists.flatten.each do |list|
+		case list
+		when String
+			$focus.library_paths += list.split(';')
+		else
+			raise ArgumentError , "Expected a String, got a #{list.class}"
+		end
 	end
 end
 
@@ -64,4 +70,7 @@ def msvc_warning_level( level )
 	raise ArgumentError, "Warning level should be between 1 and 4" unless (1..4) === level
 	raise ArgumentError, "Must be used in the context of a Program or Library" unless ($focus && $focus.respond_to?('msvc_warning_level='))
 	$focus.msvc_warning_level = level
+end
+def project_root( root )
+	$project_root = root
 end

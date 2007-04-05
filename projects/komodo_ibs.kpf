@@ -15,9 +15,9 @@
 </file>
 <file url="msvc8_unittest.vcproj.TOKYO.Mike.user" idref="2df2cae7-b04a-4082-8790-28c358f7c6c5" id="1309c35b-029c-4d11-b50a-1433a1e82cc0" name="msvc8_unittest.vcproj.TOKYO.Mike.user">
 </file>
-<file url="file:///C:/dev/lib-industry/svn/branches/build/ibs-project.rb" idref="5b2bdb12-9f27-48c8-9e4f-7c3c1929318c" id="9662028b-b6cb-4f8a-b1ec-2389f2b0a721" name="ibs-project.rb">
+<file url="file:///C:/dev/lib-industry/svn/trunk/ibs-project.rb" idref="5b2bdb12-9f27-48c8-9e4f-7c3c1929318c" id="9662028b-b6cb-4f8a-b1ec-2389f2b0a721" name="ibs-project.rb">
 </file>
-<livefolder url="file:///C:/dev/lib-industry/svn/branches/build/ibs-lib" idref="5b2bdb12-9f27-48c8-9e4f-7c3c1929318c" id="a9c1b2a6-b4f0-418e-9b90-3ed34c139607" name="ibs-lib">
+<livefolder url="file:///C:/dev/lib-industry/svn/trunk/ibs-lib" idref="5b2bdb12-9f27-48c8-9e4f-7c3c1929318c" id="a9c1b2a6-b4f0-418e-9b90-3ed34c139607" name="ibs-lib">
 </livefolder>
 <command insertOutput="0" keyboard_shortcut="" idref="5b2bdb12-9f27-48c8-9e4f-7c3c1929318c" name="Open Solution" parseRegex="" id="900164ee-8f0f-4388-8bc1-99fda3563d4a" operateOnSelection="0" cwd="" env="" doNotOpenOutputWindow="0" showParsedOutputList="0" parseOutput="0" runIn="command-output-window">
 %p\msvc8.sln</command>
