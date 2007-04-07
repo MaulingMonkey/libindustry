@@ -10,23 +10,18 @@
 #define IG_INDUSTRY_API_OPENGL_COLOR
 
 #include <industry/api/opengl/import.hpp>
+#include <industry/api/opengl/types.hpp>
 
 namespace industry {
 	namespace api {
 		namespace opengl {
-			namespace detail {
-				template < typename T > struct type_to_glenum;
-				template <> struct type_to_glenum< GLfloat  > { static const GLenum value = GL_FLOAT;         };
-				template <> struct type_to_glenum< GLdouble > { static const GLenum value = GL_DOUBLE;        };
-				template <> struct type_to_glenum< GLubyte  > { static const GLenum value = GL_UNSIGNED_BYTE; };
-			}
 			template < typename T , unsigned N > struct color;
 			template < typename T > struct color< T, 3 > {
 				T red, green, blue;
 				color( T red, T green, T blue ): red(red), green(green), blue(blue) {}
 
 				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_glenum< T >::value;
+				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
 			};
 
 			template < typename T > struct color< T, 4 > {
@@ -34,7 +29,7 @@ namespace industry {
 				color( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
 
 				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_glenum< T >::value;
+				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
 			};
 
 			typedef color< GLfloat , 3 > color3f;
@@ -58,6 +53,11 @@ namespace industry {
 			}
 			template < typename T > inline void glClearColor( const color< T, 4 >& c ) {
 				::glClearColor( static_cast<GLdouble>(c.red), static_cast<GLdouble>(c.green), static_cast<GLdouble>(c.blue), static_cast<GLdouble>(c.alpha) );
+			}
+
+			template < typename T , size_t N >
+			inline void glColorPointer( const color<T,N> *list ) {
+				::glColorPointer( N, color<T,N>::component_type_enum, sizeof(color<T,N>), &(list->x) );
 			}
 		}
 	}
