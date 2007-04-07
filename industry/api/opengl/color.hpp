@@ -18,18 +18,22 @@ namespace industry {
 			template < typename T , unsigned N > struct color;
 			template < typename T > struct color< T, 3 > {
 				T red, green, blue;
+				color(): red(), green(), blue() {}
 				color( T red, T green, T blue ): red(red), green(green), blue(blue) {}
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				static const GLenum format_enum = GL_RGB;
 			};
 
 			template < typename T > struct color< T, 4 > {
 				T red, green, blue, alpha;
+				color(): red(), green(), blue(), alpha() {}
 				color( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				static const GLenum format_enum = GL_RGBA;
 			};
 
 			typedef color< GLfloat , 3 > color3f;

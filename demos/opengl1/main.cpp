@@ -13,11 +13,17 @@
 #include <industry/api/opengl/display_list.hpp>
 #include <industry/api/opengl/texture.hpp>
 #include <industry/api/opengl/vbo.hpp>
+#include <boost/shared_ptr.hpp>
 
 int main () {
 	SDL_Init( SDL_INIT_EVERYTHING );
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
 	SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
+
+	using namespace industry::api;
+	boost::multi_array< opengl::color3ub, 2 > data( boost::extents[64][64] );
+	boost::shared_ptr< opengl::texture<2> >( new opengl::texture<2>(data) );
+
 	while( true ) {
 		SDL_Event e;
 		while ( SDL_PollEvent( &e ) ) {

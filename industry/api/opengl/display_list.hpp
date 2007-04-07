@@ -39,8 +39,13 @@ namespace industry {
 				friend void glNewList( const display_list& list , GLenum mode ) {
 					::glNewList( list.id , mode );
 				}
+				//friend void glEndList(); //No override needed, OpenGL's does everything we need.
+
 				friend display_list_compiler compile( const display_list& list ) {
 					return display_list_compiler( list.id );
+				}
+				friend void glCallList( const display_list& list ) {
+					::glCallList( list.id );
 				}
 			};
 		}
