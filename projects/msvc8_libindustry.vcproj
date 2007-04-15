@@ -193,6 +193,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\industry\api\opengl\interleaved.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\texcoord.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\industry\api\opengl\texture.hpp"
 						>
 					</File>

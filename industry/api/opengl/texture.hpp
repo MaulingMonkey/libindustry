@@ -40,6 +40,8 @@ namespace industry {
 			template <> class texture<2>: boost::noncopyable {
 				GLuint id;
 			public:
+				friend inline void glBindTexture( const texture<2>& t ) { ::glBindTexture( GL_TEXTURE_2D, t.id ); }
+
 				template < typename T >
 				texture( const boost::multi_array<T,2>& data ) {
 					for ( unsigned i = 0 ; i < 2 ; ++i ) {
@@ -49,7 +51,7 @@ namespace industry {
 					}
 
 					glGenTextures( 1 , &id );
-					glBindTexture( GL_TEXTURE_2D , id );
+					glBindTexture( *this );
 					glTexImage2D( GL_TEXTURE_2D, 0, 3, static_cast<GLsizei>(data.shape()[0]), static_cast<GLsizei>(data.shape()[1]), 0, T::format_enum, T::component_type_enum, data.data() );
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	// Linear Filtering
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -57,7 +59,12 @@ namespace industry {
 				~texture() {
 					glDeleteTextures( 1 , &id );
 				}
+
+				static const GLenum target_enum = GL_TEXTURE_2D;
 			};
+
+			typedef texture<1> texture1d;
+			typedef texture<2> texture2d;
 		}
 	}
 }

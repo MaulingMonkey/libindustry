@@ -24,6 +24,7 @@ namespace industry {
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				enum { components = 2 };
 			};
 
 			template < typename T > struct vertex< T, 3 > {
@@ -33,23 +34,20 @@ namespace industry {
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				enum { components = 3 };
 			};
 
 			typedef vertex< GLfloat , 2 > vertex2f;
 			typedef vertex< GLdouble, 2 > vertex2d;
-			typedef vertex< GLubyte , 2 > vertex2ub;
 
 			typedef vertex< GLfloat , 3 > vertex3f;
 			typedef vertex< GLdouble, 3 > vertex3d;
-			typedef vertex< GLubyte , 3 > vertex3ub;
 
 			inline void glVertex( const vertex2f & v ) { ::glVertex2f ( v.x, v.y ); }
 			inline void glVertex( const vertex2d & v ) { ::glVertex2d ( v.x, v.y ); }
-			inline void glVertex( const vertex2ub& v ) { ::glVertex2ub( v.x, v.y ); }
 
-			inline void glVertex( const vertex3f & v ) { ::glVertex2f ( v.x, v.y ); }
-			inline void glVertex( const vertex3d & v ) { ::glVertex2d ( v.x, v.y ); }
-			inline void glVertex( const vertex3ub& v ) { ::glVertex2ub( v.x, v.y ); }
+			inline void glVertex( const vertex3f & v ) { ::glVertex3f ( v.x, v.y, v.z ); }
+			inline void glVertex( const vertex3d & v ) { ::glVertex3d ( v.x, v.y, v.z ); }
 
 			template < typename T , size_t N >
 			inline void glVertexPointer( const vertex<T,N> *list ) {

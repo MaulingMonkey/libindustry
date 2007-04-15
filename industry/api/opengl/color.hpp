@@ -23,6 +23,7 @@ namespace industry {
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				enum { components = 3 };
 				static const GLenum format_enum = GL_RGB;
 			};
 
@@ -33,6 +34,7 @@ namespace industry {
 
 				typedef T           component_type;
 				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
+				enum { components = 4 };
 				static const GLenum format_enum = GL_RGBA;
 			};
 
