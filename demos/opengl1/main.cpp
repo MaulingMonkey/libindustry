@@ -66,6 +66,7 @@ int main () {
 
 	using namespace industry::api;
 	
+	boost::shared_ptr< opengl::texture<2>   > texture = generate_test_texture();
 	boost::shared_ptr< opengl::display_list > example = generate_test_list();
 
 	while( true ) {
@@ -106,7 +107,7 @@ int main () {
 		};
 
 		glColor3f( 1.0f, 1.0f, 1.0f );
-		//glBindTexture( *texture );
+		glBindTexture( *texture );
 		glVertexPointer  ( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+2 );
 		glTexCoordPointer( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+0 );
 
