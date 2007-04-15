@@ -10,6 +10,7 @@
 #include <industry/pod/tuple.hpp>
 #include <industry/traits/pod.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace {
 	struct pod1 { int a, b, c; };
@@ -43,12 +44,31 @@ namespace industry {
 }
 
 void test_pod( void ) {
-	pod1    legal1 = {1, 2, 3}; //OK
+	pod1    legal1 = {1, 2, 3};
 	//nonpod1 illegal1 = {1, 2, 3}; //OK (error)
 	//nonpod2 illegal2 = {1, 2, 3}; //OK (error)
+	nonpod1 legal2( 1, 2, 3 );
+	nonpod2 legal3( 1, 2, 3 );
 
-	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > data[] = {
+
+
+	industry::pod::tuple< int , float , char > legal4 = { 1, 2.3f, 'a' };
+	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > legal5 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	//industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > illegal3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }; //OK (error)
+
+
+	BOOST_CHECK( legal4.element2 == 'a' );
+	BOOST_CHECK( legal5.element1.b == 5 );
+	BOOST_CHECK( legal5.element2.a == 7 );
+
+
+	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > legal6[] = {
 		{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 		{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	};
+	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion1 = legal6[0].to_tuple();
+
+
+	BOOST_CHECK( legal6[1].element1.b == 5 );
+	BOOST_CHECK( conversion1.get<1>().b == 5 );
 }
