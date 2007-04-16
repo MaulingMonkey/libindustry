@@ -16,34 +16,69 @@
 #include <industry/nil.hpp>
 #include <industry/traits/pod.hpp>
 #include <boost/preprocessor.hpp>
+#include <boost/tuple/tuple.hpp>
 
-#define DO_TUPLE_TYPEDEF(z,n,t)  typedef BOOST_PP_CAT(t,n) BOOST_PP_CAT(BOOST_PP_CAT(element,n),_type);
-#define DO_TUPLE_ELEMENT(z,n,t)  BOOST_PP_CAT(t,n) BOOST_PP_CAT(element,n);
+#define DO_ORIGINAL_TYPEDEF(z,n,t) typedef BOOST_PP_CAT(t,n) BOOST_PP_CAT(BOOST_PP_CAT(original,n),_type);
+#define DO_ADAPTED_TYPEDEF(z,n,t)  typedef typename to_pod_conversion_traits< BOOST_PP_CAT(t,n) >::pod_type \
+                                   BOOST_PP_CAT(BOOST_PP_CAT(element,n),_type); /* FIXME:  Actually adapt the type */
+#define DO_ADAPTED_ELEMENT(z,n,t)  BOOST_PP_CAT(BOOST_PP_CAT(element,n),_type)  BOOST_PP_CAT(element,n);
+#define DO_UNADAPT_OF(z,n,element) from_pod_conversion_traits< BOOST_PP_CAT(BOOST_PP_CAT(original,n),_type) , BOOST_PP_CAT(BOOST_PP_CAT(element,n),_type) >::convert( BOOST_PP_CAT(element,n) )
 
 namespace industry {
 	namespace pod {
 		template < BOOST_PP_ENUM_BINARY_PARAMS( INDUSTRY_POD_TUPLE_LIMIT , typename T , = nil BOOST_PP_INTERCEPT ) >
 		struct tuple {
-			BOOST_PP_REPEAT( INDUSTRY_POD_TUPLE_LIMIT , DO_TUPLE_TYPEDEF , T )
-			BOOST_PP_REPEAT( INDUSTRY_POD_TUPLE_LIMIT , DO_TUPLE_ELEMENT , T )
+			BOOST_PP_REPEAT( INDUSTRY_POD_TUPLE_LIMIT , DO_ORIGINAL_TYPEDEF , T )
+			BOOST_PP_REPEAT( INDUSTRY_POD_TUPLE_LIMIT , DO_ADAPTED_TYPEDEF  , T )
+			BOOST_PP_REPEAT( INDUSTRY_POD_TUPLE_LIMIT , DO_ADAPTED_ELEMENT  , T )
+
+			boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_TUPLE_LIMIT , T ) > unpod() const {
+				return boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_TUPLE_LIMIT , T ) >
+					( BOOST_PP_ENUM( INDUSTRY_POD_TUPLE_LIMIT , DO_UNADAPT_OF , element )
+					);
+			}
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS(INDUSTRY_POD_TUPLE_LIMIT,T) >() const {
+				return unpod();
+			}
+			template < BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_TUPLE_LIMIT , typename U ) >
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_TUPLE_LIMIT , U ) >() const {
+				return unpod();
+			}
 		};
 
-#define DO_TUPLE_SPECIALIZATION(z,n,unused)                                                                       \
-		template < BOOST_PP_ENUM_PARAMS( n , typename T ) >                                                       \
-		struct tuple< BOOST_PP_ENUM_PARAMS(n,T)  BOOST_PP_COMMA_IF(n)                                             \
-		              BOOST_PP_ENUM_PARAMS( BOOST_PP_SUB(INDUSTRY_POD_TUPLE_LIMIT,n) , nil BOOST_PP_INTERCEPT )   \
-		            > {                                                                                           \
-			BOOST_PP_REPEAT( n , DO_TUPLE_TYPEDEF , T )                                                           \
-			BOOST_PP_REPEAT( n , DO_TUPLE_ELEMENT , T )                                                           \
-		};                                                                                                        \
-/*---------------------------------------------------------------------------------------------------------------*/
+#define DO_ITERATION(z,n,unused)                                                               \
+		template < BOOST_PP_ENUM_PARAMS(n,typename T) >                                        \
+		struct tuple                                                                           \
+			< BOOST_PP_ENUM_PARAMS( n , T )  BOOST_PP_COMMA_IF(n)                              \
+			  BOOST_PP_ENUM_PARAMS( BOOST_PP_SUB(INDUSTRY_POD_TUPLE_LIMIT,n)                   \
+			                      , nil BOOST_PP_INTERCEPT )                                   \
+			> {                                                                                \
+			BOOST_PP_REPEAT( n , DO_ORIGINAL_TYPEDEF , T )                                     \
+			BOOST_PP_REPEAT( n , DO_ADAPTED_TYPEDEF  , T )                                     \
+			BOOST_PP_REPEAT( n , DO_ADAPTED_ELEMENT  , T )                                     \
+			boost::tuples::tuple< BOOST_PP_ENUM_PARAMS(n,T) > unpod() const {                  \
+				return boost::tuples::tuple< BOOST_PP_ENUM_PARAMS(n,T) >                       \
+					( BOOST_PP_ENUM( n , DO_UNADAPT_OF , element )                             \
+					);                                                                         \
+			}                                                                                  \
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS(n,T) >() const {               \
+				return unpod();                                                                \
+			}                                                                                  \
+			template < BOOST_PP_ENUM_PARAMS(n,typename U) >                                    \
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS(n,U) >() const {               \
+				return unpod();                                                                \
+			}                                                                                  \
+		};                                                                                     \
+/*--------------------------------------------------------------------------------------------*/
 
-		BOOST_PP_REPEAT( BOOST_PP_SUB(INDUSTRY_POD_TUPLE_LIMIT,1) , DO_TUPLE_SPECIALIZATION , ~ )
+		BOOST_PP_REPEAT_FROM_TO( 1, BOOST_PP_SUB(INDUSTRY_POD_TUPLE_LIMIT,1), DO_ITERATION, ~ )
 	}
 }
 
-#undef DO_TUPLE_TYPEDEF
-#undef DO_TUPLE_ELEM
-#undef DO_TUPLE_SPECIALIZATION
+#undef DO_ORIGINAL_TYPEDEF
+#undef DO_ADAPTED_TYPEDEF
+#undef DO_ADAPTED_ELEMENT
+#undef DO_UNADAPT_OF
+#undef DO_ITERATION
 
 #endif //ndef IG_INDUSTRY_POD_TUPLE

@@ -6,7 +6,6 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
-#include <industry/pod/interleaved_source.hpp>
 #include <industry/pod/tuple.hpp>
 #include <industry/traits/pod.hpp>
 #include <boost/test/unit_test.hpp>
@@ -53,8 +52,8 @@ void test_pod( void ) {
 
 
 	industry::pod::tuple< int , float , char > legal4 = { 1, 2.3f, 'a' };
-	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > legal5 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	//industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > illegal3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }; //OK (error)
+	industry::pod::tuple< pod1, nonpod1, nonpod2 > legal5 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	//industry::pod::tuple< pod1, nonpod1, nonpod2 > illegal3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }; //OK (error)
 
 
 	BOOST_CHECK_EQUAL( legal4.element2   , 'a' );
@@ -62,11 +61,11 @@ void test_pod( void ) {
 	BOOST_CHECK_EQUAL( legal5.element2.a ,  7  );
 
 
-	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > legal6[] = {
+	industry::pod::tuple< pod1, nonpod1, nonpod2 > legal6[] = {
 		{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 		{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	};
-	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion1 = legal6[0].to_tuple();
+	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion1 = legal6[0].unpod();
 	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion2 = legal6[1];
 
 
@@ -74,13 +73,13 @@ void test_pod( void ) {
 	BOOST_CHECK_EQUAL( conversion1.get<1>().b , 5 );
 	BOOST_CHECK_EQUAL( conversion2.get<1>().c , 6 );
 
-	industry::pod::interleaved_source< const char*, const char* > legal7[] = {
+	industry::pod::tuple< const char*, const char* > legal7[] = {
 		{ "Panda likes", "Pineapples" },
 		{ "Panda eats", "Bamboo" },
 	};
 
 	std::string pineapple, eats;
-	boost::tuples::tie( boost::tuples::ignore , pineapple ) = legal7[0].to_tuple();
+	boost::tuples::tie( boost::tuples::ignore , pineapple ) = legal7[0].unpod();
 	//boost::tuples::tie( eats , boost::tuples::ignore ) = legal7[1]; // BAD1  (cannot get this to work, use the above instead)
 
 	BOOST_CHECK_EQUAL( pineapple , "Pineapples" );
