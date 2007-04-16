@@ -43,6 +43,7 @@ void test_math_fixed();
 void test_math_vector();
 void test_multitype();
 void test_multi_iterator();
+void test_pod();
 void test_range();
 //void test_utility();
 void test_range_numeric_iterator();
@@ -80,6 +81,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test->add(BOOST_TEST_CASE(test_math_vector));
 	test->add(BOOST_TEST_CASE(test_multitype));
 	test->add(BOOST_TEST_CASE(test_multi_iterator));
+	test->add(BOOST_TEST_CASE(test_pod));
 	test->add(BOOST_TEST_CASE(test_range));
 	test->add(BOOST_TEST_CASE(test_range_numeric_iterator));
 	test->add(BOOST_TEST_CASE(test_template_crtp));
