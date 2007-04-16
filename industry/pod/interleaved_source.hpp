@@ -37,7 +37,8 @@ namespace industry {
 					( BOOST_PP_ENUM( n , DO_UNADAPT_OF , element )
 					);
 			}
-			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_INTERLEAVED_LIMIT , T ) >() const {
+			template < BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_INTERLEAVED_LIMIT , typename U ) >
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( INDUSTRY_POD_INTERLEAVED_LIMIT , U ) >() const {
 				return to_tuple();
 			}
 		};
@@ -58,6 +59,10 @@ namespace industry {
 					);                                                                         \
 			}                                                                                  \
 			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( n , T ) >() const {           \
+				return to_tuple();                                                             \
+			}                                                                                  \
+			template < BOOST_PP_ENUM_PARAMS( n , typename U ) >                                \
+			operator boost::tuples::tuple< BOOST_PP_ENUM_PARAMS( n , U ) >() const {           \
 				return to_tuple();                                                             \
 			}                                                                                  \
 		};                                                                                     \

@@ -57,9 +57,9 @@ void test_pod( void ) {
 	//industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > illegal3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }; //OK (error)
 
 
-	BOOST_CHECK( legal4.element2 == 'a' );
-	BOOST_CHECK( legal5.element1.b == 5 );
-	BOOST_CHECK( legal5.element2.a == 7 );
+	BOOST_CHECK_EQUAL( legal4.element2   , 'a' );
+	BOOST_CHECK_EQUAL( legal5.element1.b ,  5  );
+	BOOST_CHECK_EQUAL( legal5.element2.a ,  7  );
 
 
 	industry::pod::interleaved_source< pod1, nonpod1, nonpod2 > legal6[] = {
@@ -67,8 +67,26 @@ void test_pod( void ) {
 		{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	};
 	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion1 = legal6[0].to_tuple();
+	boost::tuples::tuple< pod1, nonpod1, nonpod2 > conversion2 = legal6[1];
 
 
-	BOOST_CHECK( legal6[1].element1.b == 5 );
-	BOOST_CHECK( conversion1.get<1>().b == 5 );
+	BOOST_CHECK_EQUAL( legal6[1].element1.b   , 5 );
+	BOOST_CHECK_EQUAL( conversion1.get<1>().b , 5 );
+	BOOST_CHECK_EQUAL( conversion2.get<1>().c , 6 );
+
+	industry::pod::interleaved_source< const char*, const char* > legal7[] = {
+		{ "Panda likes", "Pineapples" },
+		{ "Panda eats", "Bamboo" },
+	};
+
+	std::string pineapple, eats;
+	boost::tuples::tie( boost::tuples::ignore , pineapple ) = legal7[0].to_tuple();
+	//boost::tuples::tie( eats , boost::tuples::ignore ) = legal7[1]; // BAD1  (cannot get this to work, use the above instead)
+
+	BOOST_CHECK_EQUAL( pineapple , "Pineapples" );
+	//BOOST_CHECK_EQUAL( eats , "Panda eats" ); // depends on BAD1 above
+
+	boost::tuples::tuple< std::string , std::string > conversion3[] = { legal7[0] , legal7[1] };
+	BOOST_CHECK_EQUAL( conversion3[0].get<0>() , "Panda likes" );
+	BOOST_CHECK_EQUAL( conversion3[1].get<1>() , "Bamboo" );
 }
