@@ -280,6 +280,10 @@
 				RelativePath="..\unittest\test.traits.processor.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\test.utility.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
