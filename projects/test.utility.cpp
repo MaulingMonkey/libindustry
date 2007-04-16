@@ -19,7 +19,11 @@ void test_utility( void ) {
 	BOOST_CHECK_EQUAL( legal1.get<0>() , get_at_type< char  >( legal1 ) );
 	BOOST_CHECK_EQUAL( legal1.get<1>() , get_at_type< int   >( legal1 ) );
 	BOOST_CHECK_EQUAL( legal1.get<3>() , get_at_type< short >( legal1 ) );
-	//get_at_type< double >( legal1 ); // OK (clean error)
+	BOOST_CHECK_EQUAL( legal1.get<0>() , get_at_type_or_default< char  >( legal1 , 'b'  ) );
+	BOOST_CHECK_EQUAL( legal1.get<1>() , get_at_type_or_default< int   >( legal1 , 24   ) );
+	BOOST_CHECK_EQUAL( legal1.get<3>() , get_at_type_or_default< short >( legal1 , -1   ) );
+	BOOST_CHECK_EQUAL(   4242          , get_at_type_or_default< long  >( legal1 , 4242 ) );
+	//get_at_type< long >( legal1 ); // OK (clean error)
 
 
 	boost::tuple< char, char >      reoccurance1( 'a', 'a' );
@@ -27,7 +31,13 @@ void test_utility( void ) {
 	boost::tuple< int, char, char > reoccurance3( 42, 'a', 'a' );
 	BOOST_CHECK_EQUAL( reoccurance2.get<1>() , get_at_type< int >( reoccurance2 ) );
 	BOOST_CHECK_EQUAL( reoccurance3.get<0>() , get_at_type< int >( reoccurance3 ) );
+	BOOST_CHECK_EQUAL( reoccurance2.get<1>() , get_at_type_or_default< int  >( reoccurance2 ,   24 ) );
+	BOOST_CHECK_EQUAL( reoccurance3.get<0>() , get_at_type_or_default< int  >( reoccurance3 ,   24 ) );
+	BOOST_CHECK_EQUAL(   4242                , get_at_type_or_default< long >( reoccurance3 , 4242 ) );
 	//get_at_type< char >( reoccurance1 ); //OK (clean error)
 	//get_at_type< char >( reoccurance2 ); //OK (clean error)
 	//get_at_type< char >( reoccurance3 ); //OK (clean error)
+	//get_at_type_or_default< char >( reoccurance1 , 'a' ); //OK (clean error)
+	//get_at_type_or_default< char >( reoccurance2 , 'a' ); //OK (clean error)
+	//get_at_type_or_default< char >( reoccurance3 , 'a' ); //OK (clean error)
 }
