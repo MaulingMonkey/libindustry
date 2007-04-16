@@ -11,6 +11,7 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
@@ -18,23 +19,28 @@ namespace industry {
 			template < typename T , size_t N > struct vertex;
 
 			template < typename T > struct vertex< T, 2 > {
+				enum                                 { components = 2 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+
 				T x, y;
-
+				vertex(): x(), y() {}
+				vertex( pod_type pod ): x(pod[0]), y(pod[1]) {}
 				vertex( T x, T y ): x(x), y(y) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 2 };
 			};
 
 			template < typename T > struct vertex< T, 3 > {
+				enum                                 { components = 3 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+
 				T x, y, z;
 
+				vertex(): x(), y(), z() {}
+				vertex( pod_type pod ): x(pod[0]), y(pod[1]), z(pod[2]) {}
 				vertex( T x, T y, T z ): x(x), y(y), z(z) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 3 };
 			};
 
 			typedef vertex< GLfloat , 2 > vertex2f;

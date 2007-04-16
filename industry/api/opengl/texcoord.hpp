@@ -11,6 +11,7 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
@@ -18,23 +19,27 @@ namespace industry {
 			template < typename T , size_t N > struct texcoord;
 
 			template < typename T > struct texcoord< T, 1 > {
+				enum                                 { components = 1 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+
 				T u;
-
+				texcoord(): u() {}
+				texcoord( pod_type pod ): u(pod[0]) {}
 				texcoord( T u ): u(u) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 1 };
 			};
 
 			template < typename T > struct texcoord< T, 2 > {
+				enum                                 { components = 2 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+
 				T u, v;
-
+				texcoord(): u(), v() {}
+				texcoord( pod_type pod ): u(pod[0]), v(pod[1]) {}
 				texcoord( T u, T v ): u(u), v(v) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 2 };
 			};
 
 			typedef texcoord< GLfloat , 1 > texcoord1f;

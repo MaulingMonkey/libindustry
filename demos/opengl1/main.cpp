@@ -16,12 +16,14 @@
 #include <industry/api/opengl/texture.hpp>
 #include <industry/api/opengl/vertex.hpp>
 #include <industry/api/opengl/vbo.hpp>
+#include <industry/pod/tuple.hpp>
 #include <boost/shared_ptr.hpp>
 #include <cmath>
 
 const double pi = 3.141592653589;
 
 namespace opengl = ::industry::api::opengl;
+namespace pod    = ::industry::pod;
 
 boost::shared_ptr< opengl::texture<2> > generate_test_texture() {
 	const size_t size = 64;
@@ -45,7 +47,7 @@ boost::shared_ptr< opengl::display_list > generate_test_list() {
 
 	boost::shared_ptr< texture<2> > texture = generate_test_texture();
 	
-	interleaved< vertex2f, texcoord2f > data[] = {
+	pod::tuple< vertex2f, texcoord2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},
 		{0.0f, 1.0f, -100.0f, +100.0f},
 		{1.0f, 1.0f, +100.0f, +100.0f},

@@ -11,31 +11,36 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
 		namespace opengl {
 			template < typename T , unsigned N > struct color;
 			template < typename T > struct color< T, 3 > {
+				enum                                 { components = 3 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+				static const GLenum                    format_enum = GL_RGB;
+
 				T red, green, blue;
 				color(): red(), green(), blue() {}
+				color( pod_type pod ): red(pod[0]), green(pod[1]), blue(pod[2]) {}
 				color( T red, T green, T blue ): red(red), green(green), blue(blue) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 3 };
-				static const GLenum format_enum = GL_RGB;
 			};
 
 			template < typename T > struct color< T, 4 > {
+				enum                                 { components = 4 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+				static const GLenum                    format_enum = GL_RGB;
+
 				T red, green, blue, alpha;
 				color(): red(), green(), blue(), alpha() {}
+				color( pod_type pod ): red(pod[0]), green(pod[1]), blue(pod[2]), alpha(pod[3]) {}
 				color( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
-
-				typedef T           component_type;
-				static const GLenum component_type_enum = detail::type_to_enum< T >::value;
-				enum { components = 4 };
-				static const GLenum format_enum = GL_RGBA;
 			};
 
 			typedef color< GLfloat , 3 > color3f;
