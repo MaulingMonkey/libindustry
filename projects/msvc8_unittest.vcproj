@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\unittest\test.pod.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\unittest\test.range.cpp"
 				>
 			</File>

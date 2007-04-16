@@ -463,6 +463,14 @@
 				</File>
 			</Filter>
 			<Filter
+				Name="pod"
+				>
+				<File
+					RelativePath="..\industry\pod\tuple.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="range"
 				>
 				<File
@@ -495,6 +503,10 @@
 				</File>
 				<File
 					RelativePath="..\industry\traits\function.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\traits\pod.hpp"
 					>
 				</File>
 				<File
