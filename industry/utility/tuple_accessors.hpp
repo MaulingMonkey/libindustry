@@ -53,7 +53,7 @@ namespace industry {
 			template < typename Tuple, template < typename > class P > struct tuple_has_pred_type {
 				enum { value
 					=  P< typename Tuple::head_type >::value
-					|| tuple_has_type< typename Tuple::tail_type , T >::value
+					|| tuple_has_pred_type< typename Tuple::tail_type , P >::value
 				};
 			};
 			template < typename Tuple, template < typename > class P > struct tuple_has_pred_many_of_type {
@@ -84,6 +84,8 @@ namespace industry {
 			template < template < typename > class P , typename Tuple , bool match = detail::tuple_meets_head_type_predicate< Tuple, P >::value > struct tuple_get_if_type;
 			template < template < typename > class P , typename D , typename Tuple , bool match = detail::tuple_meets_head_type_predicate< Tuple, P >::value > struct tuple_get_if_type_or_default;
 			
+
+
 			template < typename T , typename Tuple > struct tuple_get_at<T, Tuple, false> {
 				static T from( const Tuple& tuple ) {
 					return tuple_get_at< T , typename Tuple::tail_type >::from( tuple.get_tail() );
@@ -93,17 +95,21 @@ namespace industry {
 				}
 			};
 			template < template < typename > class P , typename Tuple > struct tuple_get_if_type<P, Tuple, false> {
+				BOOST_STATIC_ASSERT(( detail::tuple_has_pred_one_of_type< Tuple , P >::value )); //TODO: Cut down on spam here!
 				typedef typename tuple_get_if_type<P,typename Tuple::tail_type>::result_type result_type;
 				static result_type from( const Tuple& tuple ) {
 					return tuple_get_if_type< P , typename Tuple::tail_type >::from( tuple.get_tail() );
 				}
 			};
 			template < template < typename > class P , typename D , typename Tuple > struct tuple_get_if_type_or_default<P, D, Tuple, false> {
+				BOOST_STATIC_ASSERT(( !detail::tuple_has_pred_many_of_type< Tuple , P >::value )); //TODO: Cut down on spam here!
 				typedef typename tuple_get_if_type_or_default<P,D,typename Tuple::tail_type>::result_type result_type;
 				static result_type from( const Tuple& tuple, const D& default_ ) {
 					return tuple_get_if_type_or_default< P , D , typename Tuple::tail_type >::from( tuple.get_tail(), default_ );
 				}
 			};
+
+
 
 			template < typename T , typename Tuple > struct tuple_get_at<T,Tuple,true> {
 				static T from( const Tuple& tuple )                        { return tuple.get_head(); }
@@ -117,6 +123,8 @@ namespace industry {
 				typedef typename Tuple::head_type result_type;
 				static result_type from( const Tuple& tuple, const D& /*default*/ ) { return tuple.get_head(); }
 			};
+
+
 
 			template < typename T > struct tuple_get_at< T , boost::tuples::null_type , false > {
 				static T from( const boost::tuples::null_type& /*tuple*/, const T& default_ ) { return default_; }
@@ -138,10 +146,12 @@ namespace industry {
 
 		template < template < typename > class P , typename Tuple >
 		typename detail::tuple_get_if_type<P,Tuple>::result_type get_if_type( const Tuple& tuple ) {
+			BOOST_STATIC_ASSERT(( detail::tuple_has_pred_one_of_type< Tuple , P >::value ));
 			return detail::tuple_get_if_type<P,Tuple>::from(tuple);
 		}
 		template < template < typename > class P , typename D , typename Tuple >
 		typename detail::tuple_get_if_type_or_default<P,D,Tuple>::result_type get_if_type_or_default( const Tuple& tuple, const D& default_ ) {
+			BOOST_STATIC_ASSERT(( !detail::tuple_has_pred_many_of_type< Tuple , P >::value ));
 			return detail::tuple_get_if_type_or_default<P,D,Tuple>::from(tuple,default_);
 		}
 	}
