@@ -478,6 +478,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="utility"
+				>
+				<File
+					RelativePath="..\industry\utility\tuple_accessors.hpp"
+					>
+				</File>
+			</Filter>
 			<File
 				RelativePath="..\industry\algorithm.hpp"
 				>
