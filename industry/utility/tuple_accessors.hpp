@@ -50,7 +50,9 @@ namespace industry {
 			template < typename T > struct tuple_has_many_of_type< boost::tuples::null_type , T > { enum { value = false }; };
 			template < typename T > struct tuple_has_one_of_type < boost::tuples::null_type , T > { enum { value = false }; };
 
-			template < typename T , typename Tuple , bool equal = boost::is_same< T , typename Tuple::head_type >::value > struct tuple_get_at {
+			template < typename T , typename Tuple , bool equal = boost::is_same< T , typename Tuple::head_type >::value > struct tuple_get_at;
+			
+			template < typename T , typename Tuple > struct tuple_get_at<T, Tuple, false> {
 				static T from( const Tuple& tuple ) {
 					return tuple_get_at< T , typename Tuple::tail_type >::from( tuple.get_tail() );
 				}

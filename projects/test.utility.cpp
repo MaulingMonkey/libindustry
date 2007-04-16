@@ -26,7 +26,7 @@ void test_utility( void ) {
 	boost::tuple< char, int, char > reoccurance2( 'a', 42, 'a' );
 	boost::tuple< int, char, char > reoccurance3( 42, 'a', 'a' );
 	BOOST_CHECK_EQUAL( reoccurance2.get<1>() , get_at_type< int >( reoccurance2 ) );
-	BOOST_CHECK_EQUAL( reoccurance2.get<0>() , get_at_type< int >( reoccurance3 ) );
+	BOOST_CHECK_EQUAL( reoccurance3.get<0>() , get_at_type< int >( reoccurance3 ) );
 	//get_at_type< char >( reoccurance1 ); //OK (clean error)
 	//get_at_type< char >( reoccurance2 ); //OK (clean error)
 	//get_at_type< char >( reoccurance3 ); //OK (clean error)
