@@ -45,19 +45,16 @@ opengl::texture<2> generate_test_texture() {
 opengl::display_list generate_test_list() {
 	using namespace opengl;
 
-	texture<2> test_texture = generate_test_texture();
+	static texture<2> test_texture = generate_test_texture();
 	
-	pod::tuple< vertex2f, texcoord2f > data[] = {
+	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},
 		{0.0f, 1.0f, -100.0f, +100.0f},
 		{1.0f, 1.0f, +100.0f, +100.0f},
 		{1.0f, 0.0f, +100.0f, -100.0f},
 	};
 
-	opengl::display_list list;
-	list = display_list::from( GL_QUADS, data, test_texture )( GL_QUADS, data, test_texture );
-	list = display_list( GL_QUADS, data, test_texture );
-	return list;
+	return display_list( GL_QUADS, data, test_texture );
 }
 
 int main () {
@@ -66,8 +63,7 @@ int main () {
 	SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
 
 	using namespace industry::api;
-	
-	opengl::texture<2>   texture = generate_test_texture();
+
 	opengl::display_list example = generate_test_list();
 
 	while( true ) {
@@ -100,22 +96,9 @@ int main () {
 		glMatrixMode( GL_MODELVIEW );
 		glLoadIdentity();
 
-		GLfloat model[][4] = {
-			{0.0f, 0.0f, -100.0f, -100.0f},
-			{0.0f, 1.0f, -100.0f, +100.0f},
-			{1.0f, 1.0f, +100.0f, +100.0f},
-			{1.0f, 0.0f, +100.0f, -100.0f},
-		};
-
+		using namespace opengl;
 		glColor3f( 1.0f, 1.0f, 1.0f );
-		glBindTexture( texture );
-		glVertexPointer  ( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+2 );
-		glTexCoordPointer( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+0 );
-
-		glEnable( GL_TEXTURE_2D );
-		glEnable( GL_VERTEX_ARRAY );
-		glEnable( GL_TEXTURE_COORD_ARRAY );
-		glDrawArrays( GL_QUADS, 0, 4 );
+		glCallList( example );
 
 		SDL_GL_SwapBuffers();
 	}

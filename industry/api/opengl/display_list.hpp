@@ -10,7 +10,11 @@
 #define IG_INDUSTRY_API_OPENGL_DISPLAY_LIST
 
 #include <industry/api/opengl/import.hpp>
+#include <industry/api/opengl/color.hpp>
+#include <industry/api/opengl/texcoord.hpp>
 #include <industry/api/opengl/texture.hpp>
+#include <industry/api/opengl/vertex.hpp>
+#include <industry/utility/tuple_accessors.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor.hpp>
@@ -82,9 +86,18 @@ namespace industry {
 						if (id) glEndList();
 					}
 
-					void do_select ( const texture<2>& texture ) { glBindTexture(texture); }
+					void do_select ( const texture<2>& texture ) { glBindTexture(texture); glEnable( GL_TEXTURE_2D ); }
+
 					template < typename Tuple , size_t N >
 					void do_compile( GLenum mode , const Tuple (&data)[N] ) {
+						glBegin( mode );
+						for ( unsigned i = 0 ; i < N ; ++i ) {
+							using namespace industry::utility;
+							glColor   ( get_if_type_or_default< is_a_color    >(data[i].unpod(),industry::nil()) );
+							glTexCoord( get_if_type_or_default< is_a_texcoord >(data[i].unpod(),industry::nil()) );
+							glVertex  ( get_if_type           < is_a_vertex   >(data[i].unpod()) );
+						}
+						glEnd();
 					}
 
 					BOOST_PP_REPEAT_FROM_TO( 0 , INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS , DO_DISPLAY_LIST_COMPILER_OPER , ~ )
@@ -99,10 +112,6 @@ namespace industry {
 				BOOST_PP_REPEAT_FROM_TO(0,INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS,DO_DISPLAY_LIST_CTOR,~)
 				BOOST_PP_REPEAT_FROM_TO(0,INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS,DO_DISPLAY_LIST_FROM,~)
 				~display_list() {}
-
-				template < typename Tuple >
-				void config( const Tuple& params ) {
-				}
 
 				friend void glNewList( const display_list& list , GLenum mode ) {
 					::glNewList( list.id->id , mode );
