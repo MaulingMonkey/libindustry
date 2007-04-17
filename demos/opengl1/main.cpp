@@ -25,7 +25,7 @@ const double pi = 3.141592653589;
 namespace opengl = ::industry::api::opengl;
 namespace pod    = ::industry::pod;
 
-boost::shared_ptr< opengl::texture<2> > generate_test_texture() {
+opengl::texture<2> generate_test_texture() {
 	const size_t size = 64;
 	const size_t tiles = 3;
 	boost::multi_array< opengl::color3ub, 2 > data( boost::extents[size][size] );
@@ -39,13 +39,13 @@ boost::shared_ptr< opengl::texture<2> > generate_test_texture() {
 			data[x][y] = opengl::color3ub( GLubyte(r), GLubyte(g), GLubyte(b) );
 		}
 	}
-	return boost::shared_ptr< opengl::texture<2> >( new opengl::texture<2>(data) );
+	return opengl::texture<2>(data);
 }
 
-boost::shared_ptr< opengl::display_list > generate_test_list() {
+opengl::display_list generate_test_list() {
 	using namespace opengl;
 
-	boost::shared_ptr< texture<2> > texture = generate_test_texture();
+	texture<2> test_texture = generate_test_texture();
 	
 	pod::tuple< vertex2f, texcoord2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},
@@ -53,13 +53,9 @@ boost::shared_ptr< opengl::display_list > generate_test_list() {
 		{1.0f, 1.0f, +100.0f, +100.0f},
 		{1.0f, 0.0f, +100.0f, -100.0f},
 	};
-	
-	//return display_list::create_from< interleaved< vertex2f, texcoord2f > >( data , texture );
-	return boost::shared_ptr< opengl::display_list >();
+
+	return display_list(data,test_texture);
 }
-
-
-// model = opengl::display_list::create_from_interleaved< opengl::vertex2f, opengl::texcoord2f >(data);
 
 int main () {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -68,8 +64,8 @@ int main () {
 
 	using namespace industry::api;
 	
-	boost::shared_ptr< opengl::texture<2>   > texture = generate_test_texture();
-	boost::shared_ptr< opengl::display_list > example = generate_test_list();
+	opengl::texture<2>   texture = generate_test_texture();
+	opengl::display_list example = generate_test_list();
 
 	while( true ) {
 		SDL_Event e;
@@ -109,7 +105,7 @@ int main () {
 		};
 
 		glColor3f( 1.0f, 1.0f, 1.0f );
-		glBindTexture( *texture );
+		glBindTexture( texture );
 		glVertexPointer  ( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+2 );
 		glTexCoordPointer( 2, GL_FLOAT, 4*sizeof(GLfloat), model[0]+0 );
 

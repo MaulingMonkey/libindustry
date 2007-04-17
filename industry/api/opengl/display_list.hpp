@@ -11,45 +11,55 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/preprocessor.hpp>
+
+#ifndef INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS
+#define INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS 10
+#endif //ndef INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS
+
+#define DO_DISPLAY_LIST_CTOR(z,n,ynysed)                               \
+	template < BOOST_PP_ENUM_PARAMS(n, typename A) >                   \
+	display_list( BOOST_PP_ENUM_BINARY_PARAMS(n, A, arg) ) {           \
+		config( boost::make_tuple( BOOST_PP_ENUM_PARAMS(n, arg) ) );   \
+	}                                                                  \
+/*--------------------------------------------------------------------*/
 
 namespace industry {
 	namespace api {
 		namespace opengl {
-			class display_list_compiler {
-				GLuint id;
-			public:
-				display_list_compiler( GLuint id ): id(id) {
-					::glNewList( id , GL_COMPILE );
-				}
-				display_list_compiler( display_list_compiler& other ): id(other.id) {
-					other.id = 0;
-				}
-				~display_list_compiler() {
-					if (id != 0) ::glEndList();
-				}
-			};
+			namespace detail {
+				struct display_list_id : boost::noncopyable {
+					display_list_id()  { id = ::glGenLists(1);  }
+					~display_list_id() { ::glDeleteLists(id,1); }
 
+					GLuint id;
+				};
+			}
 
-			class display_list : public boost::noncopyable {
-				GLuint id;
+			class display_list {
+				boost::shared_ptr< detail::display_list_id > id;
 			public:
-				display_list() { id = ::glGenLists(1); }
-				~display_list() { ::glDeleteLists(id,1); }
+				display_list() {}
+				BOOST_PP_REPEAT_FROM_TO(1,INDUSTRY_API_OPENGL_DISPLAY_LIST_MAX_ARGS,DO_DISPLAY_LIST_CTOR,~)
+				~display_list() {}
+
+				template < typename Tuple >
+				void config( const Tuple& params ) {
+				}
 
 				friend void glNewList( const display_list& list , GLenum mode ) {
-					::glNewList( list.id , mode );
+					::glNewList( list.id->id , mode );
 				}
 				//friend void glEndList(); //No override needed, OpenGL's does everything we need.
-
-				friend display_list_compiler compile( const display_list& list ) {
-					return display_list_compiler( list.id );
-				}
 				friend void glCallList( const display_list& list ) {
-					::glCallList( list.id );
+					::glCallList( list.id->id );
 				}
 			};
 		}
 	}
 }
+
+#undef DO_DISPLAY_LIST_CTOR
 
 #endif //ndef IG_INDUSTRY_API_OPENGL_DISPLAY_LIST

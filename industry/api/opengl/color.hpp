@@ -11,12 +11,19 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <industry/nil.hpp>
 #include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
 		namespace opengl {
 			template < typename T , unsigned N > struct color;
+
+			namespace detail {
+				template < typename T > struct is_a_color { enum { value = false }; };
+				template < typename T , size_t N > struct is_a_color< color<T,N> > { enum { value = true }; };
+			}
+
 			template < typename T > struct color< T, 3 > {
 				enum                                 { components = 3 };
 				typedef T                              component_type;
@@ -59,6 +66,8 @@ namespace industry {
 			inline void glColor( const color4d & c ) { ::glColor4d ( c.red, c.green, c.blue, c.alpha ); }
 			inline void glColor( const color4ub& c ) { ::glColor4ub( c.red, c.green, c.blue, c.alpha ); }
 
+			inline void glColor( industry::nil ) {}
+
 			template < typename T > inline void glClearColor( const color< T, 3 >& c ) {
 				::glClearColor( static_cast<GLdouble>(c.red), static_cast<GLdouble>(c.green), static_cast<GLdouble>(c.blue), 0.0 );
 			}
@@ -70,6 +79,7 @@ namespace industry {
 			inline void glColorPointer( const color<T,N> *list ) {
 				::glColorPointer( N, color<T,N>::component_type_enum, sizeof(color<T,N>), &(list->x) );
 			}
+			inline void glColorPointer( industry::nil ) {}
 		}
 	}
 }

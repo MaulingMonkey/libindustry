@@ -11,12 +11,18 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <industry/nil.hpp>
 #include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
 		namespace opengl {
 			template < typename T , size_t N > struct texcoord;
+
+			namespace detail {
+				template < typename T > struct is_a_texcoord { enum { value = false }; };
+				template < typename T , size_t N > struct is_a_texcoord< texcoord<T,N> > { enum { value = true }; };
+			}
 
 			template < typename T > struct texcoord< T, 1 > {
 				enum                                 { components = 1 };
@@ -54,10 +60,13 @@ namespace industry {
 			inline void glTexCoord( const texcoord2f & tc ) { ::glTexCoord2f ( tc.u, tc.v ); }
 			inline void glTexCoord( const texcoord2d & tc ) { ::glTexCoord2d ( tc.u, tc.v ); }
 
+			inline void glTexCoord( industry::nil ) {}
+
 			template < typename T , size_t N >
 			inline void glTexCoordPointer( const texcoord<T,N> *list ) {
 				::glTexCoordPointer( N, texcoord<T,N>::component_type_enum, sizeof(texcoord<T,N>), &(list->u) );
 			}
+			inline void glTexCoordPointer( industry::nil ) {}
 		}
 	}
 }

@@ -11,12 +11,18 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <industry/nil.hpp>
 #include <boost/array.hpp>
 
 namespace industry {
 	namespace api {
 		namespace opengl {
 			template < typename T , size_t N > struct vertex;
+			
+			namespace detail {
+				template < typename T > struct is_a_vertex { enum { value = false }; };
+				template < typename T , size_t N > struct is_a_vertex< vertex<T,N> > { enum { value = true }; };
+			}
 
 			template < typename T > struct vertex< T, 2 > {
 				enum                                 { components = 2 };
@@ -55,10 +61,13 @@ namespace industry {
 			inline void glVertex( const vertex3f & v ) { ::glVertex3f ( v.x, v.y, v.z ); }
 			inline void glVertex( const vertex3d & v ) { ::glVertex3d ( v.x, v.y, v.z ); }
 
+			inline void glVertex( industry::nil ) {}
+
 			template < typename T , size_t N >
 			inline void glVertexPointer( const vertex<T,N> *list ) {
 				::glVertexPointer( N, vertex<T,N>::component_type_enum, sizeof(vertex<T,N>), &(list->x) );
 			}
+			inline void glVertexPointer( industry::nil ) {}
 		}
 	}
 }
