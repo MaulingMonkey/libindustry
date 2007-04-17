@@ -54,7 +54,10 @@ opengl::display_list generate_test_list() {
 		{1.0f, 0.0f, +100.0f, -100.0f},
 	};
 
-	return display_list(data,test_texture);
+	opengl::display_list list;
+	list = display_list::from( GL_QUADS, data, test_texture )( GL_QUADS, data, test_texture );
+	list = display_list( GL_QUADS, data, test_texture );
+	return list;
 }
 
 int main () {

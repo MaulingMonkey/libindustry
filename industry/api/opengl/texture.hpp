@@ -14,6 +14,7 @@
 #include <industry/api/opengl/types.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/shared_ptr.hpp>
 #include <cassert>
 
 #ifdef _MSC_VER
