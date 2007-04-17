@@ -189,11 +189,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\industry\api\opengl\exceptions.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\opengl\extensions.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\industry\api\opengl\import.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\industry\api\opengl\interleaved.hpp"
+						RelativePath="..\industry\api\opengl\tags.hpp"
 						>
 					</File>
 					<File

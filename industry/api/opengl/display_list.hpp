@@ -86,7 +86,8 @@ namespace industry {
 						if (id) glEndList();
 					}
 
-					void do_select ( const texture<2>& texture ) { glBindTexture(texture); glEnable( GL_TEXTURE_2D ); }
+					template < typename Tag >
+					void do_select ( const texture<2,Tag>& texture ) { glBindTexture(texture); glEnable( GL_TEXTURE_2D ); }
 
 					template < typename Tuple , size_t N >
 					void do_compile( GLenum mode , const Tuple (&data)[N] ) {

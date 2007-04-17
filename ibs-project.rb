@@ -50,7 +50,7 @@ program( 'demo-opengl1' ) {
 	dependancy :sdl
 	dependancy :opengl
 	sources "demos/opengl1/**/*.{c,h}pp"
-	msvc_supress_warnings  4267
+	msvc_supress_warnings  4267, 4312
 }
 
 script( :ibs , :ruby ) {
