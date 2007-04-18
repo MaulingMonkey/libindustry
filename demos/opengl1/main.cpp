@@ -17,7 +17,7 @@
 #include <industry/api/opengl/vbo.hpp>
 #include <industry/pod/tuple.hpp>
 #include <boost/shared_ptr.hpp>
-#include <algorithm>
+#include <iostream>
 #include <cmath>
 
 const double pi = 3.141592653589;
@@ -25,8 +25,9 @@ const double pi = 3.141592653589;
 namespace opengl = ::industry::api::opengl;
 namespace pod    = ::industry::pod;
 
-opengl::texture<2> generate_test_texture() {
-	const size_t size = std::min( opengl::max_texture_size() , 256u );
+typedef opengl::texture<2,opengl::rectangular> test_texture_t;
+test_texture_t generate_test_texture() {
+	const size_t size = std::min( opengl::max_texture_size() , 255u );
 	const size_t tiles = 3;
 	boost::multi_array< opengl::color3ub, 2 > data( boost::extents[size][size] );
 
@@ -39,13 +40,13 @@ opengl::texture<2> generate_test_texture() {
 			data[x][y] = opengl::color3ub( GLubyte(r), GLubyte(g), GLubyte(b) );
 		}
 	}
-	return opengl::texture<2>(data);
+	return test_texture_t(data);
 }
 
 opengl::display_list generate_test_list() {
 	using namespace opengl;
 
-	static texture<2> test_texture = generate_test_texture();
+	static test_texture_t test_texture = generate_test_texture();
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},

@@ -50,11 +50,12 @@ namespace industry {
 
 
 			namespace detail {
-				struct texture_id : boost::noncopyable {
-					texture_id()  { glGenTextures   (1,&id); }
-					~texture_id() { glDeleteTextures(1,&id); }
+				struct texture_data : boost::noncopyable {
+					texture_data(): width(1), height(1) { glGenTextures(1,&id); }
+					~texture_data() { glDeleteTextures(1,&id); }
 
 					GLuint id;
+					GLuint width, height;
 				};
 
 				template < typename T >              struct is_a_texture                   { enum { value = false }; };
@@ -108,26 +109,53 @@ namespace industry {
 			}
 			
 			template < typename Tag > class texture<2,Tag> {
-				boost::shared_ptr< detail::texture_id > id;
+				typedef detail::texture_data  texture_data;
+				boost::shared_ptr< texture_data > data;
 			public:
-				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( target_enum, t.id->id ); }
+				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.target_enum(), t.data->id ); }
+				friend inline void select( const texture& t ) {
+					glBindTexture(t);
+					glEnable(t.target_enum());
+					GLenum mode;
+					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
+					glMatrixMode( GL_TEXTURE );
+					glPushMatrix();
+					glScalef( 1.0f * t.data->width , 1.0f * t.data->height , 1.0f );
+					glMatrixMode( mode );
+				}
+				friend inline void unselect( const texture& t ) {
+					glDisable(t.target_enum());
+					GLenum mode;
+					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
+					glMatrixMode( GL_TEXTURE );
+					glPopMatrix();
+					glMatrixMode( mode );
+				}
 
 				texture() {}
 
 				template < typename T >
-				texture( const boost::multi_array<T,2>& data ) {
-					detail::verify_texture_preconditions< Tag >::on( data );
+				texture( const boost::multi_array<T,2>& source ) {
+					detail::verify_texture_preconditions< Tag >::on( source );
 
-					id.reset( new detail::texture_id );
+					data.reset( new texture_data );
 					glBindTexture( *this );
-					glTexImage2D( GL_TEXTURE_2D, 0, 3, static_cast<GLsizei>(data.shape()[0]), static_cast<GLsizei>(data.shape()[1]), 0, T::format_enum, T::component_type_enum, data.data() );
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);	// Linear Filtering
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
+					glTexImage2D( target_enum(), 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
+					glTexParameteri(target_enum(),GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					glTexParameteri(target_enum(),GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+					if ( target_enum() == GL_TEXTURE_RECTANGLE_ARB ) {
+						data->width  = source.shape()[0];
+						data->height = source.shape()[1];
+					}
 				}
 				~texture() {
 				}
 
-				static const GLenum target_enum = boost::is_same< Tag , rectangular >::value ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
+				GLenum target_enum() const {
+					return (boost::is_same< Tag , rectangular >::value && has_rectangular_textures()) ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
+				}
 			};
 
 			typedef texture<1> texture1d;

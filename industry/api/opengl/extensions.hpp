@@ -33,18 +33,24 @@ namespace industry {
 
 				std::set< std::string > extensions;
 				if ( extensions.empty() || !cache_extensions ) {
-					boost::char_separator<char> sep(" ");
-					boost::tokenizer< boost::char_separator<char> > t( std::string((const char *)glGetString(GL_EXTENSIONS)) , sep );
 					extensions.clear();
-					extensions.insert( t.begin() , t.end() );
+					const char * string = (const char *) glGetString( GL_EXTENSIONS );
+					while ( *string ) {
+						const char * i = string;
+						while( *i && *i != ' ' ) ++i;
+						extensions.insert( std::string(string, i) );
+						string = i;
+						while ( *string == ' ' ) ++string;
+					}
 				}
 				return extensions;
 			}
 			inline bool has_extension( const std::string & e ) {
 				std::set< std::string > es = available_extensions();
-				return es.find(e) != es.end();
+				bool has = es.find(e) != es.end();
+				return has;
 			}
-			inline bool has_rectangular_textures()       { return has_extension( "GL_ARB_texture_rectangle" );        }
+			inline bool has_rectangular_textures()       { return has_extension( "GL_ARB_texture_rectangle" ) || has_extension( "GL_EXT_texture_rectangle" ); }
 			inline bool has_non_pow2_textures()          { return has_extension( "GL_ARB_texture_non_power_of_two" ); }
 			inline size_t max_texture_size()             { GLint texSize; glGetIntegerv(GL_MAX_TEXTURE_SIZE              , &texSize); return texSize; }
 			inline size_t max_rectangular_texture_size() { GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return texSize; }

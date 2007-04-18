@@ -39,7 +39,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/wd4267"
+				AdditionalOptions="/wd4267 /wd4312"
 				Optimization="0"
 				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/wd4267"
+				AdditionalOptions="/wd4267 /wd4312"
 				AdditionalIncludeDirectories="C:\dev\lang-ruby1.8.5;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"

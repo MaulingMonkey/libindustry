@@ -14,8 +14,8 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			struct texture_size_unavailable : std::exception { const char * what() { return "industry::api::opengl -- texture_size_unavailable"; } };
-			struct texture_shape_unavailable : std::exception { const char * what() { return "industry::api::opengl -- texture_shape_unavailable"; } };
+			struct texture_size_unavailable  : std::exception { const char * what() const { return "industry::api::opengl -- texture_size_unavailable" ; } };
+			struct texture_shape_unavailable : std::exception { const char * what() const { return "industry::api::opengl -- texture_shape_unavailable"; } };
 		}
 	}
 }

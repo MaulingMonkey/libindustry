@@ -43,7 +43,10 @@
 	}                                                                               \
 /*---------------------------------------------------------------------------------*/
 #define DO_DISPLAY_LIST_SELECT(z,n,param)                                           \
-	do_select( BOOST_PP_CAT(param,n) );                                             \
+	select( BOOST_PP_CAT(param,n) );                                                \
+/*---------------------------------------------------------------------------------*/
+#define DO_DISPLAY_LIST_UNSELECT(z,n,param)                                         \
+	unselect( BOOST_PP_CAT(param,n) );                                              \
 /*---------------------------------------------------------------------------------*/
 #define DO_DISPLAY_LIST_COMPILER_OPER(z,n,unused)                                   \
 	template < typename D , size_t N  BOOST_PP_ENUM_TRAILING_PARAMS(n,typename P) > \
@@ -52,6 +55,7 @@
 	{                                                                               \
 		BOOST_PP_REPEAT(n,DO_DISPLAY_LIST_SELECT,param)                             \
 		do_compile(mode,data);                                                      \
+		BOOST_PP_REPEAT(n,DO_DISPLAY_LIST_UNSELECT,param)                           \
 		return *this;                                                               \
 	}                                                                               \
 /*---------------------------------------------------------------------------------*/
@@ -85,9 +89,6 @@ namespace industry {
 					~display_list_compiler() {
 						if (id) glEndList();
 					}
-
-					template < typename Tag >
-					void do_select ( const texture<2,Tag>& texture ) { glBindTexture(texture); glEnable( GL_TEXTURE_2D ); }
 
 					template < typename Tuple , size_t N >
 					void do_compile( GLenum mode , const Tuple (&data)[N] ) {
