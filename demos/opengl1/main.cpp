@@ -66,52 +66,61 @@ opengl::display_list generate_test_list() {
 }
 
 int main () {
-	SDL_Init( SDL_INIT_EVERYTHING );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
-	SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
+	try {
+		SDL_Init( SDL_INIT_EVERYTHING );
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
+		SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
 
-	using namespace industry::api;
-	std::set< std::string > extensions = opengl::available_extensions();
-	std::cout << "Extensions:\n\t";
-	std::copy( extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(std::cout,"\n\t") );
-	std::cout << std::endl;
+		using namespace industry::api;
+		std::set< std::string > extensions = opengl::available_extensions();
+		std::cout << "Extensions:\n\t";
+		std::copy( extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(std::cout,"\n\t") );
+		std::cout << std::endl;
 
-	opengl::display_list example = generate_test_list();
+		opengl::display_list example = generate_test_list();
 
-	while( true ) {
-		SDL_Event e;
-		while ( SDL_PollEvent( &e ) ) {
-			switch( e.type ) {
-				case SDL_KEYDOWN:
-					switch ( e.key.keysym.sym ) {
-						case SDLK_ESCAPE:
-							SDL_Quit();
-							return 0;
-						default:
-							break;
-					}
-				case SDL_QUIT:
-					SDL_Quit();
-					return 0;
-				default:
-					break;
+		while( true ) {
+			SDL_Event e;
+			while ( SDL_PollEvent( &e ) ) {
+				switch( e.type ) {
+					case SDL_KEYDOWN:
+						switch ( e.key.keysym.sym ) {
+							case SDLK_ESCAPE:
+								SDL_Quit();
+								return 0;
+							default:
+								break;
+						}
+					case SDL_QUIT:
+						SDL_Quit();
+						return 0;
+					default:
+						break;
+				}
 			}
+
+			glClearColor( 0.0, 0.0, 0.0, 0.0 );
+			glClear( GL_COLOR_BUFFER_BIT );
+
+			glMatrixMode( GL_PROJECTION );
+			glLoadIdentity();
+			glOrtho( -200 , +200 , -150 , +150 , -1 , +1 );
+
+			glMatrixMode( GL_MODELVIEW );
+			glLoadIdentity();
+
+			using namespace opengl;
+			glColor3f( 1.0f, 1.0f, 1.0f );
+			glCallList( example );
+
+			SDL_GL_SwapBuffers();
 		}
-
-		glClearColor( 0.0, 0.0, 0.0, 0.0 );
-		glClear( GL_COLOR_BUFFER_BIT );
-
-		glMatrixMode( GL_PROJECTION );
-		glLoadIdentity();
-		glOrtho( -200 , +200 , -150 , +150 , -1 , +1 );
-
-		glMatrixMode( GL_MODELVIEW );
-		glLoadIdentity();
-
-		using namespace opengl;
-		glColor3f( 1.0f, 1.0f, 1.0f );
-		glCallList( example );
-
-		SDL_GL_SwapBuffers();
+	} catch( const std::exception & e ) {
+		std::cout << "Exception: " << e.what() << std::endl;
+#ifdef _DEBUG
+		throw;
+#else
+		return -1;
+#endif
 	}
 }
