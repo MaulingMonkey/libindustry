@@ -23,7 +23,12 @@
 #define GL_SAMPLER_2D_RECT_SHADOW_ARB       0x8B64
 #endif
 
-
+// Testing options:
+// #define INDUSTRY_API_OPENGL_DISABLE_ALL_EXTENSIONS
+// #define INDUSTRY_API_OPENGL_DISABLE_RECTANGULAR_TEXTURES
+// #define INDUSTRY_API_OPENGL_DISABLE_NPOT_TEXTURES
+// #define INDUSTRY_API_OPENGL_OVERRIDE_MAX_TEXTURE_SIZE              64   // [ unsigned int ]
+// #define INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE  64   // [ unsigned int ]
 
 namespace industry {
 	namespace api {
@@ -43,17 +48,41 @@ namespace industry {
 						while ( *string == ' ' ) ++string;
 					}
 				}
+#ifndef INDUSTRY_API_OPENGL_DISABLE_ALL_EXTENSIONS
 				return extensions;
+#else
+				return std::set<std::string>();
+#endif
 			}
 			inline bool has_extension( const std::string & e ) {
 				std::set< std::string > es = available_extensions();
 				bool has = es.find(e) != es.end();
+#ifndef INDUSTRY_API_OPENGL_DISABLE_ALL_EXTENSIONS
 				return has;
+#else
+				return false;
+#endif
 			}
+#ifndef INDUSTRY_API_OPENGL_DISABLE_RECTANGULAR_TEXTURES
 			inline bool has_rectangular_textures()       { return has_extension( "GL_ARB_texture_rectangle" ) || has_extension( "GL_EXT_texture_rectangle" ); }
-			inline bool has_non_pow2_textures()          { return has_extension( "GL_ARB_texture_non_power_of_two" ); }
+#else
+			inline bool has_rectangular_textures()       { return false; }
+#endif
+#ifndef INDUSTRY_API_OPENGL_DISABLE_NPOT_TEXTURES
+			inline bool has_npot_textures()              { return has_extension( "GL_ARB_texture_non_power_of_two" ) || has_extension( "GL_EXT_texture_non_power_of_two" ); }
+#else
+			inline bool has_npot_textures()              { return false; }
+#endif
+#if !defined( INDUSTRY_API_OPENGL_OVERRIDE_MAX_TEXTURE_SIZE )
 			inline size_t max_texture_size()             { GLint texSize; glGetIntegerv(GL_MAX_TEXTURE_SIZE              , &texSize); return texSize; }
+#else
+			inline size_t max_texture_size()             { GLint texSize; glGetIntegerv(GL_MAX_TEXTURE_SIZE              , &texSize); return std::min(texSize,INDUSTRY_API_OPENGL_OVERRIDE_MAX_TEXTURE_SIZE); }
+#endif
+#if !defined( INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE )
 			inline size_t max_rectangular_texture_size() { GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return texSize; }
+#else
+			inline size_t max_rectangular_texture_size() { GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return std::min(texSize,INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE); }
+#endif
 		}
 	}
 }

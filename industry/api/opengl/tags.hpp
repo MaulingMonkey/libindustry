@@ -12,9 +12,8 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			struct minimal     {}; // Textures: Lowest common denominator (e.g. 64x64 max)
-			struct non_pow2    {}; // Textures: Supports non pow-2 textures for everything
-			struct rectangular {}; // Textures: Supports minimal non pow-2 textures
+			struct normalized   {};
+			struct unnormalized {}; //possibly rectangular npot textures
 		}
 	}
 }

@@ -33,21 +33,7 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			template < size_t N , typename Tag = nil > class texture;
-
-			//  Tag          Programmatically unavailable (always asserted) options:
-			//  minimal      empty, Oversized
-			//  nil          empty, non-pow2, non-rectangular
-			//  rectangular  empty, mipmapping, many clamp modes, etc
-			//  non_pow2     empty
-
-			//  Tag          Checked options (thrown if unavailable):
-			//  minimal      *nothing*
-			//  nil          Oversized
-			//  rectangular  Oversized, non-pow2
-			//  non_pow2     Oversized, non-pow2, lack of clamp mode in non-pow2, etc
-
-
+			template < size_t N , typename Tag = normalized > class texture;
 
 			namespace detail {
 				struct texture_data : boost::noncopyable {
@@ -56,6 +42,7 @@ namespace industry {
 
 					GLuint id;
 					GLuint width, height;
+					GLuint type;
 				};
 
 				template < typename T >              struct is_a_texture                   { enum { value = false }; };
@@ -63,46 +50,28 @@ namespace industry {
 
 				template < typename Tag > struct verify_texture_preconditions;
 
-				template <> struct verify_texture_preconditions< minimal > {
+				template <> struct verify_texture_preconditions< unnormalized > {
 					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
+						const bool npot = has_rectangular_textures() || has_npot_textures();
+
 						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                          ); // not empty
-							assert( data.shape()[i] == data.shape()[0]       ); // rectangular
-							assert( data.shape()[i] <= 64                    ); // right size
-							assert( !(data.shape()[i] & (data.shape()[i]-1)) ); // power of 2
+							assert( data.shape()[i]                                  ); // not empty
+							if    ( data.shape()[i] != data.shape()[0] && !npot      ) throw texture_shape_unavailable();
+							if    ( data.shape()[i] > max_rectangular_texture_size() ) throw texture_size_unavailable();
+							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !npot ) throw texture_shape_unavailable();
 						}
 					}
 				};
 
-				template <> struct verify_texture_preconditions< nil > {
+				template <> struct verify_texture_preconditions< normalized > {
 					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
-						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                          ); // not empty
-							assert( data.shape()[i] == data.shape()[0]       ); // rectangular
-							if    ( data.shape()[i] > max_texture_size()     ) throw texture_size_unavailable();
-							assert( !(data.shape()[i] & (data.shape()[i]-1)) ); // power of 2
-						}
-					}
-				};
+						const bool npot = has_npot_textures();
 
-				template <> struct verify_texture_preconditions< rectangular > {
-					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
 						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                                                        ); // not empty
-							if    ( data.shape()[i] != data.shape()[0] && !has_rectangular_textures()      ) throw texture_shape_unavailable();
-							if    ( data.shape()[i] > max_rectangular_texture_size()                       ) throw texture_size_unavailable();
-							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !has_rectangular_textures() ) throw texture_shape_unavailable();
-						}
-					}
-				};
-
-				template <> struct verify_texture_preconditions< non_pow2 > {
-					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
-						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                                                     ); // not empty
-							if    ( data.shape()[i] != data.shape()[0] && !has_non_pow2_textures()      ) throw texture_shape_unavailable();
-							if    ( data.shape()[i] > max_texture_size()                                ) throw texture_size_unavailable();
-							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !has_non_pow2_textures() ) throw texture_shape_unavailable();
+							assert( data.shape()[i]                                  ); // not empty
+							if    ( data.shape()[i] != data.shape()[0] && !npot      ) throw texture_shape_unavailable();
+							if    ( data.shape()[i] > max_texture_size()             ) throw texture_size_unavailable();
+							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !npot ) throw texture_shape_unavailable();
 						}
 					}
 				};
@@ -112,10 +81,10 @@ namespace industry {
 				typedef detail::texture_data  texture_data;
 				boost::shared_ptr< texture_data > data;
 			public:
-				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.target_enum(), t.data->id ); }
+				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.data->type, t.data->id ); }
 				friend inline void select( const texture& t ) {
 					glBindTexture(t);
-					glEnable(t.target_enum());
+					glEnable(t.data->type);
 					GLenum mode;
 					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
 					glMatrixMode( GL_TEXTURE );
@@ -124,7 +93,7 @@ namespace industry {
 					glMatrixMode( mode );
 				}
 				friend inline void unselect( const texture& t ) {
-					glDisable(t.target_enum());
+					glDisable(t.data->type);
 					GLenum mode;
 					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
 					glMatrixMode( GL_TEXTURE );
@@ -133,19 +102,22 @@ namespace industry {
 				}
 
 				texture() {}
+				texture( const texture<2,normalized>& o ): data(o.data) {} //allow normalized -> * (e.g. unnormalized) texture conversion
 
 				template < typename T >
 				texture( const boost::multi_array<T,2>& source ) {
 					detail::verify_texture_preconditions< Tag >::on( source );
 
 					data.reset( new texture_data );
+					data->type = new_texture_type();
+
 					glBindTexture( *this );
 					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
-					glTexImage2D( target_enum(), 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
-					glTexParameteri(target_enum(),GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					glTexParameteri(target_enum(),GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					glTexImage2D   (data->type, 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
+					glTexParameteri(data->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					glTexParameteri(data->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-					if ( target_enum() == GL_TEXTURE_RECTANGLE_ARB ) {
+					if ( data->type == GL_TEXTURE_RECTANGLE_ARB ) {
 						data->width  = source.shape()[0];
 						data->height = source.shape()[1];
 					}
@@ -153,8 +125,8 @@ namespace industry {
 				~texture() {
 				}
 
-				GLenum target_enum() const {
-					return (boost::is_same< Tag , rectangular >::value && has_rectangular_textures()) ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
+				static GLenum new_texture_type() {
+					return (boost::is_same< Tag , unnormalized >::value && has_rectangular_textures() && !has_npot_textures()) ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
 				}
 			};
 

@@ -25,22 +25,29 @@ const double pi = 3.141592653589;
 namespace opengl = ::industry::api::opengl;
 namespace pod    = ::industry::pod;
 
-typedef opengl::texture<2,opengl::rectangular> test_texture_t;
+typedef opengl::texture< 2, opengl::normalized > test_texture_t;
+
 test_texture_t generate_test_texture() {
-	const size_t size = std::min( opengl::max_texture_size() , 255u );
-	const size_t tiles = 3;
-	boost::multi_array< opengl::color3ub, 2 > data( boost::extents[size][size] );
+	const size_t size  = std::min( opengl::max_texture_size() , 512u );
+	const size_t tiles = 5;
 
-	for ( unsigned x = 0 ; x < size ; ++x ) {
-		for ( unsigned y = 0 ; y < size ; ++y ) {
-			const double r = (std::sin( x*2*pi/size * tiles )+1)  /  2  *  255.0;
-			const double g = (std::sin( y*2*pi/size * tiles )+1)  /  2  *  255.0;
-			const double b = ( (x+y)*255.0 * tiles )   /  2   /  size;
+	try {
+		boost::multi_array< opengl::color3ub, 2 > data( boost::extents[size][size] );
 
-			data[x][y] = opengl::color3ub( GLubyte(r), GLubyte(g), GLubyte(b) );
+		for ( unsigned x = 0 ; x < size ; ++x ) {
+			for ( unsigned y = 0 ; y < size ; ++y ) {
+				const double r = (std::sin( x*2*pi/size * tiles )+1)  /  2  *  255.0;
+				const double g = (std::sin( y*2*pi/size * tiles )+1)  /  2  *  255.0;
+				const double b = ( (x+y)*255.0 * tiles )   /  2   /  size;
+
+				data[x][y] = opengl::color3ub( GLubyte(r), GLubyte(g), GLubyte(b) );
+			}
 		}
+		return test_texture_t(data);
+	} catch( ... ) {
+		std::cout << "Error generating test texture of size: " << size << "x" << size << std::endl;
+		throw;
 	}
-	return test_texture_t(data);
 }
 
 opengl::display_list generate_test_list() {
@@ -64,6 +71,10 @@ int main () {
 	SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
 
 	using namespace industry::api;
+	std::set< std::string > extensions = opengl::available_extensions();
+	std::cout << "Extensions:\n\t";
+	std::copy( extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(std::cout,"\n\t") );
+	std::cout << std::endl;
 
 	opengl::display_list example = generate_test_list();
 
