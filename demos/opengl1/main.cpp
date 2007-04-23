@@ -53,7 +53,7 @@ test_texture_t generate_test_texture() {
 opengl::display_list generate_test_list() {
 	using namespace opengl;
 
-	static test_texture_t test_texture = generate_test_texture();
+	test_texture_t test_texture = generate_test_texture();
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},

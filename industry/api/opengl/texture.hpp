@@ -33,7 +33,7 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			// Note:  texture<> is NOT necessairly normalized, only texture<N,normalized> for N != 0 is.
+			// Note:  texture<> is NOT necessairly normalized, only texture<N,normalized> for N != 0 is.  For now.
 			template < size_t N = 0 , typename Tag = normalized > class texture;
 
 			namespace detail {
