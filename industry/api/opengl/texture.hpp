@@ -33,12 +33,13 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			template < size_t N , typename Tag = normalized > class texture;
+			// Note:  texture<> is NOT necessairly normalized, only texture<N,normalized> for N != 0 is.
+			template < size_t N = 0 , typename Tag = normalized > class texture;
 
 			namespace detail {
-				struct texture_data : boost::noncopyable {
-					texture_data(): width(1), height(1) { glGenTextures(1,&id); }
-					~texture_data() { glDeleteTextures(1,&id); }
+				struct texture_impl : boost::noncopyable {
+					texture_impl(): width(1), height(1) { glGenTextures(1,&id); }
+					~texture_impl() { glDeleteTextures(1,&id); }
 
 					GLuint id;
 					GLuint width, height;
@@ -76,50 +77,61 @@ namespace industry {
 					}
 				};
 			}
-			
-			template < typename Tag > class texture<2,Tag> {
-				typedef detail::texture_data  texture_data;
-				boost::shared_ptr< texture_data > data;
+
+			// NOTE:  This isn't necessairly a normalized texture (and certainly isn't 0 dimensions).
+			//        This is just the base interface (e.g. texture<>) which all texture<N,Tag> should be convertable to.
+			template <> class texture<0,normalized> {
+			protected:
+				typedef detail::texture_impl  texture_impl;
+				boost::shared_ptr< texture_impl > impl;
 			public:
-				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.data->type, t.data->id ); }
+				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.impl->type, t.impl->id ); }
+
 				friend inline void select( const texture& t ) {
 					glBindTexture(t);
-					glEnable(t.data->type);
-					GLenum mode;
-					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
-					glMatrixMode( GL_TEXTURE );
-					glPushMatrix();
-					glScalef( 1.0f * t.data->width , 1.0f * t.data->height , 1.0f );
-					glMatrixMode( mode );
+					glEnable(t.impl->type);
+					if ( t.impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
+						GLenum mode;
+						glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
+						glMatrixMode( GL_TEXTURE );
+						glPushMatrix();
+						glScalef( 1.0f * t.impl->width , 1.0f * t.impl->height , 1.0f );
+						glMatrixMode( mode );
+					}
 				}
 				friend inline void unselect( const texture& t ) {
-					glDisable(t.data->type);
-					GLenum mode;
-					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
-					glMatrixMode( GL_TEXTURE );
-					glPopMatrix();
-					glMatrixMode( mode );
+					glDisable(t.impl->type);
+					if ( t.impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
+						GLenum mode;
+						glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
+						glMatrixMode( GL_TEXTURE );
+						glPopMatrix();
+						glMatrixMode( mode );
+					}
 				}
+			};
 
+			template < typename Tag > class texture<2,Tag>: public texture<> {
+			public:
 				texture() {}
-				texture( const texture<2,normalized>& o ): data(o.data) {} //allow normalized -> * (e.g. unnormalized) texture conversion
+				texture( const texture<2,normalized>& o ) { impl = o.impl; } //allow normalized -> * (e.g. unnormalized) texture conversion
 
 				template < typename T >
 				texture( const boost::multi_array<T,2>& source ) {
 					detail::verify_texture_preconditions< Tag >::on( source );
 
-					data.reset( new texture_data );
-					data->type = new_texture_type();
+					impl.reset( new texture_impl );
+					impl->type = new_texture_type();
 
 					glBindTexture( *this );
 					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
-					glTexImage2D   (data->type, 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
-					glTexParameteri(data->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					glTexParameteri(data->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					glTexImage2D   (impl->type, 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
+					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-					if ( data->type == GL_TEXTURE_RECTANGLE_ARB ) {
-						data->width  = source.shape()[0];
-						data->height = source.shape()[1];
+					if ( impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
+						impl->width  = source.shape()[0];
+						impl->height = source.shape()[1];
 					}
 				}
 				~texture() {
