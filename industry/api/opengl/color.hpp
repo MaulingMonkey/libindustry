@@ -42,7 +42,7 @@ namespace industry {
 				typedef T                              component_type;
 				typedef boost::array< T, components >  pod_type;
 				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
-				static const GLenum                    format_enum = GL_RGB;
+				static const GLenum                    format_enum = GL_RGBA;
 
 				T red, green, blue, alpha;
 				color(): red(), green(), blue(), alpha() {}
