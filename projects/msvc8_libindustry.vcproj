@@ -530,6 +530,10 @@
 				Name="utility"
 				>
 				<File
+					RelativePath="..\industry\utility\new_shared_ptr.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\industry\utility\tuple_accessors.hpp"
 					>
 				</File>
