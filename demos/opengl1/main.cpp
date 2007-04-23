@@ -8,6 +8,8 @@
 
 #include <SDL/SDL.h>
 #undef main
+#include <industry/api/devil/import.hpp>
+#include <industry/api/devil/image.hpp>
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/color.hpp>
 #include <industry/api/opengl/display_list.hpp>
@@ -70,6 +72,9 @@ int main () {
 		SDL_Init( SDL_INIT_EVERYTHING );
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
 		SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
+		ilInit();
+		ilutInit();
+		ilutRenderer( ILUT_OPENGL );
 
 		using namespace industry::api;
 		std::set< std::string > extensions = opengl::available_extensions();

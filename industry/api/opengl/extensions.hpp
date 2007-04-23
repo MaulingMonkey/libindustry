@@ -64,7 +64,7 @@ namespace industry {
 #endif
 			}
 #ifndef INDUSTRY_API_OPENGL_DISABLE_RECTANGULAR_TEXTURES
-			inline bool has_rectangular_textures()       { return has_extension( "GL_ARB_texture_rectangle" ) || has_extension( "GL_EXT_texture_rectangle" ); }
+			inline bool has_rectangular_textures()       { return has_extension( "GL_ARB_texture_rectangle" ) || has_extension( "GL_EXT_texture_rectangle" ) || has_extension( "GL_NV_texture_rectangle" ); }
 #else
 			inline bool has_rectangular_textures()       { return false; }
 #endif

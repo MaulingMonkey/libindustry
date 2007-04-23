@@ -178,6 +178,18 @@
 				Name="api"
 				>
 				<Filter
+					Name="devil"
+					>
+					<File
+						RelativePath="..\industry\api\devil\image.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\devil\import.hpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="opengl"
 					>
 					<File
