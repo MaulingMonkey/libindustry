@@ -31,6 +31,7 @@ namespace industry {
 				image() {}
 				image( const std::string& filename ) {
 					impl.reset( new image_impl );
+					ilBindImage( *this );
 #ifndef _UNICODE
 					assert( ilLoadImage( filename.c_str() ) );
 #else

@@ -106,6 +106,8 @@ int main () {
 		opengl::display_list example1 = generate_test_list_1();
 		opengl::display_list example2 = generate_test_list_2();
 
+		double tween = 0.0f;
+
 		while( true ) {
 			SDL_Event e;
 			while ( SDL_PollEvent( &e ) ) {
@@ -140,9 +142,9 @@ int main () {
 			glEnable( GL_BLEND );
 			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
 
-			static GLfloat n = 0.0f; //TODO:  Unhackerishize this
-			n += 0.001f;
-			glColor4f( 1.0f, 1.0f, 1.0f, (std::cos(n)+1)/2 );
+			tween += 0.0005f;
+			while ( tween > 2*pi ) tween -= 2*pi;
+			glColor4f( 1.0f, 1.0f, 1.0f, GLfloat((std::cos(tween)+1)/2) );
 
 			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
 			glCallList( example1 );

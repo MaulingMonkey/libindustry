@@ -39,11 +39,12 @@ namespace industry {
 			namespace detail {
 				struct texture_impl : boost::noncopyable {
 					texture_impl(): width(1), height(1) { glGenTextures(1,&id); }
+					texture_impl( GLuint id ): id(id), width(1), height(1) {}
 					~texture_impl() { glDeleteTextures(1,&id); }
 
 					GLuint id;
-					GLuint width, height;
 					GLuint type;
+					GLuint width, height;
 				};
 
 				template < typename T >              struct is_a_texture                   { enum { value = false }; };
@@ -116,23 +117,19 @@ namespace industry {
 				texture() {}
 				texture( const texture<2,normalized>& o ) { impl = o.impl; } //allow normalized -> * (e.g. unnormalized) texture conversion
 				texture( const api::devil::image& image ) {
-					ilBindImage( image );
-
-					impl.reset( new texture_impl );
-					impl->type = new_texture_type();
-
 					//FIXME:  Error checking please!!!
 					//        Merge refactoring too probably?
 					//        VTEC just kick in yo
 
+					ilBindImage( image );
+					impl.reset( new texture_impl( ilutGLBindTexImage() ) );
+					impl->type = GL_TEXTURE_2D; //I think DevIL only uses this?
 					impl->width  = ilGetInteger(IL_IMAGE_WIDTH );
 					impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-					glBindTexture( *this );
-					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
-					glTexImage2D   (impl->type, 0, 3, impl->width, impl->height, 0, GL_RGB, GL_UNSIGNED_BYTE, ilGetData() );
-					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					assert( impl->id != 0 );
+					//glBindTexture( *this );
+					//glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					//glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 				}
 
 				template < typename T >
