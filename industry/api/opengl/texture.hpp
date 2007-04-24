@@ -115,6 +115,25 @@ namespace industry {
 			public:
 				texture() {}
 				texture( const texture<2,normalized>& o ) { impl = o.impl; } //allow normalized -> * (e.g. unnormalized) texture conversion
+				texture( const api::devil::image& image ) {
+					ilBindImage( image );
+
+					impl.reset( new texture_impl );
+					impl->type = new_texture_type();
+
+					//FIXME:  Error checking please!!!
+					//        Merge refactoring too probably?
+					//        VTEC just kick in yo
+
+					impl->width  = ilGetInteger(IL_IMAGE_WIDTH );
+					impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+					glBindTexture( *this );
+					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
+					glTexImage2D   (impl->type, 0, 3, impl->width, impl->height, 0, GL_RGB, GL_UNSIGNED_BYTE, ilGetData() );
+					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+				}
 
 				template < typename T >
 				texture( const boost::multi_array<T,2>& source ) {

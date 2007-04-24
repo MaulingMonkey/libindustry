@@ -24,12 +24,13 @@
 
 const double pi = 3.141592653589;
 
+namespace devil  = ::industry::api::devil;
 namespace opengl = ::industry::api::opengl;
 namespace pod    = ::industry::pod;
 
-typedef opengl::texture< 2, opengl::normalized > test_texture_t;
+typedef opengl::texture< 2, opengl::unnormalized > test_texture_t;
 
-test_texture_t generate_test_texture() {
+test_texture_t generate_test_texture_1() {
 	const size_t size  = std::min( opengl::max_texture_size() , 512u );
 	const size_t tiles = 5;
 
@@ -52,10 +53,15 @@ test_texture_t generate_test_texture() {
 	}
 }
 
-opengl::display_list generate_test_list() {
+test_texture_t generate_test_texture_2() {
+	devil::image logo( "..\\demos\\opengl1\\libindustry.png" );
+	return test_texture_t(logo);
+}
+
+opengl::display_list generate_test_list_1() {
 	using namespace opengl;
 
-	test_texture_t test_texture = generate_test_texture();
+	test_texture_t test_texture_1 = generate_test_texture_1();
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -100.0f, -100.0f},
@@ -64,7 +70,22 @@ opengl::display_list generate_test_list() {
 		{1.0f, 0.0f, +100.0f, -100.0f},
 	};
 
-	return display_list( GL_QUADS, data, test_texture );
+	return display_list( GL_QUADS, data, test_texture_1 );
+}
+
+opengl::display_list generate_test_list_2() {
+	using namespace opengl;
+
+	test_texture_t test_texture_2 = generate_test_texture_2();
+	
+	pod::tuple< texcoord2f , vertex2f > data[] = {
+		{0.0f, 0.0f, -200.0f, -150.0f},
+		{0.0f, 1.0f, -200.0f, +150.0f},
+		{1.0f, 1.0f, +200.0f, +150.0f},
+		{1.0f, 0.0f, +200.0f, -150.0f},
+	};
+
+	return display_list( GL_QUADS, data, test_texture_2 );
 }
 
 int main () {
@@ -82,7 +103,8 @@ int main () {
 		std::copy( extensions.begin(), extensions.end(), std::ostream_iterator<std::string>(std::cout,"\n\t") );
 		std::cout << std::endl;
 
-		opengl::display_list example = generate_test_list();
+		opengl::display_list example1 = generate_test_list_1();
+		opengl::display_list example2 = generate_test_list_2();
 
 		while( true ) {
 			SDL_Event e;
@@ -115,8 +137,17 @@ int main () {
 			glLoadIdentity();
 
 			using namespace opengl;
-			glColor3f( 1.0f, 1.0f, 1.0f );
-			glCallList( example );
+			glEnable( GL_BLEND );
+			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
+
+			static GLfloat n = 0.0f; //TODO:  Unhackerishize this
+			n += 0.001f;
+			glColor4f( 1.0f, 1.0f, 1.0f, (std::cos(n)+1)/2 );
+
+			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
+			glCallList( example1 );
+			glBlendFunc( GL_ONE_MINUS_SRC_ALPHA , GL_SRC_ALPHA );
+			glCallList( example2 );
 
 			SDL_GL_SwapBuffers();
 		}

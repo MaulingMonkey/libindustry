@@ -31,6 +31,11 @@ namespace industry {
 				image() {}
 				image( const std::string& filename ) {
 					impl.reset( new image_impl );
+#ifndef _UNICODE
+					assert( ilLoadImage( filename.c_str() ) );
+#else
+					assert( ilLoadImage( std::wstring( filename.begin(), filename.end() ).c_str() ) );
+#endif
 				}
 			};
 		}
