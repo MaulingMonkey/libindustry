@@ -122,14 +122,26 @@ namespace industry {
 					//        VTEC just kick in yo
 
 					ilBindImage( image );
-					impl.reset( new texture_impl( ilutGLBindTexImage() ) );
-					impl->type = GL_TEXTURE_2D; //I think DevIL only uses this?
-					impl->width  = ilGetInteger(IL_IMAGE_WIDTH );
-					impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
-					assert( impl->id != 0 );
-					//glBindTexture( *this );
-					//glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					//glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					switch( new_texture_type() ) {
+						case GL_TEXTURE_2D:
+							impl.reset( new texture_impl( ilutGLBindTexImage() ) );
+							impl->type = GL_TEXTURE_2D;
+							assert( impl->id != 0 );
+							break;
+						case GL_TEXTURE_RECTANGLE_ARB:
+							impl.reset( new texture_impl );
+							impl->type   = GL_TEXTURE_RECTANGLE_ARB;
+							impl->width  = ilGetInteger(IL_IMAGE_WIDTH );
+							impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
+							assert( impl->id != 0 );
+							glBindTexture( *this );
+							glTexImage2D   (impl->type, 0, 3, impl->width, impl->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData() );
+							glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+							glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+							break;
+						default:
+							assert(!"reached");
+					}
 				}
 
 				template < typename T >

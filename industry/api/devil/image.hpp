@@ -32,11 +32,15 @@ namespace industry {
 				image( const std::string& filename ) {
 					impl.reset( new image_impl );
 					ilBindImage( *this );
+					ILboolean origin = ilIsEnabled( IL_ORIGIN_SET );
+					if (!origin) ilEnable( IL_ORIGIN_SET );
+					ilOriginFunc( IL_ORIGIN_LOWER_LEFT );
 #ifndef _UNICODE
 					assert( ilLoadImage( filename.c_str() ) );
 #else
 					assert( ilLoadImage( std::wstring( filename.begin(), filename.end() ).c_str() ) );
 #endif
+					if (!origin) ilDisable( IL_ORIGIN_SET );
 				}
 			};
 		}
