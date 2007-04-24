@@ -135,7 +135,7 @@ namespace industry {
 							impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
 							assert( impl->id != 0 );
 							glBindTexture( *this );
-							glTexImage2D   (impl->type, 0, 3, impl->width, impl->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData() );
+							glTexImage2D   (impl->type, 0, 4, impl->width, impl->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData() );
 							glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 							glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 							break;

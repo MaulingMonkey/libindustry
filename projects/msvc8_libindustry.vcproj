@@ -193,6 +193,10 @@
 					Name="opengl"
 					>
 					<File
+						RelativePath="..\industry\api\opengl\canvas.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\industry\api\opengl\color.hpp"
 						>
 					</File>

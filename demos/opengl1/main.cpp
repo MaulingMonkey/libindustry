@@ -53,11 +53,6 @@ test_texture_t generate_test_texture_1() {
 	}
 }
 
-test_texture_t generate_test_texture_2() {
-	devil::image logo( "..\\demos\\opengl1\\libindustry.png" );
-	return test_texture_t(logo);
-}
-
 opengl::display_list generate_test_list_1() {
 	using namespace opengl;
 
@@ -76,7 +71,7 @@ opengl::display_list generate_test_list_1() {
 opengl::display_list generate_test_list_2() {
 	using namespace opengl;
 
-	test_texture_t test_texture_2 = generate_test_texture_2();
+	test_texture_t test_texture_2( devil::image( "..\\demos\\opengl1\\libindustry.png" ) );
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -200.0f, -150.0f},

@@ -35,13 +35,8 @@ namespace industry {
 				friend void ilBindImage( const image& self ) { assert( self.impl ); ::ilBindImage( self.impl->id ); }
 
 				image() {}
-				image( ILstring filename ) { initialize(filename); }
-#ifndef _UNICODE
-				image( const std::string& filename ) { initialize(filename.c_str()); }
-#else
-				image( const std::string& filename ) { initialize( std::basic_string< detail::char_type_of<ILstring>::type >(filename.begin(),filename.end()).c_str() ); }
-				image( const std::wstring& filename ) { initialize( filename.c_str() ); }
-#endif
+				image( const std::string& filename ) { initialize((const ILstring)filename.c_str()); }
+
 				void initialize( const ILstring filename ) {
 					impl.reset( new image_impl );
 					ilBindImage( *this );

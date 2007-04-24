@@ -24,7 +24,14 @@ dependancy( :boost ) {
 }
 
 dependancy( :opengl ) {
+	#  Assumed to be in your IDE paths already (for now)
 	add_library "opengl32.lib"
+}
+
+dependancy( :devil ) {
+	#  Assumed to be in your IDE paths already (for now)
+	add_library "devil.lib"
+	add_library "ilut.lib"
 }
 
 dependancy( :sdl ) {
@@ -49,6 +56,7 @@ program( 'demo-opengl1' ) {
 	dependancy :libindustry
 	dependancy :sdl
 	dependancy :opengl
+	dependancy :devil
 	sources "demos/opengl1/**/*.{c,h}pp"
 	msvc_supress_warnings  4267, 4312
 }
