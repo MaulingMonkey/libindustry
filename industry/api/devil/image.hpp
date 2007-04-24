@@ -18,6 +18,12 @@
 namespace industry {
 	namespace api {
 		namespace devil {
+			namespace detail {
+				template < typename S > struct char_type_of;
+				template < typename C > struct char_type_of<       C* > { typedef C type; };
+				template < typename C > struct char_type_of< const C* > { typedef C type; };
+			}
+
 			struct image_impl : boost::noncopyable {
 				ILuint id;
 				image_impl()  { id = ilGenImage(); }
@@ -29,17 +35,20 @@ namespace industry {
 				friend void ilBindImage( const image& self ) { assert( self.impl ); ::ilBindImage( self.impl->id ); }
 
 				image() {}
-				image( const std::string& filename ) {
+				image( ILstring filename ) { initialize(filename); }
+#ifndef _UNICODE
+				image( const std::string& filename ) { initialize(filename.c_str()); }
+#else
+				image( const std::string& filename ) { initialize( std::basic_string< detail::char_type_of<ILstring>::type >(filename.begin(),filename.end()).c_str() ); }
+				image( const std::wstring& filename ) { initialize( filename.c_str() ); }
+#endif
+				void initialize( const ILstring filename ) {
 					impl.reset( new image_impl );
 					ilBindImage( *this );
 					ILboolean origin = ilIsEnabled( IL_ORIGIN_SET );
 					if (!origin) ilEnable( IL_ORIGIN_SET );
 					ilOriginFunc( IL_ORIGIN_LOWER_LEFT );
-#ifndef _UNICODE
-					assert( ilLoadImage( filename.c_str() ) );
-#else
-					assert( ilLoadImage( std::wstring( filename.begin(), filename.end() ).c_str() ) );
-#endif
+					assert( ilLoadImage( filename ) );
 					if (!origin) ilDisable( IL_ORIGIN_SET );
 				}
 			};
