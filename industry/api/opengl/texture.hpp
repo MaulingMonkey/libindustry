@@ -9,6 +9,7 @@
 #ifndef IG_INDUSTRY_API_OPENGL_TEXTURE
 #define IG_INDUSTRY_API_OPENGL_TEXTURE
 
+#include <industry/api/devil/image.hpp>
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/color.hpp>
 #include <industry/api/opengl/extensions.hpp>
@@ -142,6 +143,9 @@ namespace industry {
 						default:
 							assert(!"reached");
 					}
+				}
+				texture( const std::string& filename ) {
+					*this = texture( api::devil::image( filename , IL_ORIGIN_LOWER_LEFT ) );
 				}
 
 				template < typename T >

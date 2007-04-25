@@ -35,16 +35,33 @@ namespace industry {
 				friend void ilBindImage( const image& self ) { assert( self.impl ); ::ilBindImage( self.impl->id ); }
 
 				image() {}
-				image( const std::string& filename ) { initialize((const ILstring)filename.c_str()); }
+				image( const std::string& filename ) { unsigned flags[] = {0}; initialize((const ILstring)filename.c_str(),flags); }
+				image( const std::string& filename, unsigned flag1 ) { unsigned flags[] = {flag1}; initialize((const ILstring)filename.c_str(),flags); }
 
-				void initialize( const ILstring filename ) {
+				template < size_t N >
+				void initialize( const ILstring filename, unsigned (&flags)[N] ) {
 					impl.reset( new image_impl );
 					ilBindImage( *this );
-					ILboolean origin = ilIsEnabled( IL_ORIGIN_SET );
-					if (!origin) ilEnable( IL_ORIGIN_SET );
-					ilOriginFunc( IL_ORIGIN_LOWER_LEFT );
+
+					unsigned origin = 0;
+					for ( unsigned i = 0 ; i < N ; ++i ) {
+						switch ( flags[i] ) {
+							case 0: //null flag (to avoid 0-length-array problem)
+								break;
+							case IL_ORIGIN_LOWER_LEFT:
+							case IL_ORIGIN_UPPER_LEFT:
+								assert(!origin); origin = flags[i];
+								break;
+							default:
+								assert(!"reached");
+						}
+					}
+
+					ILboolean enable_origin = !ilIsEnabled( IL_ORIGIN_SET ) && origin;
+					if (enable_origin) ilEnable( IL_ORIGIN_SET );
+					if (origin) ilOriginFunc( origin );
 					assert( ilLoadImage( filename ) );
-					if (!origin) ilDisable( IL_ORIGIN_SET );
+					if (enable_origin) ilDisable( IL_ORIGIN_SET );
 				}
 			};
 		}

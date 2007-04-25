@@ -61,6 +61,14 @@ program( 'demo-opengl1' ) {
 	msvc_supress_warnings  4267, 4312
 }
 
+program( 'demo-opengl2' ) {
+	dependancy :libindustry
+	dependancy :sdl
+	dependancy :opengl
+	dependancy :devil
+	sources "demos/opengl2/**/*.{c,h}pp"
+}
+
 script( :ibs , :ruby ) {
 	sources "ibs-lib/**/*.rb"
 	start   "ibs-lib/ibs.rb"

@@ -16,8 +16,8 @@
 #include <industry/api/opengl/texcoord.hpp>
 #include <industry/api/opengl/texture.hpp>
 #include <industry/api/opengl/vertex.hpp>
-#include <industry/api/opengl/vbo.hpp>
 #include <industry/pod/tuple.hpp>
+#include <boost/multi_array.hpp>
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <cmath>
@@ -71,7 +71,7 @@ opengl::display_list generate_test_list_1() {
 opengl::display_list generate_test_list_2() {
 	using namespace opengl;
 
-	test_texture_t test_texture_2( devil::image( "..\\demos\\opengl1\\libindustry.png" ) );
+	test_texture_t test_texture_2( "..\\demos\\opengl1\\libindustry.png" );
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -200.0f, -150.0f},
