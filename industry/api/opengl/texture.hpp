@@ -40,8 +40,7 @@ namespace industry {
 					texture_impl(): scale_width(1.0f), scale_height(1.0f) { glGenTextures(1,&id); }
 					~texture_impl() { glDeleteTextures(1,&id); }
 
-					GLuint id;
-					GLuint type;
+					GLuint id, type;
 					GLuint  pixels_width, pixels_height;
 					GLfloat scale_width , scale_height;
 				};
@@ -98,7 +97,7 @@ namespace industry {
 						dimms[0] = limit;
 						dimms[1] = limit;
 					}
-					do_create(texture_type_for(dimms),dimms,GL_RGBA,ilGetData());
+					do_create(texture_type_for(dimms),dimms,GL_RGBA,GL_UNSIGNED_BYTE,ilGetData());
 					iluScale(1,1,1);
 				}
 				template < typename T >
@@ -106,53 +105,57 @@ namespace industry {
 					GLuint dimms[] = { GLuint(source.shape()[0]), GLuint(source.shape()[1]) };
 					if (!is_within_limits(0,dimms)) {
 						unsigned limit = std::max( max_texture_size() , max_rectangular_texture_size() );
-						ilTexImage( dimms[0], dimms[1], 1, T::components, T::format_enum, IL_UNSIGNED_BYTE, const_cast< T* >( source.data() ) );
+						ilTexImage( dimms[0], dimms[1], 1, T::components, T::format_enum, T::component_type_enum, const_cast< T* >( source.data() ) );
 						iluImageParameter( ILU_FILTER , ILU_SCALE_LANCZOS3 );
 						iluScale( limit, limit, 1 );
 						dimms[0] = limit;
 						dimms[1] = limit;
 					}
-					do_create(texture_type_for(dimms),dimms,T::format_enum,source.data());
+					do_create(texture_type_for(dimms),dimms,T::format_enum,T::component_type_enum,source.data());
 					iluScale(1,1,1);
 				}
 				template < typename T >
 				texture( unsigned w, unsigned h , const std::vector<T> & data ) {
-					assert( w*h < data.size() );
+					assert( w*h <= data.size() );
 					GLuint dimms[] = {w,h};
-					do_create(texture_type_for(dimms),dimms,T::format_enum,&data[0]);
+					do_create(texture_type_for(dimms),dimms,T::format_enum,T::component_type_enum,&data[0]);
 				}
 				~texture() {
 				}
 
 				template < typename T >
 				void blit( GLuint x, GLuint y, const boost::multi_array<T,2>& source ) {
-					do_blit( x, y, source.shape()[0], source.shape()[1], source.data() );
+					do_blit( x, y, source.shape()[0], source.shape()[1], T::format_enum, T::component_type_enum, source.data() );
 				}
 			private:
-				void do_create( GLenum type , const GLuint (&dimms)[2] , GLenum format, const void* data ) {
+				void do_create( GLenum type , const GLuint (&dimms)[2] , GLenum format, GLenum component, const void* data ) {
 					impl.reset( new detail::texture_impl );
-					impl->type = type;
+					impl->type   = type;
 					if (!is_within_limits(impl->type,dimms)) throw texture_size_unavailable();
 					bool rects = (impl->type == GL_TEXTURE_RECTANGLE_ARB);
 					bool need_resize = !rects && !is_pot(dimms);
 					impl->pixels_width  = dimms[0];
 					impl->pixels_height = dimms[1];
-					impl->scale_width   = rects ? GLfloat(dimms[0]) : (GLfloat(dimms[0]) / upper_pot( dimms[0] ));
-					impl->scale_height  = rects ? GLfloat(dimms[1]) : (GLfloat(dimms[1]) / upper_pot( dimms[1] ));
+					impl->scale_width   = rects ? GLfloat(dimms[0]) : (GLfloat(dimms[0]) / upper_pot(dimms[0]));
+					impl->scale_height  = rects ? GLfloat(dimms[1]) : (GLfloat(dimms[1]) / upper_pot(dimms[1]));
 					glBindTexture  (impl->type,impl->id);
 					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
 					if (!need_resize) {
-						glTexImage2D(impl->type, 0, 4, dimms[0], dimms[1], 0, format, GL_UNSIGNED_BYTE, data );
+						glTexImage2D(impl->type, 0, 4, dimms[0], dimms[1], 0, format, component, data );
 					} else {
-						glTexImage2D(impl->type, 0, 4, upper_pot(dimms[0]), upper_pot(dimms[1]), 0, format, GL_UNSIGNED_BYTE, NULL );
-						glTexSubImage2D(impl->type,0,0,0,dimms[0],dimms[1],format,GL_UNSIGNED_BYTE,data);
+						glTexImage2D(impl->type, 0, 4, upper_pot(dimms[0]), upper_pot(dimms[1]), 0, format, component, NULL );
+						glTexSubImage2D(impl->type,0,0,0,dimms[0],dimms[1],format,component,data);
 					}
 					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+					glTexParameteri(impl->type,GL_TEXTURE_WRAP_S,GL_CLAMP);
+					glTexParameteri(impl->type,GL_TEXTURE_WRAP_T,GL_CLAMP);
 				}
-				void do_blit( GLuint x, GLuint y, GLuint w, GLuint h, GLenum format, const void* data ) {
-					assert( x+w < impl->pixels_width && y+h < impl->pixels_height );
-					glTexSubImage2D(impl->type,0,x,y,w,h,format,GL_UNSIGNED_BYTE,data);
+				void do_blit( GLuint x, GLuint y, GLuint w, GLuint h, GLenum format, GLenum component, const void* data ) {
+					assert( x+w <= impl->pixels_width && y+h <= impl->pixels_height );
+					glBindTexture( impl->type , impl->id );
+					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
+					glTexSubImage2D(impl->type,0,x,y,w,h,format,component,data);
 				}
 				static GLenum texture_type_for( const GLuint (&dimms)[2] ) {
 					bool square = dimms[0] == dimms[1];

@@ -68,7 +68,7 @@ program( 'demo-opengl2' ) {
 	dependancy :opengl
 	dependancy :devil
 	sources "demos/opengl2/**/*.{c,h}pp"
-	msvc_supress_warnings  4244, 4267
+	msvc_supress_warnings  4244, 4267, 4312
 }
 
 script( :ibs , :ruby ) {

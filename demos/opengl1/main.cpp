@@ -31,7 +31,7 @@ namespace pod    = ::industry::pod;
 typedef opengl::texture< 2 > test_texture_t;
 
 test_texture_t generate_test_texture_1() {
-	const size_t size  = std::min( opengl::max_texture_size() , 512u );
+	const size_t size  = std::min( opengl::max_texture_size() , 511u );
 	const size_t tiles = 5;
 
 	try {

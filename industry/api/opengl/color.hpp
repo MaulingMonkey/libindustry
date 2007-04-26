@@ -24,6 +24,19 @@ namespace industry {
 				template < typename T , size_t N > struct is_a_color< color<T,N> > { enum { value = true }; };
 			}
 
+			template < typename T > struct color< T, 1 > {
+				enum                                 { components = 3 };
+				typedef T                              component_type;
+				typedef boost::array< T, components >  pod_type;
+				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
+				static const GLenum                    format_enum = GL_LUMINANCE;
+
+				T luminance;
+				color(): luminance() {}
+				color( pod_type pod ): luminance(pod[0]) {}
+				color( T luminance ): luminance(luminance) {}
+			};
+
 			template < typename T > struct color< T, 3 > {
 				enum                                 { components = 3 };
 				typedef T                              component_type;
@@ -50,6 +63,10 @@ namespace industry {
 				color( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
 			};
 
+			typedef color< GLfloat , 1 > color1f;
+			typedef color< GLdouble, 1 > color1d;
+			typedef color< GLubyte , 1 > color1ub;
+
 			typedef color< GLfloat , 3 > color3f;
 			typedef color< GLdouble, 3 > color3d;
 			typedef color< GLubyte , 3 > color3ub;
@@ -57,6 +74,10 @@ namespace industry {
 			typedef color< GLfloat , 4 > color4f;
 			typedef color< GLdouble, 4 > color4d;
 			typedef color< GLubyte , 4 > color4ub;
+
+			inline void glColor( const color1f & c ) { ::glColor3f ( c.luminance, c.luminance, c.luminance ); }
+			inline void glColor( const color1d & c ) { ::glColor3d ( c.luminance, c.luminance, c.luminance ); }
+			inline void glColor( const color1ub& c ) { ::glColor3ub( c.luminance, c.luminance, c.luminance ); }
 
 			inline void glColor( const color3f & c ) { ::glColor3f ( c.red, c.green, c.blue ); }
 			inline void glColor( const color3d & c ) { ::glColor3d ( c.red, c.green, c.blue ); }
@@ -68,6 +89,9 @@ namespace industry {
 
 			inline void glColor( industry::nil ) {}
 
+			template < typename T > inline void glClearColor( const color< T, 1 >& c ) {
+				::glClearColor( static_cast<GLdouble>(c.luminance), static_cast<GLdouble>(c.luminance), static_cast<GLdouble>(c.luminance), 0.0 );
+			}
 			template < typename T > inline void glClearColor( const color< T, 3 >& c ) {
 				::glClearColor( static_cast<GLdouble>(c.red), static_cast<GLdouble>(c.green), static_cast<GLdouble>(c.blue), 0.0 );
 			}

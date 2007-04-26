@@ -49,15 +49,19 @@ namespace industry {
 				vertex( T x, T y, T z ): x(x), y(y), z(z) {}
 			};
 
+			typedef vertex< GLint   , 2 > vertex2i;
 			typedef vertex< GLfloat , 2 > vertex2f;
 			typedef vertex< GLdouble, 2 > vertex2d;
 
+			typedef vertex< GLint   , 3 > vertex3i;
 			typedef vertex< GLfloat , 3 > vertex3f;
 			typedef vertex< GLdouble, 3 > vertex3d;
 
+			inline void glVertex( const vertex2i & v ) { ::glVertex2i ( v.x, v.y ); }
 			inline void glVertex( const vertex2f & v ) { ::glVertex2f ( v.x, v.y ); }
 			inline void glVertex( const vertex2d & v ) { ::glVertex2d ( v.x, v.y ); }
 
+			inline void glVertex( const vertex3i & v ) { ::glVertex3i ( v.x, v.y, v.z ); }
 			inline void glVertex( const vertex3f & v ) { ::glVertex3f ( v.x, v.y, v.z ); }
 			inline void glVertex( const vertex3d & v ) { ::glVertex3d ( v.x, v.y, v.z ); }
 
