@@ -28,7 +28,7 @@ namespace devil  = ::industry::api::devil;
 namespace opengl = ::industry::api::opengl;
 namespace pod    = ::industry::pod;
 
-typedef opengl::texture< 2, opengl::unnormalized > test_texture_t;
+typedef opengl::texture< 2 > test_texture_t;
 
 test_texture_t generate_test_texture_1() {
 	const size_t size  = std::min( opengl::max_texture_size() , 512u );

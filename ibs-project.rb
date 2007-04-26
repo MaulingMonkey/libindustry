@@ -31,6 +31,7 @@ dependancy( :opengl ) {
 dependancy( :devil ) {
 	#  Assumed to be in your IDE paths already (for now)
 	add_library "devil.lib"
+	add_library "ilu.lib"
 	add_library "ilut.lib"
 }
 
@@ -67,6 +68,7 @@ program( 'demo-opengl2' ) {
 	dependancy :opengl
 	dependancy :devil
 	sources "demos/opengl2/**/*.{c,h}pp"
+	msvc_supress_warnings  4244, 4267
 }
 
 script( :ibs , :ruby ) {

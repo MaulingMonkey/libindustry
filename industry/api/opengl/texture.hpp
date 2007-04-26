@@ -9,12 +9,11 @@
 #ifndef IG_INDUSTRY_API_OPENGL_TEXTURE
 #define IG_INDUSTRY_API_OPENGL_TEXTURE
 
-#include <industry/api/devil/image.hpp>
+#include <industry/api/devil/import.hpp>
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/color.hpp>
 #include <industry/api/opengl/extensions.hpp>
 #include <industry/api/opengl/exceptions.hpp>
-#include <industry/api/opengl/tags.hpp>
 #include <industry/api/opengl/types.hpp>
 #include <industry/nil.hpp>
 #include <boost/noncopyable.hpp>
@@ -34,143 +33,154 @@
 namespace industry {
 	namespace api {
 		namespace opengl {
-			// Note:  texture<> is NOT necessairly normalized, only texture<N,normalized> for N != 0 is.  For now.
-			template < size_t N = 0 , typename Tag = normalized > class texture;
+			template < size_t N = 0 > class texture;
 
 			namespace detail {
 				struct texture_impl : boost::noncopyable {
-					texture_impl(): width(1), height(1) { glGenTextures(1,&id); }
-					texture_impl( GLuint id ): id(id), width(1), height(1) {}
+					texture_impl(): scale_width(1.0f), scale_height(1.0f) { glGenTextures(1,&id); }
 					~texture_impl() { glDeleteTextures(1,&id); }
 
 					GLuint id;
 					GLuint type;
-					GLuint width, height;
+					GLuint  pixels_width, pixels_height;
+					GLfloat scale_width , scale_height;
 				};
+				typedef boost::shared_ptr< texture_impl > texture_impl_ptr;
 
-				template < typename T >              struct is_a_texture                   { enum { value = false }; };
-				template < size_t N , typename Tag > struct is_a_texture< texture<N,Tag> > { enum { value = true  }; };
-
-				template < typename Tag > struct verify_texture_preconditions;
-
-				template <> struct verify_texture_preconditions< unnormalized > {
-					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
-						const bool npot = has_rectangular_textures() || has_npot_textures();
-
-						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                                  ); // not empty
-							if    ( data.shape()[i] != data.shape()[0] && !npot      ) throw texture_shape_unavailable();
-							if    ( data.shape()[i] > max_rectangular_texture_size() ) throw texture_size_unavailable();
-							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !npot ) throw texture_shape_unavailable();
-						}
-					}
-				};
-
-				template <> struct verify_texture_preconditions< normalized > {
-					template < typename T > static void on( const boost::multi_array< T, 2 > & data ) {
-						const bool npot = has_npot_textures();
-
-						for ( unsigned i = 0 ; i < 2 ; ++i ) {
-							assert( data.shape()[i]                                  ); // not empty
-							if    ( data.shape()[i] != data.shape()[0] && !npot      ) throw texture_shape_unavailable();
-							if    ( data.shape()[i] > max_texture_size()             ) throw texture_size_unavailable();
-							if    ( (data.shape()[i] & (data.shape()[i]-1)) && !npot ) throw texture_shape_unavailable();
-						}
-					}
-				};
+				template < typename T > struct is_a_texture               { enum { value = false }; };
+				template < size_t N >   struct is_a_texture< texture<N> > { enum { value = true  }; };
 			}
 
-			// NOTE:  This isn't necessairly a normalized texture (and certainly isn't 0 dimensions).
-			//        This is just the base interface (e.g. texture<>) which all texture<N,Tag> should be convertable to.
-			template <> class texture<0,normalized> {
+			template <> class texture<0> {
 			protected:
-				typedef detail::texture_impl  texture_impl;
-				boost::shared_ptr< texture_impl > impl;
+				detail::texture_impl_ptr impl;
 			public:
-				friend inline void glBindTexture( const texture& t ) { ::glBindTexture( t.impl->type, t.impl->id ); }
-
 				friend inline void select( const texture& t ) {
-					glBindTexture(t);
+					glBindTexture(t.impl->type,t.impl->id);
 					glEnable(t.impl->type);
-					if ( t.impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
-						GLenum mode;
-						glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
-						glMatrixMode( GL_TEXTURE );
-						glPushMatrix();
-						glScalef( 1.0f * t.impl->width , 1.0f * t.impl->height , 1.0f );
-						glMatrixMode( mode );
-					}
+					GLenum mode;
+					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode ); 
+					glMatrixMode( GL_TEXTURE );
+					glPushMatrix();
+					glScalef( t.impl->scale_width , t.impl->scale_height , 1.0f );
+					glMatrixMode( mode );
 				}
 				friend inline void unselect( const texture& t ) {
 					glDisable(t.impl->type);
-					if ( t.impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
-						GLenum mode;
-						glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
-						glMatrixMode( GL_TEXTURE );
-						glPopMatrix();
-						glMatrixMode( mode );
-					}
+					GLenum mode;
+					glGetIntegerv( GL_MATRIX_MODE , (GLint*)&mode );
+					glMatrixMode( GL_TEXTURE );
+					glPopMatrix();
+					glMatrixMode( mode );
+				}
+			protected:
+				template < typename T > static bool is_pot( T v ) { return !(v & (v-1)); }
+				template < typename T > static T upper_pot( T v ) { unsigned n = 1; while(n<v) n *= 2; return n; }
+
+				template < typename T , size_t N > static bool is_pot( const T(&vs)[N] ) {
+					for ( unsigned i = 0 ; i < N ; ++i ) if (!is_pot(vs[i])) return false;
+					return true;
 				}
 			};
 
-			template < typename Tag > class texture<2,Tag>: public texture<> {
+			template <> class texture<2>: public texture<> {
 			public:
 				texture() {}
-				texture( const texture<2,normalized>& o ) { impl = o.impl; } //allow normalized -> * (e.g. unnormalized) texture conversion
-				texture( const api::devil::image& image ) {
-					//FIXME:  Error checking please!!!
-					//        Merge refactoring too probably?
-					//        VTEC just kick in yo
-
-					ilBindImage( image );
-					switch( new_texture_type() ) {
-						case GL_TEXTURE_2D:
-							impl.reset( new texture_impl( ilutGLBindTexImage() ) );
-							impl->type = GL_TEXTURE_2D;
-							assert( impl->id != 0 );
-							break;
-						case GL_TEXTURE_RECTANGLE_ARB:
-							impl.reset( new texture_impl );
-							impl->type   = GL_TEXTURE_RECTANGLE_ARB;
-							impl->width  = ilGetInteger(IL_IMAGE_WIDTH );
-							impl->height = ilGetInteger(IL_IMAGE_HEIGHT);
-							assert( impl->id != 0 );
-							glBindTexture( *this );
-							glTexImage2D   (impl->type, 0, 4, impl->width, impl->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData() );
-							glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-							glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-							break;
-						default:
-							assert(!"reached");
-					}
-				}
 				texture( const std::string& filename ) {
-					*this = texture( api::devil::image( filename , IL_ORIGIN_LOWER_LEFT ) );
+					ilEnable( IL_ORIGIN_SET );
+					ilOriginFunc( IL_ORIGIN_LOWER_LEFT );
+					if (!ilLoadImage( (const ILstring)filename.c_str() )) throw file_not_found();
+					GLuint dimms[] = { GLuint(ilGetInteger( IL_IMAGE_WIDTH )) , GLuint(ilGetInteger( IL_IMAGE_HEIGHT )) };
+					if (!is_within_limits(0,dimms)) {
+						unsigned limit = std::max( max_texture_size() , max_rectangular_texture_size() );
+						iluImageParameter( ILU_FILTER , ILU_SCALE_LANCZOS3 );
+						iluScale( limit, limit, 1 );
+						dimms[0] = limit;
+						dimms[1] = limit;
+					}
+					do_create(texture_type_for(dimms),dimms,GL_RGBA,ilGetData());
+					iluScale(1,1,1);
 				}
-
 				template < typename T >
 				texture( const boost::multi_array<T,2>& source ) {
-					detail::verify_texture_preconditions< Tag >::on( source );
-
-					impl.reset( new texture_impl );
-					impl->type = new_texture_type();
-
-					glBindTexture( *this );
-					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
-					glTexImage2D   (impl->type, 0, 3, static_cast<GLsizei>(source.shape()[0]), static_cast<GLsizei>(source.shape()[1]), 0, T::format_enum, T::component_type_enum, source.data() );
-					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-					if ( impl->type == GL_TEXTURE_RECTANGLE_ARB ) {
-						impl->width  = source.shape()[0];
-						impl->height = source.shape()[1];
+					GLuint dimms[] = { GLuint(source.shape()[0]), GLuint(source.shape()[1]) };
+					if (!is_within_limits(0,dimms)) {
+						unsigned limit = std::max( max_texture_size() , max_rectangular_texture_size() );
+						ilTexImage( dimms[0], dimms[1], 1, T::components, T::format_enum, IL_UNSIGNED_BYTE, const_cast< T* >( source.data() ) );
+						iluImageParameter( ILU_FILTER , ILU_SCALE_LANCZOS3 );
+						iluScale( limit, limit, 1 );
+						dimms[0] = limit;
+						dimms[1] = limit;
 					}
+					do_create(texture_type_for(dimms),dimms,T::format_enum,source.data());
+					iluScale(1,1,1);
+				}
+				template < typename T >
+				texture( unsigned w, unsigned h , const std::vector<T> & data ) {
+					assert( w*h < data.size() );
+					GLuint dimms[] = {w,h};
+					do_create(texture_type_for(dimms),dimms,T::format_enum,&data[0]);
 				}
 				~texture() {
 				}
 
-				static GLenum new_texture_type() {
-					return (boost::is_same< Tag , unnormalized >::value && has_rectangular_textures() && !has_npot_textures()) ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
+				template < typename T >
+				void blit( GLuint x, GLuint y, const boost::multi_array<T,2>& source ) {
+					do_blit( x, y, source.shape()[0], source.shape()[1], source.data() );
+				}
+			private:
+				void do_create( GLenum type , const GLuint (&dimms)[2] , GLenum format, const void* data ) {
+					impl.reset( new detail::texture_impl );
+					impl->type = type;
+					if (!is_within_limits(impl->type,dimms)) throw texture_size_unavailable();
+					bool rects = (impl->type == GL_TEXTURE_RECTANGLE_ARB);
+					bool need_resize = !rects && !is_pot(dimms);
+					impl->pixels_width  = dimms[0];
+					impl->pixels_height = dimms[1];
+					impl->scale_width   = rects ? GLfloat(dimms[0]) : (GLfloat(dimms[0]) / upper_pot( dimms[0] ));
+					impl->scale_height  = rects ? GLfloat(dimms[1]) : (GLfloat(dimms[1]) / upper_pot( dimms[1] ));
+					glBindTexture  (impl->type,impl->id);
+					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
+					if (!need_resize) {
+						glTexImage2D(impl->type, 0, 4, dimms[0], dimms[1], 0, format, GL_UNSIGNED_BYTE, data );
+					} else {
+						glTexImage2D(impl->type, 0, 4, upper_pot(dimms[0]), upper_pot(dimms[1]), 0, format, GL_UNSIGNED_BYTE, NULL );
+						glTexSubImage2D(impl->type,0,0,0,dimms[0],dimms[1],format,GL_UNSIGNED_BYTE,data);
+					}
+					glTexParameteri(impl->type,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+					glTexParameteri(impl->type,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+				}
+				void do_blit( GLuint x, GLuint y, GLuint w, GLuint h, GLenum format, const void* data ) {
+					assert( x+w < impl->pixels_width && y+h < impl->pixels_height );
+					glTexSubImage2D(impl->type,0,x,y,w,h,format,GL_UNSIGNED_BYTE,data);
+				}
+				static GLenum texture_type_for( const GLuint (&dimms)[2] ) {
+					bool square = dimms[0] == dimms[1];
+					bool pot    = is_pot(dimms);
+
+					if ( square && (pot || has_npot_textures()) && is_within_limits(GL_TEXTURE_2D,dimms) ) return GL_TEXTURE_2D;
+					if ( has_rectangular_textures() && is_within_limits(GL_TEXTURE_RECTANGLE_ARB,dimms) ) return GL_TEXTURE_RECTANGLE_ARB;
+					if ( is_within_limits(GL_TEXTURE_2D,dimms) ) return GL_TEXTURE_2D;
+					throw texture_size_unavailable();
+				}
+				static bool is_within_limits( GLuint type , const GLuint (&dimms)[2] ) {
+					switch( type ) {
+						case 0:
+							return is_within_limits( GL_TEXTURE_2D            , dimms )
+								|| is_within_limits( GL_TEXTURE_RECTANGLE_ARB , dimms )
+								;
+						case GL_TEXTURE_2D:
+							return (dimms[0] <= max_texture_size())
+								&& (dimms[1] <= max_texture_size())
+								;
+						case GL_TEXTURE_RECTANGLE_ARB:
+							return (dimms[0] <= max_rectangular_texture_size())
+								&& (dimms[1] <= max_rectangular_texture_size())
+								;
+						default:
+							assert(!"reached");
+							return false;
+					}
 				}
 			};
 

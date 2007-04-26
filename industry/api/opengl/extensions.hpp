@@ -79,9 +79,9 @@ namespace industry {
 			inline size_t max_texture_size()             { GLint texSize; glGetIntegerv(GL_MAX_TEXTURE_SIZE              , &texSize); return std::min(texSize,INDUSTRY_API_OPENGL_OVERRIDE_MAX_TEXTURE_SIZE); }
 #endif
 #if !defined( INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE )
-			inline size_t max_rectangular_texture_size() { GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return texSize; }
+			inline size_t max_rectangular_texture_size() { if (!has_rectangular_textures()) return 0; GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return texSize; }
 #else
-			inline size_t max_rectangular_texture_size() { GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return std::min(texSize,INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE); }
+			inline size_t max_rectangular_texture_size() { if (!has_rectangular_textures()) return 0; GLint texSize; glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB, &texSize); return std::min(texSize,INDUSTRY_API_OPENGL_OVERRIDE_MAX_RECTANGULAR_TEXTURE_SIZE); }
 #endif
 		}
 	}

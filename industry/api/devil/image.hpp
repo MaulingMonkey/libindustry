@@ -63,6 +63,9 @@ namespace industry {
 					assert( ilLoadImage( filename ) );
 					if (enable_origin) ilDisable( IL_ORIGIN_SET );
 				}
+
+				unsigned width()  const { ilBindImage(*this); return ilGetInteger( IL_IMAGE_WIDTH  ); }
+				unsigned height() const { ilBindImage(*this); return ilGetInteger( IL_IMAGE_HEIGHT ); }
 			};
 		}
 	}

@@ -6,4 +6,10 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
-int main() {}
+#define INDUSTRY_API_OPENGL_DISABLE_RECTANGULAR_TEXTURES
+#define INDUSTRY_API_OPENGL_OVERRIDE_MAX_TEXTURE_SIZE 16
+
+#include <industry/api/opengl/canvas.hpp>
+
+int main() {
+}

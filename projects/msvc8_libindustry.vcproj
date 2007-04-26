@@ -217,10 +217,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\industry\api\opengl\tags.hpp"
-						>
-					</File>
-					<File
 						RelativePath="..\industry\api\opengl\texcoord.hpp"
 						>
 					</File>
