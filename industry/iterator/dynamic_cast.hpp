@@ -1,8 +1,10 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
+//
+// $LastChangedBy$ - $LastChangedDate$
 //
 // Dev 25, 2006 - industry.iterator.cast.dynamic.hpp => industry/iterator/dynamic_cast.hpp
 // Nov 11, 2006 - Reimplemented in terms of cast_iterator_base

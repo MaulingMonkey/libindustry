@@ -1,8 +1,10 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
+//
+// $LastChangedBy$ - $LastChangedDate$
 //
 // Nov 11, 2006 - Created
 
@@ -24,13 +26,6 @@ namespace industry {
 		public:
 			filter_processor( F predicate ) : predicate( predicate ) {}
 
-#if 0
-			template < typename OutputIterator >
-			void operator()( typename boost::call_traits< typename F::argument_type >::param_type argument , OutputIterator & out ) const {
-				if ( predicate( argument ) ) *out++ = argument;
-			}
-#endif
-
 			template < typename RangeT >
 			friend industry::range< boost::filter_iterator< F , typename range_traits< RangeT >::iterator > >
 				operator|( RangeT & range_ , const filter_processor<F> & filt )
@@ -50,34 +45,6 @@ namespace industry {
 				iterator_type end  ( filt.predicate , range_traits<RangeT>::end(range_)   , range_traits<RangeT>::end(range_) );
 				return industry::range< iterator_type >( begin , end );
 			}
-			
-			/***
-			test.algorithm.cpp:31: error: no match for 'operator|' in
-				'industry::algorithm::operator|(const RangeT&, const industry::algorithm::filter_processor<F>&)
-					[with RangeT = industry::range<unsigned int*>
-					, F = std::pointer_to_unary_function<unsigned int, bool>
-					]
-					(
-						(
-							(const industry::algorithm::filter_processor<std::pointer_to_unary_function<unsigned int, bool> >&)
-							(
-								(const industry::algorithm::filter_processor<std::pointer_to_unary_function<unsigned int, bool> >*)
-								(& industry::algorithm::filter [with Result = bool, Arg1 = unsigned int](<unnamed>::is_odd))
-							)
-						)
-					)
-					|
-					industry::algorithm::push_back
-					[with ContainerT = std::vector<unsigned int, std::allocator<unsigned int> >]
-					(
-						(
-							(std::vector<unsigned int, std::allocator<unsigned int> >&)
-							(& results)
-						)
-					)'
-../libindustry/industry.algorithm.push.hpp:24: note: candidates are: void industry::algorithm::operator|(RangeT&, const industry::algorithm::push_back_processor<ContainerT>&) [with RangeT = industry::range<boost::filter_iterator<std::pointer_to_unary_function<unsigned int, bool>, unsigned int*> >, ContainerT = std::vector<unsigned int, std::allocator<unsigned int> >]
-
-			***/
 		};
 
 		template < typename Result , typename Arg1 >

@@ -1,10 +1,11 @@
-// Copyright (c) 2006 Sean M. Kent
+// Copyright (c) 2006-2007 Sean M. Kent
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Adopted changes from deffer (GDNet) 
 
 #ifndef IG_INDUSTRY_ALGORITHM_TRANSFORM
@@ -13,6 +14,7 @@
 #include <algorithm>
 #include <iterator>
 #include <boost/iterator.hpp>
+#include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits.hpp>
 #include <industry/traits/range.hpp>
 
@@ -182,6 +184,11 @@ namespace industry {
 		template< typename R, typename C >
 		transform_proxy<R (C&)> transform(R (C::*function)()) {
 			return transform_proxy<R (C&)>(function);
+		}
+
+		template< typename R, typename C >
+		transform_proxy<R (const C&)> transform(R (C::*function)() const) {
+			return transform_proxy<R (const C&)>(function);
 		}
 	}
 

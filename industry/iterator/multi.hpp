@@ -1,11 +1,13 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 27, 2006 - Created
 // $LastChangedBy$ - $LastChangedDate$
+//
+// Dec 27, 2006 - Created
+//
 // NOTE:  Only forward, bidirectional, and random access iterators are compatible currently.
 
 #ifndef IG_INDUSTRY_ITERATOR_MULTI
@@ -75,7 +77,7 @@ namespace industry {
 		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::value_type        value_type;
 		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::pointer           pointer;
 		typedef typename industry::detail::multi_iterator_traits< Iter1 , Iter2 >::reference         reference;
-								
+						
 		multi_iterator(): begin1(), i1(), end1(), begin2(), i2(), end2(), iter_set(0)
 		{
 			//Immutable end case
@@ -191,8 +193,8 @@ namespace industry {
 			assert( lhs.end2   == rhs.end2   );
 		}
 		static bool is_at_end( const this_t & t ) {
-			return t.iter_set == 0
-			    || t.iter_set == 2 && t.i2 == t.end2
+			return (t.iter_set == 0)
+			    || (t.iter_set == 2 && t.i2 == t.end2)
 				;
 		}
 	public:

@@ -1,10 +1,11 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 29, 2006 - fixes, refactoring
 // Dec 25, 2006 - industry.iterator.n.hpp => industry/iterator/n.hpp
 // Nov 12, 2006 - Created
@@ -43,8 +44,8 @@ namespace industry {
 
 		this_t &    operator++()    { /* prefix  version */ assert( is_initialized(*this) ); ++impl.get(); ++n; return *this; }
 		this_t      operator++(int) { /* postfix version */ assert( is_initialized(*this) ); this_t copy( *this ); ++impl.get(); ++n; return copy; }
-		reference   operator* () const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return impl.get().operator*(); }
-		pointer     operator->() const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return impl.get().operator->(); }
+		reference   operator* () const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return  *impl.get(); }
+		pointer     operator->() const { assert( is_initialized(*this) && is_dereferenceable(*this) ); return &*impl.get(); }
 		
 		friend bool operator==( const this_t & lhs , const this_t & rhs ) {
 			assert( is_initialized(lhs) );
@@ -56,6 +57,15 @@ namespace industry {
 			return !(lhs==rhs);
 		}
 	};
+	
+	template < typename Iterator >
+	n_iterator< Iterator > make_n_iterator( const Iterator & source ) {
+		return n_iterator< Iterator >( source );
+	}
+	template < typename Iterator >
+	n_iterator< Iterator > make_n_iterator( const Iterator & source , size_t n ) {
+		return n_iterator< Iterator >( source , n );
+	}
 }
 
 #endif //ndef IG_INDUSTRY_ITERATOR_N

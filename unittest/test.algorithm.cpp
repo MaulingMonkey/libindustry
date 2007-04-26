@@ -1,16 +1,17 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Adopted changes from deffer (GDNet) 
 
 #include <iostream>
 
 #include <industry/algorithm.hpp>
-#include <industry/arrays.hpp>
+#include <industry/attributes/range.hpp>
 #include <industry/range.hpp>
 #include <industry/math/vector.hpp>
 #include <boost/test/unit_test.hpp>
@@ -25,6 +26,7 @@ namespace {
 
 void test_algorithm( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	unsigned data[] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 };
 	unsigned expected_results_odd[] = { 1 , 3 , 5 , 7 };
@@ -69,7 +71,7 @@ namespace {
 	void print_point(child& p, int) {
 		BOOST_CHECK(p.point == 1);
 	}
-	
+
 	void print_point_ptr(base* p) {
 		BOOST_CHECK(p->point == 1);
 	}

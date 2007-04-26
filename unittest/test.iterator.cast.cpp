@@ -1,14 +1,16 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
+// $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - dot names to directory based name fixes
 // Nov 10, 2006 - Created
 
 #include <industry/iterator/cast.hpp>
-#include <industry/arrays.hpp>
+#include <industry/attributes/range.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
@@ -22,6 +24,7 @@ namespace {
 
 void test_const_iterator_cast( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	base data[4];
 	std::vector< const base * > source;
@@ -39,6 +42,7 @@ void test_const_iterator_cast( void ) {
 
 void test_dynamic_iterator_cast( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	const unsigned size = 3;
 	base    base_data   [size];
@@ -68,6 +72,7 @@ void test_dynamic_iterator_cast( void ) {
 
 void test_reinterpret_iterator_cast( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	unrelated1 data[4];
 	std::vector< unrelated1 * > source;
@@ -85,6 +90,7 @@ void test_reinterpret_iterator_cast( void ) {
 
 void test_static_iterator_cast( void ) {
 	using namespace industry;
+	using namespace industry::attributes::range;
 
 	derived data[4];
 	std::vector< base *    > source;

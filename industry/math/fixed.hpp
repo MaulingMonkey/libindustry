@@ -1,8 +1,10 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
+//
+// $LastChangedBy$ - $LastChangedDate$
 //
 // Dec 25, 2006 - industry.math.fixed.hpp => industry/math/fixed.hpp
 // Dec  1, 2006 - industry.fixed => industry.math.fixed
@@ -252,7 +254,7 @@ namespace industry {
 					                            ? (storage_max/2>=numer)
 					                            : (storage_min/2<=numer)
 					                            ;
-					const bool denom_pos_locked = (denom%2);
+					const bool denom_pos_locked = (denom%2) == 1;
 					
 					if ( remaining_shift && inadequate_ratio && numer_pos_locked && denom_pos_locked ) {
 						if (is_positive(denom)) denom = (denom+1)/2;

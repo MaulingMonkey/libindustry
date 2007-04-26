@@ -1,10 +1,11 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
 // Dec 25, 2006 - industry.range.hpp => industry/range.hpp
 // Nov 11, 2006 - Created
 
@@ -26,16 +27,21 @@ namespace industry {
 		typedef IteratorT                                                        const_iterator;
 		typedef IteratorT                                                        iterator;
 		typedef typename std::iterator_traits< IteratorT >::difference_type      difference_type;
+		typedef typename std::iterator_traits< IteratorT >::pointer              pointer;
+		typedef typename std::iterator_traits< IteratorT >::reference            reference;
 		typedef typename std::allocator<
 			typename std::iterator_traits<iterator>::value_type
 		>::size_type                                                             size_type;
+		typedef typename std::iterator_traits< IteratorT >::value_type           value_type;
 
 		range()                                                  : begin_()               , end_()             {}
 		range( const IteratorT & begin , const IteratorT & end ) : begin_( begin )        , end_( end )        {}
 		range( const range & other )                             : begin_( other.begin_ ) , end_( other.end_ ) {}
-		template < typename O >              range( const range<O>   & other     ) : begin_( other.begin_ )      , end_( other.end_ )      {}
-		template < typename ContainerT >     range( ContainerT       & container ) : begin_( container.begin() ) , end_( container.end() ) {}
-		template < typename T , std::size_t N > range( T (&array)[N]                ) : begin_( array )             , end_( array + N )       {}
+		template < typename O >                 range( const range<O>   & other     ) : begin_( other.begin_ )      , end_( other.end_ )      {}
+		template < typename ContainerT >        range( ContainerT       & container ) : begin_( container.begin() ) , end_( container.end() ) {}
+		template < typename ContainerT >        range( const ContainerT & container ) : begin_( container.begin() ) , end_( container.end() ) {}
+		template < typename T , std::size_t N > range(       T (&array)[N]          ) : begin_( array )             , end_( array + N )       {}
+		template < typename T , std::size_t N > range( const T (&array)[N]          ) : begin_( array )             , end_( array + N )       {}
 
 		IteratorT begin() const { return begin_; }
 		IteratorT end()   const { return end_; }
@@ -44,7 +50,7 @@ namespace industry {
 
 		template < typename OIt >
 		friend bool operator==( const range & lhs , const range< OIt > & rhs ) {
-			return (lhs.empty() && rhs.empty()) || (lhs.size() == rhs.size()) && std::equal( lhs.begin() , lhs.end() , rhs.begin() );
+			return (lhs.empty() && rhs.empty()) || ((lhs.size() == rhs.size()) && std::equal( lhs.begin() , lhs.end() , rhs.begin() ));
 		}
 		template < typename OIt >
 		friend bool operator!=( const range & lhs , const range< OIt > & rhs ) {

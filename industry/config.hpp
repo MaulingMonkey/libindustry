@@ -1,13 +1,13 @@
-// Copyright (c) 2006 Michael B. Edwin Rickert
+// Copyright (c) 2006-2007 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt )
 //
-// Dec 25, 2006 - industry.config.hpp => industry/config.hpp
-// Aug 17, 2006 - INDUSTRY_OS_APPLE => INDUSTRY_OS_X
-// May 27, 2006 - Added explanitory examples
-// May 20, 2006 - Created
+// $LastChangedBy$ - $LastChangedDate$
+//
+// Outstanding Issues:
+// Feb 01, 2007 - Added INDUSTRY_EXPORT #define -- did Washu botch a commit?  (Ruby stuff fails compile without)
 
 #ifndef IG_INDUSTRY_CONFIG
 #define IG_INDUSTRY_CONFIG
@@ -44,19 +44,15 @@
 
 #endif
 
-//INDUSTRY_UNICODE_DEFAULT - Defacto i/o mode (e.g. TCHAR type, streams to use, etc)
-//INDUSTRY_UNICODE_ENABLED - Wheither or not unicode is available
-#if defined( _MSC_VER )
-	#define INDUSTRY_UNICODE_ENABLED
-	#if defined( UNICODE )
-		#define INDUSTRY_UNICODE_DEFAULT
-	#endif
-#endif
-
 //INDUSTRY_TYPEOF - The typeof keyword extension (if supported by the current compiler)
 #if defined( __GNUC__ )
 #define INDUSTRY_TYPEOF(x) __typeof__(x)
 
 #endif
+
+//INDUSTRY_EXPORT - ???
+#ifndef INDUSTRY_EXPORT
+#define INDUSTRY_EXPORT
+#endif //ndef INDUSTRY_EXPORT
 
 #endif //ndef IG_INDUSTRY_CONFIG
