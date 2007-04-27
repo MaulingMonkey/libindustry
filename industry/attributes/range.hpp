@@ -12,32 +12,15 @@
 #define IG_INDUSTRY_ATTRIBUTES_RANGE
 
 #include <industry/traits/range.hpp>
+#include <boost/range.hpp>
 
 namespace industry {
 	namespace attributes {
 		namespace range {
-			template < typename Range >
-			typename industry::range_traits< Range >::iterator begin( Range& range ) {
-				return industry::range_traits< Range >::begin(range);
-			}
-			template < typename Range >
-			typename industry::range_traits< Range >::iterator end( Range& range ) {
-				return industry::range_traits< Range >::end(range);
-			}
-			template < typename Range >
-			typename industry::range_traits< Range >::const_iterator begin( const Range& range ) {
-				return industry::range_traits< Range >::begin(range);
-			}
-			template < typename Range >
-			typename industry::range_traits< Range >::const_iterator end( const Range& range ) {
-				return industry::range_traits< Range >::end(range);
-			}
-			template < typename Range >
-			typename industry::range_traits< Range >::size_type size( const Range& range ) {
-				return industry::range_traits< Range >::size_type(end(range)-begin(range));
-			}
-			template < typename T , std::size_t n >
-			std::size_t size( const T (&) [n] ) { return n; }
+			using ::boost::begin;
+			using ::boost::end;
+			using ::boost::size;
+			using ::boost::empty;
 		}
 		namespace all {
 			using namespace attributes::range;
