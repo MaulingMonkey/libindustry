@@ -26,6 +26,9 @@ namespace industry {
 				GLuint width, height, size_mod;
 			public:
 				void render() const { glCallList(list); }
+                canvas( unsigned width, unsigned height ) {
+                    do_create(width,height);
+                }
 				template < typename C >
 				canvas( const boost::multi_array< C, 2 > & data ) {
 					do_create(data.shape()[0],data.shape()[1]);

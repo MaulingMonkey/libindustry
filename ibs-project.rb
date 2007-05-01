@@ -23,6 +23,12 @@ dependancy( :boost ) {
 	#  Assumed to be in your IDE paths already (for now)
 }
 
+dependancy( :freetype ) {
+	#  Assumed to be in your IDE paths already (for now)
+	add_library "freetype-mt-d-dll.lib"
+	#  FIXME:  handle various other listings for the freetype lib
+}
+
 dependancy( :opengl ) {
 	#  Assumed to be in your IDE paths already (for now)
 	add_library "opengl32.lib"
@@ -68,6 +74,15 @@ program( 'demo-opengl2' ) {
 	dependancy :opengl
 	dependancy :devil
 	sources "demos/opengl2/**/*.{c,h}pp"
+	msvc_supress_warnings  4244, 4267, 4312
+}
+
+program( 'demo-freetype-opengl1' ) {
+	dependancy :libindustry
+	dependancy :sdl
+	dependancy :opengl
+	dependancy :freetype
+	sources "demos/freetype-opengl1/**/*.{c,h}pp"
 	msvc_supress_warnings  4244, 4267, 4312
 }
 

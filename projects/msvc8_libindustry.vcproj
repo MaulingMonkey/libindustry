@@ -190,6 +190,18 @@
 					</File>
 				</Filter>
 				<Filter
+					Name="freetype"
+					>
+					<File
+						RelativePath="..\industry\api\freetype\import.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\freetype\library.hpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="opengl"
 					>
 					<File
