@@ -276,6 +276,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\industry\api\windows\registry\key_iterator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\industry\api\windows\registry\key_iterator.hpp"
+							>
+						</File>
+						<File
 							RelativePath="..\industry\api\windows\registry\value.cpp"
 							>
 						</File>

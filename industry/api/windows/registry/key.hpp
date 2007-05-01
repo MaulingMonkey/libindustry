@@ -16,10 +16,9 @@
 #include <industry/api/windows/registry/config.hpp>
 #include <industry/api/windows/registry/detail/key_data.hpp>
 #include <industry/api/windows/registry/value.hpp>
-#include <industry/api/windows/registry/value_iterator.hpp>
 #include <industry/api/windows/tstring.hpp>
-#include <industry/range.hpp>
 #include <boost/function.hpp>
+#include <boost/range.hpp>
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
@@ -29,15 +28,19 @@ namespace industry {
 	namespace api {
 		namespace windows {
 			namespace registry {
+				class key_iterator;
+				class value_iterator;
 				class key {
 					detail::key_data_ptr impl;
 
-					void  initialize  ( const key & parent , const tstring & name );
+					void  initialize  ( const detail::key_data_ptr & parent , const tstring & name );
 					key   select_key  ( const tstring & name ) const;
 					value select_value( const tstring & name ) const;
 				public:
 					key();
 					key( HKEY );
+					key( const key                  & parent, const tstring & name );
+					key( const detail::key_data_ptr & parent, const tstring & name );
 					~key();
 
 					template < typename CharT > key( const key & parent , const std::basic_string< CharT > & name ) { initialize(parent,to_tstring(name)); }
@@ -52,23 +55,8 @@ namespace industry {
 					template < typename CharT > key   operator/ ( const CharT* name ) const { return select_key  (to_tstring(name)); }
 					template < typename CharT > key & operator/=( const CharT* name ) { return *this = *this / name; }
 
-					//friend industry::range< key_iterator   > each_key   ( const key & );
-					friend industry::range< value_iterator > each_value ( const key & );
-
-#if 0				//Deprecated:
-					friend std::vector< key   > find_         ( const key & , const std::string & key_name   );
-					friend std::vector< value > find_value_   ( const key & , const std::string & value_name );
-					friend std::vector< key   > find_if_      ( const key & , const boost::function< bool ( const char* , const char* ) > & key_name   );
-					friend std::vector< value > find_value_if_( const key & , const boost::function< bool ( const char* , const char* ) > & value_name );
-
-#if defined( UNICODE )
-					//Depreciated:
-					friend std::vector< key   > find_         ( const key & , const std::wstring & key_name   );
-					friend std::vector< value > find_value_   ( const key & , const std::wstring & value_name );
-					friend std::vector< key   > find_if_      ( const key & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & key_name   );
-					friend std::vector< value > find_value_if_( const key & , const boost::function< bool ( const wchar_t* , const wchar_t* ) > & value_name );
-#endif
-#endif
+					boost::iterator_range< key_iterator   > keys  () const;
+					boost::iterator_range< value_iterator > values() const;
 				};
 				template < typename T > bool operator==( const key & k , const T & value ) { return k % "" == value; }
 				template < typename T > bool operator==( const T & value , const key & k ) { return k % "" == value; }
@@ -81,5 +69,8 @@ namespace industry {
 		}
 	}
 }
+
+#include <industry/api/windows/registry/key_iterator.hpp>
+#include <industry/api/windows/registry/value_iterator.hpp>
 
 #endif //ndef IG_INDUSTRY_API_WINDOWS_REGISTRY_KEY
