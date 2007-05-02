@@ -31,7 +31,7 @@ int main () {
 		using namespace industry::api;
 		opengl::canvas example(  "..\\demos\\opengl1\\libindustry.png" );
 
-		double tween = 0.0f;
+		int x=600, y=450;
 
 		while( true ) {
 			SDL_Event e;
@@ -64,9 +64,26 @@ int main () {
 			glLoadIdentity();
 
 			using namespace opengl;
+
+			boost::multi_array< color3ub, 2 > pixel( boost::extents[1][1] );
+			pixel[0][0] = color3ub(0,0,0);
+
+			for ( unsigned i = 0 ; i < 5 ; ++i ) {
+				switch ( rand()%4 ) {
+				case 0: x += 1; break;
+				case 1: x -= 1; break;
+				case 2: y += 1; break;
+				case 3: y -= 1; break;
+				}
+
+				if ( x < 0 || x >= 800 ) x = rand()%800;
+				if ( y < 0 || y >= 600 ) y = rand()%600;
+
+				example.blit(x,y,pixel);
+			}
+
 			glEnable( GL_BLEND );
 			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
-
 			example.render();
 
 			SDL_GL_SwapBuffers();

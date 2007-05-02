@@ -26,9 +26,9 @@ namespace industry {
 				GLuint width, height, size_mod;
 			public:
 				void render() const { glCallList(list); }
-                canvas( unsigned width, unsigned height ) {
-                    do_create(width,height);
-                }
+				canvas( unsigned width, unsigned height ) {
+					do_create(width,height);
+				}
 				template < typename C >
 				canvas( const boost::multi_array< C, 2 > & data ) {
 					do_create(data.shape()[0],data.shape()[1]);
@@ -47,34 +47,41 @@ namespace industry {
 					blit(x,y,data.shape()[0],data.shape()[1],data.data());
 				}
 				template < typename C >
-				void blit( unsigned sx , unsigned sy , unsigned sw, unsigned sh, const C* data ) {
+				void blit( unsigned xoffset , unsigned yoffset , unsigned width, unsigned height, const C* data ) {
 					int texs_w = int(textures.shape()[0]);
 					int texs_h = int(textures.shape()[1]);
-					for ( int ty = 0 ; ty < texs_h ; ++ty ) {
-						for ( int tx = 0 ; tx < texs_w ; ++tx ) {
-							int tex_w = (tx != texs_w-1) ? size_mod : width %size_mod;
-							int tex_h = (ty != texs_h-1) ? size_mod : height%size_mod;
+					for ( int tex_y = 0 ; tex_y < texs_h ; ++tex_y ) {
+						for ( int tex_x = 0 ; tex_x < texs_w ; ++tex_x ) {
+							int tex_w = (tex_x != texs_w-1) ? size_mod : (this->width -1)%size_mod+1;
+							int tex_h = (tex_y != texs_h-1) ? size_mod : (this->height-1)%size_mod+1;
 
-							int target_left   = std::max<int>( 0    , sx    - tx*size_mod );
-							int target_right  = std::min<int>( tex_w, sx+sw - tx*size_mod );
-							int target_top    = std::max<int>( 0    , sy    - ty*size_mod );
-							int target_bottom = std::min<int>( tex_h, sy+sh - ty*size_mod );
+							int tex_xoff = tex_x*size_mod;
+							int tex_yoff = tex_y*size_mod;
+							int local_xoff = int(xoffset) - tex_xoff;
+							int local_yoff = int(yoffset) - tex_yoff;
 
-							if ( target_left == target_right  ) continue;
-							if ( target_top  == target_bottom ) continue;
+							int left   = std::max< int >( 0                   , local_xoff );
+							int right  = std::min< int >( local_xoff + width  , tex_w      );
+							int top    = std::max< int >( 0                   , local_yoff );
+							int bottom = std::min< int >( local_yoff + height , tex_h      );
 
-							GLuint target_width  = target_right  - target_left;
-							GLuint target_height = target_bottom - target_top ;
+							if ( left >= right ) continue;
+							if ( top >= bottom ) continue;
 
-							boost::multi_array< C, 2 > glob( boost::extents[target_width][target_height] );
-							int source_left = target_left + tx*size_mod;
-							int source_top  = target_top  + ty*size_mod;
+							int glob_width  = right-left;
+							int glob_height = bottom-top;
+							boost::multi_array< C, 2 > glob( boost::extents[glob_width][glob_height] , boost::fortran_storage_order() );
 
-							for ( unsigned y = 0 ; y < target_height ; ++y ) {
-								std::copy( data + (source_top+y)*sw + source_left , data + (source_top+y)*(sw) + source_left + target_width , glob.data() + (target_top+y)*(target_width) );
+							for ( int y = top ; y != bottom ; ++y ) {
+								for ( int x = left ; x != right ; ++x ) {
+									int data_x = x + tex_xoff - xoffset;
+									int data_y = y + tex_yoff - yoffset;
+
+									glob[x-left][y-top] = data[ data_y*width + data_x ];
+								}
 							}
-							
-							textures[tx][ty].blit(target_left,target_top,glob);
+
+							textures[tex_x][tex_y].blit(left,top,glob);
 						}
 					}
 				}
@@ -88,11 +95,12 @@ namespace industry {
 					size_t texs_h = (height - 1)/size_mod+1;
 					textures.resize( boost::extents[texs_w][texs_h] );
 
-					std::vector< color4ub > blackness( size_mod*size_mod , color4ub(0,0,0,0xFF) );
+					std::vector< color4ub > blackness;
+					blackness.resize( size_mod*size_mod , color4ub(0,0,0,0xFF) );
 					for ( size_t y = 0 ; y < texs_h ; ++y ) {
 						for ( size_t x = 0 ; x < texs_w ; ++x ) {
-							GLuint w = (x != texs_w-1) ? size_mod : width %size_mod;
-							GLuint h = (y != texs_h-1) ? size_mod : height%size_mod;
+							GLuint w = (x != texs_w-1) ? size_mod : (width -1)%size_mod+1;
+							GLuint h = (y != texs_h-1) ? size_mod : (height-1)%size_mod+1;
 
 							textures[x][y] = texture2d(w,h,blackness);
 						}
@@ -101,8 +109,8 @@ namespace industry {
 					display_list_compiler compile;
 					for ( size_t y = 0 ; y < texs_h ; ++y ) {
 						for ( size_t x = 0 ; x < texs_w ; ++x ) {
-							GLuint w = (x != texs_w-1) ? size_mod : width %size_mod;
-							GLuint h = (y != texs_h-1) ? size_mod : height%size_mod;
+							GLuint w = (x != texs_w-1) ? size_mod : (width -1)%size_mod+1;
+							GLuint h = (y != texs_h-1) ? size_mod : (height-1)%size_mod+1;
 
 							pod::tuple< texcoord2f , vertex2i > data[] = {
 								{ 0.0f, 0.0f, x*size_mod  , y*size_mod   },

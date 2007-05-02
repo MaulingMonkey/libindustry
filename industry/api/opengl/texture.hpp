@@ -152,7 +152,7 @@ namespace industry {
 					glTexParameteri(impl->type,GL_TEXTURE_WRAP_T,GL_CLAMP);
 				}
 				void do_blit( GLuint x, GLuint y, GLuint w, GLuint h, GLenum format, GLenum component, const void* data ) {
-					assert( x+w <= impl->pixels_width && y+h <= impl->pixels_height );
+					assert( x+w <= impl->pixels_width && y+h <= impl->pixels_height && w && h );
 					glBindTexture( impl->type , impl->id );
 					glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
 					glTexSubImage2D(impl->type,0,x,y,w,h,format,component,data);
