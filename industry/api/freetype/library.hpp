@@ -12,16 +12,16 @@
 #include <industry/api/freetype/import.hpp>
 
 namespace industry {
-    namespace api {
-        namespace freetype {
-            class library {
-                FT_Library data;
-            public:
-                library()  { FT_Init_FreeType( &data ); }
-                ~library() { FT_Done_FreeType(  data ); }
-            };
-        }
-    }
+	namespace api {
+		namespace freetype {
+			class library {
+				FT_Library data;
+			public:
+				library()  { FT_Init_FreeType( &data ); }
+				~library() { FT_Done_FreeType(  data ); }
+			};
+		}
+	}
 }
 
 #endif //ndef IG_INDUSTRY_API_FREETYPE_LIBRARY

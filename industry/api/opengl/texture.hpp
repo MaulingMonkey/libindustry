@@ -127,6 +127,10 @@ namespace industry {
 				void blit( GLuint x, GLuint y, const boost::multi_array<T,2>& source ) {
 					do_blit( x, y, source.shape()[0], source.shape()[1], T::format_enum, T::component_type_enum, source.data() );
 				}
+				template < typename T >
+				void blit( GLuint x, GLuint y, GLuint w, GLuint h, const T* source ) {
+					do_blit( x, y, w, h, T::format_enum, T::component_type_enum, source );
+				}
 			private:
 				void do_create( GLenum type , const GLuint (&dimms)[2] , GLenum format, GLenum component, const void* data ) {
 					impl.reset( new detail::texture_impl );

@@ -14,7 +14,11 @@
 #undef main
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/canvas.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/timer.hpp>
+#include <algorithm>
 #include <iostream>
+#include <string>
 
 
 
@@ -29,9 +33,19 @@ int main () {
 		ilutRenderer( ILUT_OPENGL );
 
 		using namespace industry::api;
-		opengl::canvas example(  "..\\demos\\opengl1\\libindustry.png" );
+		using namespace industry::api::opengl;
+		opengl::canvas example1(  "..\\demos\\opengl1\\libindustry.png" );
+		opengl::canvas example2(  "..\\demos\\opengl1\\libindustry.png" );
 
 		int x=600, y=450;
+
+		boost::multi_array< color3ub, 2 > pixel( boost::extents[1][1] );
+		pixel[0][0] = color3ub(0,0,0);
+
+		boost::multi_array< color3ub, 2 > fill( boost::extents[800][100] );
+
+		boost::timer timer;
+		unsigned frames = 0;
 
 		while( true ) {
 			SDL_Event e;
@@ -63,11 +77,6 @@ int main () {
 			glMatrixMode( GL_MODELVIEW );
 			glLoadIdentity();
 
-			using namespace opengl;
-
-			boost::multi_array< color3ub, 2 > pixel( boost::extents[1][1] );
-			pixel[0][0] = color3ub(0,0,0);
-
 			for ( unsigned i = 0 ; i < 5 ; ++i ) {
 				switch ( rand()%4 ) {
 				case 0: x += 1; break;
@@ -78,15 +87,25 @@ int main () {
 
 				if ( x < 0 || x >= 800 ) x = rand()%800;
 				if ( y < 0 || y >= 600 ) y = rand()%600;
-
-				example.blit(x,y,pixel);
+				example1.blit(x,y,pixel);
 			}
+
+			std::fill( fill.data() , fill.data() + fill.shape()[0] * fill.shape()[1] , color3ub( rand()%256 , rand()%256 , rand()%256 ) );
+			example1.blit(0,0,fill);
 
 			glEnable( GL_BLEND );
 			glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
-			example.render();
+			example2.render();
+			example1.render();
 
 			SDL_GL_SwapBuffers();
+			++frames;
+			if ( timer.elapsed() > 1 ) {
+				std::string title = "FPS: " + boost::lexical_cast<std::string>( double(frames)/timer.elapsed() );
+				frames = 0;
+				timer.restart();
+				SDL_WM_SetCaption( title.c_str(), title.c_str() );
+			}
 		}
 	} catch( const std::exception & e ) {
 		std::cout << "Exception: " << e.what() << std::endl;

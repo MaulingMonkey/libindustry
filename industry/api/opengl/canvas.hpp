@@ -70,18 +70,24 @@ namespace industry {
 
 							int glob_width  = right-left;
 							int glob_height = bottom-top;
-							boost::multi_array< C, 2 > glob( boost::extents[glob_width][glob_height] , boost::fortran_storage_order() );
 
-							for ( int y = top ; y != bottom ; ++y ) {
-								for ( int x = left ; x != right ; ++x ) {
-									int data_x = x + tex_xoff - xoffset;
-									int data_y = y + tex_yoff - yoffset;
+							if ( glob_width == width || glob_height == height ) {
+								// glob to blit is same dimensions as data already is, skip subdividing entirely...
+								textures[tex_x][tex_y].blit(left,top,width,height,data);
+							} else {
+								boost::multi_array< C, 2 > glob( boost::extents[glob_width][glob_height] , boost::fortran_storage_order() );
 
-									glob[x-left][y-top] = data[ data_y*width + data_x ];
+								for ( int y = top ; y != bottom ; ++y ) {
+									for ( int x = left ; x != right ; ++x ) {
+										int data_x = x + tex_xoff - xoffset;
+										int data_y = y + tex_yoff - yoffset;
+
+										glob[x-left][y-top] = data[ data_y*width + data_x ];
+									}
 								}
-							}
 
-							textures[tex_x][tex_y].blit(left,top,glob);
+								textures[tex_x][tex_y].blit(left,top,glob);
+							}
 						}
 					}
 				}
