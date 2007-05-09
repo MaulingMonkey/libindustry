@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\unittest\test.api.freetype.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\unittest\test.api.windows.registry.cpp"
 				>
 			</File>

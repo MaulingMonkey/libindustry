@@ -10,15 +10,27 @@
 #define IG_INDUSTRY_API_FREETYPE_LIBRARY
 
 #include <industry/api/freetype/import.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace industry {
 	namespace api {
 		namespace freetype {
+			namespace detail {
+				struct library_data {
+					FT_Library handle;
+
+					library_data()  { FT_Init_FreeType( &handle ); }
+					~library_data() { FT_Done_FreeType(  handle ); }
+				};
+			}
 			class library {
-				FT_Library data;
+				boost::shared_ptr< detail::library_data > impl;
 			public:
-				library()  { FT_Init_FreeType( &data ); }
-				~library() { FT_Done_FreeType(  data ); }
+				library() {
+					impl.reset( new detail::library_data );
+				}
+				~library() {
+				}
 			};
 		}
 	}

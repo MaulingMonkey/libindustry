@@ -193,6 +193,14 @@
 					Name="freetype"
 					>
 					<File
+						RelativePath="..\industry\api\freetype\face.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\freetype\face.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\industry\api\freetype\import.hpp"
 						>
 					</File>
@@ -333,6 +341,10 @@
 						>
 					</File>
 				</Filter>
+				<File
+					RelativePath="..\industry\api\freetype.hpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="attributes"
