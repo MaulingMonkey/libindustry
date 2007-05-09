@@ -15,8 +15,8 @@ void test_api_freetype() {
 	locator loc;
 	face_info info;
 	BOOST_CHECK_NO_THROW( info = loc.find_face_info( "14pt Courier New bold" ) );
-	BOOST_CHECK_EQUAL( info.size     , 14         );
-	BOOST_CHECK_EQUAL( info.filename , "COUR.TTF" );
-	BOOST_CHECK_EQUAL( info.bold     , true       );
-	BOOST_CHECK_EQUAL( info.italic   , false      );
+	BOOST_CHECK_EQUAL( info.size     , 14    );
+	BOOST_CHECK_EQUAL( info.filename , "%WINDIR%\\Fonts\\COURBD.TTF" );
+	BOOST_CHECK_EQUAL( info.bold     , true  );
+	BOOST_CHECK_EQUAL( info.italic   , false );
 }
