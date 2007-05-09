@@ -9,7 +9,14 @@
 #include <industry/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <industry/api/freetype.hpp>
-//HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts [ Courier New (TrueType) = COUR.TTF ]
 
 void test_api_freetype() {
+	using namespace industry::api::freetype;
+	locator loc;
+	face_info info;
+	BOOST_CHECK_NO_THROW( info = loc.find_face_info( "14pt Courier New bold" ) );
+	BOOST_CHECK_EQUAL( info.size     , 14         );
+	BOOST_CHECK_EQUAL( info.filename , "COUR.TTF" );
+	BOOST_CHECK_EQUAL( info.bold     , true       );
+	BOOST_CHECK_EQUAL( info.italic   , false      );
 }

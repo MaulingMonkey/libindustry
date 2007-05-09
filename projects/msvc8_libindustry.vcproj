@@ -208,6 +208,14 @@
 						RelativePath="..\industry\api\freetype\library.hpp"
 						>
 					</File>
+					<File
+						RelativePath="..\industry\api\freetype\locator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\industry\api\freetype\locator.hpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="opengl"

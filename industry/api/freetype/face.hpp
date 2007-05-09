@@ -11,6 +11,7 @@
 
 #include <industry/api/freetype/import.hpp>
 #include <industry/api/freetype/library.hpp>
+#include <industry/api/freetype/locator.hpp>
 #include <boost/shared_ptr.hpp>
 #include <string>
 
@@ -36,8 +37,6 @@ namespace industry {
 			}
 			class face {
 				boost::shared_ptr< detail::face_data > impl;
-				struct info { std::string filename; unsigned size; bool bold, italic; };
-				static info find_info_for( const std::string& fontname );
 			public:
 				face() {}
 				face( const boost::shared_ptr< detail::library_data >& library, const std::string& name );
