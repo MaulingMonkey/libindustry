@@ -53,7 +53,6 @@ namespace industry {
 					if ( error == ERROR_SUCCESS ) buffer.resize( buffer_size ), ++index;
 					else if ( error == ERROR_NO_MORE_ITEMS ) key.reset();
 					//else ERROR HANDLING HERE
-					++index;
 					return *this;
 				}
 				key_iterator  key_iterator::operator++( /* postfix */ int ) {
