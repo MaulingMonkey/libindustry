@@ -12,7 +12,10 @@
 namespace industry {
 	namespace api {
 		namespace freetype {
-			namespace { freetype::locator default_locator; }
+			namespace {
+				freetype::library default_library;
+				freetype::locator default_locator( default_library.handle() );
+			}
 
 			face::face( const boost::shared_ptr< detail::library_data >& library, const std::string& name ) {
 				face_info info = default_locator.find_face_info(name);

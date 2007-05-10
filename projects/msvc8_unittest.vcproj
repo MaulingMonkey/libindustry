@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="msvcr80-ruby18.lib"
+				AdditionalDependencies="freetype-mt-d-dll.lib msvcr80-ruby18.lib freetype-mt-d-dll.lib msvcr80-ruby18.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
 				GenerateDebugInformation="true"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="msvcr80-ruby18.lib"
+				AdditionalDependencies="freetype-mt-d-dll.lib msvcr80-ruby18.lib freetype-mt-d-dll.lib msvcr80-ruby18.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="C:\dev\lang-ruby1.8.5;C:\dev\lang-ruby1.8.5\lib;C:\dev\lang-ruby1.8.5\ext;C:\dev\lang-ruby1.8.5\ext\digest\sha2;C:\dev\lang-ruby1.8.5\.ext\i386-mswin32_80\digest"
 				GenerateDebugInformation="true"

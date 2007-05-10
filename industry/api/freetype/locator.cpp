@@ -13,6 +13,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 #include <algorithm>
+#include <string>
+#include <cstdlib>
 
 #ifdef INDUSTRY_OS_WINDOWS
 #include <industry/api/windows/registry.hpp>
@@ -31,70 +33,115 @@ irb(main):024:0> "12pt courier bold".scan r
 namespace industry {
 	namespace api {
 		namespace freetype {
-			face_info locator::find_face_info( const std::string& description ) {
-				static const boost::regex description_format( "^(?:(\\d+)pt +)?(.+?)(?:\\s+(bold)|\\s+(italic))*$" );
-				boost::smatch             description_match;
-				if (!regex_match(description.begin(),description.end(),description_match,description_format)) throw std::runtime_error( "Invalid font description format" );
-				
-				unsigned    size = 12;
-				if ( description_match[1].matched ) size = boost::lexical_cast< unsigned >( std::string(description_match[1].first,description_match[1].second) );
+			struct font_description {
+				std::string name;
+				unsigned    size;
+				bool bold, italic;
+			};
 
-				std::string name( description_match[2].first , description_match[2].second );
-				std::transform( name.begin(), name.end(), name.begin(), std::tolower );
-
-				bool bold=false, italic=false;
-				for ( unsigned flag = 3 ; description_match[flag].matched ; flag += 1 ) {
-					std::string flag_text( description_match[flag].first , description_match[flag].second );
-					if ( flag_text == "bold" ) {
-						if (bold) throw std::runtime_error( "Invalid font description -- only one \"bold\" allowed" );
-						else bold = true;
-					} else if ( flag_text == "italic" ) {
-						if (italic) std::runtime_error( "Invalid font description -- only one \"italic\" allowed" );
-						else italic = true;
-					} else {
-						assert(!"reached"); //should never occur
-						throw std::runtime_error( "What the **** did you do" );
-					}
+			namespace {
+				unsigned match_score( const font_description& lhs, const font_description& rhs ) {
+					if ( lhs.name != rhs.name ) return 0;
+					return 1 + ((lhs.italic==rhs.italic)?2:0) + ((lhs.bold==rhs.bold)?4:0);
 				}
 
+				// NOTE:  Error indicated with exceptions
+				font_description parse_description( std::string description ) {
+					std::transform( description.begin(), description.end(), description.begin(), std::tolower );
+					font_description desc = {"",0,false,false};
+					static const boost::regex description_format( "^(?:(\\d+)pt +)?(.+?)(?:\\s+(bold)|\\s+(italic))*$" );
+					boost::match_results< std::string::iterator > description_match;
+					if (!regex_match(description.begin(),description.end(),description_match,description_format)) throw std::runtime_error( "Invalid font description format" );
+					
+					desc.size = 12;
+					if ( description_match[1].matched ) desc.size = boost::lexical_cast< unsigned >( std::string(description_match[1].first,description_match[1].second) );
+
+					desc.name = std::string( description_match[2].first , description_match[2].second );
+					std::transform( desc.name.begin(), desc.name.end(), desc.name.begin(), std::tolower );
+
+					for ( unsigned flag = 3 ; description_match[flag].matched ; flag += 1 ) {
+						std::string flag_text( description_match[flag].first , description_match[flag].second );
+						if ( flag_text == "bold" ) {
+							if (desc.bold) throw std::runtime_error( "Invalid font description -- only one \"bold\" allowed" );
+							else desc.bold = true;
+						} else if ( flag_text == "italic" ) {
+							if (desc.italic) std::runtime_error( "Invalid font description -- only one \"italic\" allowed" );
+							else desc.italic = true;
+						} else {
+							assert(!"reached"); //should never occur
+							throw std::runtime_error( "What the **** did you do" );
+						}
+					}
+					return desc;
+				}
+
+				// NOTE:  Error indicated with "" name
+				font_description parse_w32_reg_description( std::string description ) {
+					std::transform( description.begin(), description.end(), description.begin(), std::tolower );
+					font_description          desc = {"",0,false,false};
+					static const boost::regex description_format( "^(.+?)(?:\\s+(bold)|\\s+(italic))*\\s+\\(truetype\\)$" );
+					boost::match_results< std::string::iterator > description_match;
+
+					if (!regex_search( description.begin(), description.end(), description_match, description_format )) return desc;
+					desc.name = std::string( description_match[1].first , description_match[1].second );
+					std::transform( desc.name.begin(), desc.name.end(), desc.name.begin(), std::tolower );
+
+					for ( unsigned flag = 2 ; description_match[flag].matched ; flag += 1 ) {
+						std::string flag_text( description_match[flag].first, description_match[flag].second );
+						if      ( flag_text == "bold"   ) desc.bold   = true;
+						else if ( flag_text == "italic" ) desc.italic = true;
+						else                              assert(!"reached");
+					}
+					return desc;
+				}
+			}
 
 #ifdef INDUSTRY_OS_WINDOWS
-				static const boost::regex w32_reg_format( "^(.+?)(?:\\s+(bold)|\\s+(italic))*\\s+\\(truetype\\)$" );
-				boost::smatch             w32_reg_match;
+			face_info locator::find_face_info( const std::string& target_description ) {
+				font_description target = parse_description( target_description );
+
+				face_info best_info  = { "", 0, target.size };
+				unsigned  best_file_score=0, best_reg_score=0;
 
 				using namespace industry::api::windows;
 				registry::key fonts = registry::registry[ "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" ];
+				BOOST_FOREACH( registry::value font , fonts.values() ) {
+					font_description reg_entry = parse_w32_reg_description( font.name() );
+					if ( reg_entry.name.empty()        ) continue; // skip malformed registry entries
+					std::string filename  = std::string(std::getenv("WINDIR")) + "\\Fonts\\" + font.to_string();
+					if ( reg_entry.name != target.name ) continue; // skip misnamed  registry entries
 
-				face_info best = { "", 0, false, false };
-				int best_score = std::numeric_limits<int>::min();
-				BOOST_FOREACH( registry::value w32_font , fonts.values() ) {
-					std::string w32_font_desc_ = w32_font.name();
-					std::transform( w32_font_desc_.begin(), w32_font_desc_.end(), w32_font_desc_.begin(), std::tolower );
-					const std::string& w32_font_desc = w32_font_desc_;
+					unsigned reg_score = match_score(target,reg_entry);
+					if ( reg_score < best_reg_score ) continue;    // skip worse-match registry entries
 
-					if (!regex_search( w32_font_desc.begin(), w32_font_desc.end(), w32_reg_match, w32_reg_format )) continue; //malformed registry value
-					std::string w32_font_name( w32_reg_match[1].first , w32_reg_match[1].second );
-					//std::transform( w32_font_name.begin(), w32_font_name.end(), w32_font_name.begin(), std::tolower );
+					FT_Face face;
+					if (FT_New_Face( library(), filename.c_str(), -1, &face )) continue; //unusable font file
+					unsigned faces = face->num_faces;
+					FT_Done_Face(face);
+					for ( unsigned index = 0 ; index < faces ; ++index ) {
+						FT_Error err = FT_New_Face( library(), filename.c_str(), index, &face );
+						if ( err ) continue; //ignore errors in font files
+						std::string style = face->style_name;
+						std::transform( style.begin(), style.end(), style.begin(), std::tolower );
+						font_description desc = { reg_entry.name, 0, false, false };
+						if ( style.find( "bold"   ) != std::string::npos ) desc.bold   = true;
+						if ( style.find( "italic" ) != std::string::npos ) desc.italic = true;
+						FT_Done_Face( face );
 
-					if ( w32_font_name != name ) continue;
-					bool w32_bold=false, w32_italic=false;
-					for ( unsigned flag = 2 ; w32_reg_match[flag].matched ; flag += 1 ) {
-						std::string w32_flag( w32_reg_match[flag].first, w32_reg_match[flag].second );
-						if      ( w32_flag == "bold"   ) w32_bold   = true;
-						else if ( w32_flag == "italic" ) w32_italic = true;
-						else assert(!"reached");
+						unsigned file_score = match_score(target,desc);
+						if ( reg_score == best_reg_score && file_score <= best_file_score ) continue;
+						// else reg_score > best_reg_score || file_score > best_file_score
+
+						face_info info  = { filename, index , target.size };
+						best_reg_score  = reg_score;
+						best_file_score = file_score;
+						best_info       = info;
 					}
-					int score = ((w32_italic==italic)?1:0) + ((w32_bold==bold)?2:0);
-					face_info info = { "%WINDIR%\\Fonts\\" + w32_font.to_string(), size, bold, italic };
-					if ( score <= best_score ) continue;
-					best=info, best_score=score;
 				}
-				if ( best.filename.empty() ) throw std::runtime_error( "Could not find font" );
-				return best;
-#else
-				throw std::runtime_error( "Unimplemented" );
-#endif
+				if ( best_info.filename.empty() ) throw std::runtime_error( "Could not find font" );
+				return best_info;
 			}
+#endif
 		}
 	}
 }

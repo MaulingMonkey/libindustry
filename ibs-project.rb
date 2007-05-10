@@ -48,6 +48,7 @@ dependancy( :sdl ) {
 
 library( :libindustry ) {
 	dependancy :boost
+	dependancy :freetype
 	dependancy :ruby
 	sources "industry/**/*.{c,h}pp"
 }

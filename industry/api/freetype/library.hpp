@@ -26,6 +26,7 @@ namespace industry {
 			class library {
 				boost::shared_ptr< detail::library_data > impl;
 			public:
+				FT_Library handle() const { return impl->handle; }
 				library() {
 					impl.reset( new detail::library_data );
 				}
