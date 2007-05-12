@@ -24,6 +24,7 @@ namespace industry {
 				};
 			}
 			class library {
+				friend class face;
 				boost::shared_ptr< detail::library_data > impl;
 			public:
 				FT_Library handle() const { return impl->handle; }

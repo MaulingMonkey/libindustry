@@ -12,14 +12,17 @@
 namespace industry {
 	namespace api {
 		namespace freetype {
-			namespace {
-				freetype::library default_library;
-				freetype::locator default_locator( default_library.handle() );
-			}
-
 			face::face( const boost::shared_ptr< detail::library_data >& library, const std::string& name ) {
-				face_info info = default_locator.find_face_info(name);
-				//impl.reset( new detail::face_data( library , font.to_string().c_str() , 0 /*????*/ ) );
+				initialize( library, name );
+			}
+			face::face( const freetype::library& library, const std::string& name ) {
+				initialize( library.impl, name );
+			}
+			void face::initialize( const boost::shared_ptr< detail::library_data >& library, const std::string& name ) {
+				freetype::locator locator(library->handle);
+				face_info info = locator.find_face_info(name);
+				impl.reset( new detail::face_data( library, info.filename.c_str(), info.index ) );
+				FT_Set_Pixel_Sizes( impl->handle , info.size , 0 );
 			}
 		}
 	}

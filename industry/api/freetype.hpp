@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_API_FREETYPE
 
 #include <industry/api/freetype/import.hpp>
+#include <industry/api/freetype/exceptions.hpp>
 #include <industry/api/freetype/face.hpp>
 #include <industry/api/freetype/library.hpp>
 

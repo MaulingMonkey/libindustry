@@ -26,9 +26,9 @@ namespace industry {
 					face_data( const boost::shared_ptr< detail::library_data >& library
 					         , const char* filename
 					         , unsigned index
-							 ): library(library)
+					         ): library(library)
 					{
-						FT_New_Face( library->handle, filename, index, &handle );
+						if (FT_New_Face( library->handle, filename, index, &handle )) throw std::runtime_error( "Error opening face" );
 					}
 					~face_data() {
 						FT_Done_Face( handle );
@@ -40,7 +40,10 @@ namespace industry {
 			public:
 				face() {}
 				face( const boost::shared_ptr< detail::library_data >& library, const std::string& name );
+				face( const freetype::library& library, const std::string& name );
 				~face() {}
+			private:
+				void initialize( const boost::shared_ptr< detail::library_data >& library, const std::string& name );
 			};
 		}
 	}

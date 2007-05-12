@@ -7,6 +7,7 @@
 // $LastChangedBy$ - $LastChangedDate$
 
 #include <industry/config.hpp>
+#include <industry/api/freetype/exceptions.hpp>
 #include <industry/api/freetype/locator.hpp>
 #include <industry/api/windows/registry.hpp>
 #include <boost/foreach.hpp>
@@ -19,16 +20,6 @@
 #ifdef INDUSTRY_OS_WINDOWS
 #include <industry/api/windows/registry.hpp>
 #endif
-
-/****************
-
-irb(main):023:0> r = /^((\d+)pt +)?(.*?)( +(bold|italic|underlined))*$/
-=> /^((\d+)pt +)?(.*?)( +(bold|italic|underlined))*$/
-
-irb(main):024:0> "12pt courier bold".scan r
-=> [["12pt ", "12", "courier", " bold", "bold"]]
-
-****************/
 
 namespace industry {
 	namespace api {
@@ -51,7 +42,7 @@ namespace industry {
 					font_description desc = {"",0,false,false};
 					static const boost::regex description_format( "^(?:(\\d+)pt +)?(.+?)(?:\\s+(bold)|\\s+(italic))*$" );
 					boost::match_results< std::string::iterator > description_match;
-					if (!regex_match(description.begin(),description.end(),description_match,description_format)) throw std::runtime_error( "Invalid font description format" );
+					if (!regex_match(description.begin(),description.end(),description_match,description_format)) throw invalid_font_description();
 					
 					desc.size = 12;
 					if ( description_match[1].matched ) desc.size = boost::lexical_cast< unsigned >( std::string(description_match[1].first,description_match[1].second) );
@@ -62,14 +53,14 @@ namespace industry {
 					for ( unsigned flag = 3 ; description_match[flag].matched ; flag += 1 ) {
 						std::string flag_text( description_match[flag].first , description_match[flag].second );
 						if ( flag_text == "bold" ) {
-							if (desc.bold) throw std::runtime_error( "Invalid font description -- only one \"bold\" allowed" );
+							if (desc.bold) throw invalid_font_description();
 							else desc.bold = true;
 						} else if ( flag_text == "italic" ) {
-							if (desc.italic) std::runtime_error( "Invalid font description -- only one \"italic\" allowed" );
+							if (desc.italic) invalid_font_description();
 							else desc.italic = true;
-						} else {
-							assert(!"reached"); //should never occur
-							throw std::runtime_error( "What the **** did you do" );
+						} else { //should never occur
+							assert(!"reached");
+							throw std::logic_error( "industry::api::freetype -- encountered an unexpected format flag" );
 						}
 					}
 					return desc;
@@ -97,6 +88,9 @@ namespace industry {
 			}
 
 #ifdef INDUSTRY_OS_WINDOWS
+			// Preconditions:   Valid target_description        (throws invalid_font_description otherwise)
+			// Postconditions:  return.filename isn't empty     (throws font_not_found otherwise)
+			//                  return.index was valid
 			face_info locator::find_face_info( const std::string& target_description ) {
 				font_description target = parse_description( target_description );
 
@@ -138,7 +132,7 @@ namespace industry {
 						best_info       = info;
 					}
 				}
-				if ( best_info.filename.empty() ) throw std::runtime_error( "Could not find font" );
+				if ( best_info.filename.empty() ) throw font_not_found();
 				return best_info;
 			}
 #endif
