@@ -8,7 +8,7 @@
 
 #include <SDL/SDL.h>
 #undef main
-#include <industry/api/freetype/library.hpp>
+#include <industry/api/freetype.hpp>
 #include <industry/api/opengl/canvas.hpp>
 #include <industry/api/opengl/import.hpp>
 #include <iostream>
@@ -16,6 +16,7 @@
 
 namespace freetype = ::industry::api::freetype;
 namespace opengl   = ::industry::api::opengl;
+namespace math     = ::industry::math;
 
 int main () {
 	try {
@@ -24,7 +25,12 @@ int main () {
 		SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
 
 		freetype::library fonts;
-		opengl::canvas canvas( 800, 600 );
+		freetype::face    courier( fonts, "12pt Courier New" );
+		opengl::canvas    canvas( 800, 600 );
+
+		boost::multi_array< FT_Byte, 2 > data( boost::extents[100][100] );
+		courier.char_blit( 'H', math::vector<int,2>(50,50), data );
+		canvas.blit( 400, 300, 100, 100, (opengl::color1ub*) data.data() );
 
 		while( true ) {
 			SDL_Event e;
