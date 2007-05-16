@@ -18,53 +18,53 @@ namespace freetype = ::industry::api::freetype;
 namespace opengl   = ::industry::api::opengl;
 
 int main () {
-    try {
-        SDL_Init( SDL_INIT_EVERYTHING );
-        SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
-        SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
+	try {
+		SDL_Init( SDL_INIT_EVERYTHING );
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER , 1 );
+		SDL_SetVideoMode( 800 , 600 , 32 , SDL_OPENGL );
 
-        freetype::library fonts;
-        opengl::canvas canvas( 800, 600 );
+		freetype::library fonts;
+		opengl::canvas canvas( 800, 600 );
 
-        while( true ) {
-            SDL_Event e;
-            while ( SDL_PollEvent( &e ) ) {
-                switch( e.type ) {
-                    case SDL_KEYDOWN:
-                        switch ( e.key.keysym.sym ) {
-                            case SDLK_ESCAPE:
-                                SDL_Quit();
-                                return 0;
-                            default:
-                                break;
-                        }
-                    case SDL_QUIT:
-                        SDL_Quit();
-                        return 0;
-                    default:
-                        break;
-                }
-            }
+		while( true ) {
+			SDL_Event e;
+			while ( SDL_PollEvent( &e ) ) {
+				switch( e.type ) {
+					case SDL_KEYDOWN:
+						switch ( e.key.keysym.sym ) {
+							case SDLK_ESCAPE:
+								SDL_Quit();
+								return 0;
+							default:
+								break;
+						}
+					case SDL_QUIT:
+						SDL_Quit();
+						return 0;
+					default:
+						break;
+				}
+			}
 
-            glClearColor( 0.0, 0.0, 0.0, 0.0 );
-            glClear( GL_COLOR_BUFFER_BIT );
+			glClearColor( 0.0, 0.0, 0.0, 0.0 );
+			glClear( GL_COLOR_BUFFER_BIT );
 
-            glMatrixMode( GL_PROJECTION );
-            glLoadIdentity();
-            glOrtho( 0, 800 , 0 , 600 , -1 , +1 );
+			glMatrixMode( GL_PROJECTION );
+			glLoadIdentity();
+			glOrtho( 0, 800 , 0 , 600 , -1 , +1 );
 
-            glMatrixMode( GL_MODELVIEW );
-            glLoadIdentity();
-            canvas.render();
+			glMatrixMode( GL_MODELVIEW );
+			glLoadIdentity();
+			canvas.render();
 
-            SDL_GL_SwapBuffers();
-        }
-    } catch( const std::exception & e ) {
-        std::cout << "Exception: " << e.what() << std::endl;
+			SDL_GL_SwapBuffers();
+		}
+	} catch( const std::exception & e ) {
+		std::cout << "Exception: " << e.what() << std::endl;
 #ifdef _DEBUG
-        throw;
+		throw;
 #else
-        return -1;
+		return -1;
 #endif
-    }
+	}
 }
