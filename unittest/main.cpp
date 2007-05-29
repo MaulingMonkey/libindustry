@@ -34,7 +34,7 @@ void test_algorithm();
 void test_algorithm_concepts();
 void test_api_freetype();
 void test_factory();
-//void test_image();
+void test_graphics();
 void test_inherit();
 void test_iterator_cast();
 void test_iterator_n();
@@ -73,6 +73,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 	test->add(BOOST_TEST_CASE(test_api_freetype));
 	test->add(BOOST_TEST_CASE(test_algorithm_call));
 	test->add(BOOST_TEST_CASE(test_factory));
+	test->add(BOOST_TEST_CASE(test_graphics));
 	test->add(BOOST_TEST_CASE(test_algorithm));
 	test->add(BOOST_TEST_CASE(test_inherit));
 	test->add(BOOST_TEST_CASE(test_iterator_cast));

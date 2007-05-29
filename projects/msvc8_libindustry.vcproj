@@ -411,6 +411,18 @@
 				</File>
 			</Filter>
 			<Filter
+				Name="graphics"
+				>
+				<File
+					RelativePath="..\industry\graphics\color.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\industry\graphics\image.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="iterator"
 				>
 				<Filter

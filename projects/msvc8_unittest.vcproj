@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\unittest\test.graphics.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\unittest\test.inherit.cpp"
 				>
 			</File>
