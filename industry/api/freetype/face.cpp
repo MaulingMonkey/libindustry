@@ -35,11 +35,12 @@ namespace industry {
 				assert( FT_Get_Kerning( impl->handle, left_glyph, right_glyph, FT_KERNING_DEFAULT, &kern ) );
 				return kern;
 			}
-			void face::char_blit( FT_ULong c, math::vector<int,2> offset, boost::multi_array< FT_Byte, 2 > & target ) const {
+			void face::char_blit( FT_ULong charcode, math::vector<int,2> offset, boost::multi_array< FT_Byte, 2 > & target ) const {
 				offset.x += impl->handle->glyph->bitmap_left;
 				offset.y += impl->handle->glyph->bitmap_top;
+				FT_Load_Char( impl->handle, charcode, FT_LOAD_RENDER );
 				const FT_Bitmap & bitmap = impl->handle->glyph->bitmap;
-				assert( bitmap.pixel_mode == FT_PIXEL_MODE_MONO );
+				assert( bitmap.pixel_mode == FT_PIXEL_MODE_GRAY );
 				assert( 0 <= offset.x && offset.x < target.shape()[0] );
 				assert( 0 <= offset.y && offset.y < target.shape()[1] );
 

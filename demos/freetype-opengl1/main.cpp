@@ -27,6 +27,8 @@ int main () {
 		freetype::library fonts;
 		freetype::face    courier( fonts, "12pt Courier New" );
 		opengl::canvas    canvas( 800, 600 );
+		std::vector< opengl::color1ub > greyness( 800*600, opengl::color1ub(0x10) );
+		canvas.blit( 0, 0, 800, 600, &greyness[0] );
 
 		boost::multi_array< FT_Byte, 2 > data( boost::extents[100][100] );
 		courier.char_blit( 'H', math::vector<int,2>(50,50), data );
@@ -52,7 +54,7 @@ int main () {
 				}
 			}
 
-			glClearColor( 0.0, 0.0, 0.0, 0.0 );
+			glClearColor( 0.1, 0.1, 0.1, 0.0 );
 			glClear( GL_COLOR_BUFFER_BIT );
 
 			glMatrixMode( GL_PROJECTION );
