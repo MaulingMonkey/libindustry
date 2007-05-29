@@ -85,14 +85,14 @@ namespace industry {
 			typedef unsigned char component_type;
 		private:
 			template < size_t i > struct info_ {
-				static const unsigned lshift = NN<i>::value + info_<i+1>::lshift;
+				static const unsigned lshift = NN<i+1>::value + info_<i+1>::lshift;
 			};
-			template <> struct info_< components > {
+			template <> struct info_< components-1 > {
 				static const unsigned lshift = 0;
 			};
 		public:
 			template < size_t i > class info {
-				static const component_type mask = (NN<i>::value==CHAR_BIT) ? ~0u : (1u<<NN<i>::value);
+				static const component_type mask = (NN<i>::value==CHAR_BIT) ? ~0u : ((1u<<NN<i>::value)-1);
 			public:
 				static const component_type value_min=0, clamp_min=0, clamp_max=mask, value_max=mask;
 				class reference {
@@ -100,9 +100,12 @@ namespace industry {
 				public:
 					reference( packedNNNN* self ): self(self) {}
 					operator component_type() const {
-						component_type value = self->data >> info_<i>::lshift & mask;
+						component_type value = component_type((self->data >> info_<i>::lshift) & mask);
+						return value;
 					}
 					reference& operator=( component_type value ) {
+						unsigned _mask = mask;
+						unsigned _lshift = info_<i>::lshift;
 						assert( value <= value_max );
 						self->data &= ~(DataT(mask) << info_<i>::lshift);
 						self->data |= value << info_<i>::lshift;

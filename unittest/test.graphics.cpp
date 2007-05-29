@@ -6,6 +6,7 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#include <boost/test/unit_test.hpp>
 #include <industry/graphics/color.hpp>
 #include <industry/graphics/image.hpp>
 
@@ -21,4 +22,20 @@ void test_graphics() {
 	c2.red()   = 42;
 	c3.green() = 12;
 	c4.alpha() = 0;
+
+	BOOST_CHECK_EQUAL( c1.red     , 42 );
+	BOOST_CHECK_EQUAL( c1.green   ,  2 );
+	BOOST_CHECK_EQUAL( c1.blue    ,  3 );
+	BOOST_CHECK_EQUAL( c1.alpha   ,  4 );
+	BOOST_CHECK_EQUAL( c2.red()   , 42 );
+	BOOST_CHECK_EQUAL( c2.green() ,  2 );
+	BOOST_CHECK_EQUAL( c2.blue()  ,  3 );
+	BOOST_CHECK_EQUAL( c2.alpha() ,  4 );
+	BOOST_CHECK_EQUAL( c3.red()   ,  1 );
+	BOOST_CHECK_EQUAL( c3.green() , 12 );
+	BOOST_CHECK_EQUAL( c3.blue()  ,  3 );
+	BOOST_CHECK_EQUAL( c4.red()   ,  1 );
+	BOOST_CHECK_EQUAL( c4.green() ,  2 );
+	BOOST_CHECK_EQUAL( c4.blue()  ,  3 );
+	BOOST_CHECK_EQUAL( c4.alpha() ,  0 );
 }
