@@ -5,3 +5,16 @@
 // http://www.boost.org/LICENSE_1_0.txt ) 
 //
 // $LastChangedBy$ - $LastChangedDate$
+
+#ifndef IG_INDUSTRY_GRAPHICS_IMAGE
+#define IG_INDUSTRY_GRAPHICS_IMAGE
+
+namespace industry {
+	namespace graphics {
+		template < typename ColorT >
+		struct image {
+		};
+	}
+}
+
+#endif //ndef IG_INDUSTRY_GRAPHICS_IMAGE
