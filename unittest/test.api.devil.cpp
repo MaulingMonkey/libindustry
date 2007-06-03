@@ -18,8 +18,20 @@ void test_api_devil() {
 	using namespace industry::api::devil;
 
 	ilInit();
-	BOOST_CHECK_THROW(    load<rgb <unsigned char> >( "Testing 123" ), file_not_found );
-	BOOST_CHECK_THROW(    load<rgba<unsigned char> >( "Testing 123" ), file_not_found );
-	BOOST_CHECK_NO_THROW( load<rgb <unsigned char> >( "..\\data\\libindustry.png" ) );
-	BOOST_CHECK_NO_THROW( load<rgba<unsigned char> >( "..\\data\\libindustry.png" ) );
+	BOOST_CHECK_THROW( load<rgb <unsigned char> >( "Testing 123" ), file_not_found );
+	BOOST_CHECK_THROW( load<rgba<unsigned char> >( "Testing 123" ), file_not_found );
+
+	boost::shared_ptr< image<rgb <unsigned char> > > i1;
+	boost::shared_ptr< image<rgba<unsigned char> > > i2;
+	BOOST_CHECK_NO_THROW( i1 = load<rgb <unsigned char> >( "..\\data\\libindustry.png" ) );
+	BOOST_CHECK_NO_THROW( i2 = load<rgba<unsigned char> >( "..\\data\\libindustry.png" ) );
+
+	if (i1) {
+		BOOST_CHECK_EQUAL( i1->width()  , 800 );
+		BOOST_CHECK_EQUAL( i1->height() , 600 );
+	}
+	if (i2) {
+		BOOST_CHECK_EQUAL( i2->width()  , 800 );
+		BOOST_CHECK_EQUAL( i2->height() , 600 );
+	}
 }
