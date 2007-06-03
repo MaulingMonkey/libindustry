@@ -17,8 +17,9 @@ void test_api_devil() {
 	using namespace industry::graphics;
 	using namespace industry::api::devil;
 
-	BOOST_CHECK_THROW( load<rgb <unsigned char> >( "Testing 123" ), file_not_found );
-	BOOST_CHECK_THROW( load<rgba<unsigned char> >( "Testing 123" ), file_not_found );
+	ilInit();
+	BOOST_CHECK_THROW(    load<rgb <unsigned char> >( "Testing 123" ), file_not_found );
+	BOOST_CHECK_THROW(    load<rgba<unsigned char> >( "Testing 123" ), file_not_found );
 	BOOST_CHECK_NO_THROW( load<rgb <unsigned char> >( "..\\data\\libindustry.png" ) );
 	BOOST_CHECK_NO_THROW( load<rgba<unsigned char> >( "..\\data\\libindustry.png" ) );
 }

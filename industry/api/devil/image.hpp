@@ -41,7 +41,7 @@ namespace industry {
 
 				if (!ilConvertImage( detail::getFormatOf(ColorT()), detail::getTypeOf(ColorT()) )) throw conversion_error();
 				assert( sizeof(ColorT)==ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL) );
-				std::copy( ilGetData(), ilGetData() + width*height*ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL), (ILbyte*)image.get() );
+				std::copy( ilGetData(), ilGetData() + width*height*ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL), (ILbyte*)image->data() );
 
 				return image;
 			}
