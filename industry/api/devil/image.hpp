@@ -10,63 +10,41 @@
 #define IG_INDUSTRY_API_DEVIL_IMAGE
 
 #include <industry/api/devil/import.hpp>
-#include <boost/noncopyable.hpp>
+#include <industry/graphics/image.hpp>
 #include <boost/shared_ptr.hpp>
+#include <exception>
 #include <string>
 #include <cassert>
 
 namespace industry {
 	namespace api {
 		namespace devil {
+			struct file_not_found   : std::exception { const char * what() const throw() { return "industry::api::devil -- file_not_found"; } };
+			struct conversion_error : std::exception { const char * what() const throw() { return "industry::api::devil -- conversion_error"; } };
+
 			namespace detail {
-				template < typename S > struct char_type_of;
-				template < typename C > struct char_type_of<       C* > { typedef C type; };
-				template < typename C > struct char_type_of< const C* > { typedef C type; };
+				template < typename T > ILenum getFormatOf( const graphics::rgb<T> & ) { return IL_RGB;  }
+				template < typename T > ILenum getFormatOf( const graphics::rgba<T>& ) { return IL_RGBA; }
+				template < template < typename > class C > ILenum getTypeOf( const C<unsigned char>& ) { return IL_BYTE; }
+				template < template < typename > class C > ILenum getTypeOf( const C<float>        & ) { return IL_FLOAT; }
 			}
 
-			struct image_impl : boost::noncopyable {
-				ILuint id;
-				image_impl()  { id = ilGenImage(); }
-				~image_impl() { ilDeleteImage(id); }
-			};
-			class image {
-				boost::shared_ptr< image_impl > impl;
-			public:
-				friend void ilBindImage( const image& self ) { assert( self.impl ); ::ilBindImage( self.impl->id ); }
+			template < typename ColorT >
+			boost::shared_ptr< graphics::image< ColorT > > load( const std::string& filename ) {
+				ilEnable( IL_ORIGIN_SET );
+				ilOriginFunc( IL_ORIGIN_UPPER_LEFT );
+				if (!ilLoadImage( (const ILstring) filename.c_str() )) throw file_not_found();
+				
+				unsigned width  = ilGetInteger(IL_IMAGE_WIDTH);
+				unsigned height = ilGetInteger(IL_IMAGE_HEIGHT);
+				boost::shared_ptr< graphics::image< ColorT > > image(  new graphics::image<ColorT>(width,height)  );
 
-				image() {}
-				image( const std::string& filename ) { unsigned flags[] = {0}; initialize((const ILstring)filename.c_str(),flags); }
-				image( const std::string& filename, unsigned flag1 ) { unsigned flags[] = {flag1}; initialize((const ILstring)filename.c_str(),flags); }
+				if (!ilConvertImage( detail::getFormatOf(ColorT()), detail::getTypeOf(ColorT()) )) throw conversion_error();
+				assert( sizeof(ColorT)==ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL) );
+				std::copy( ilGetData(), ilGetData() + width*height*ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL), (ILbyte*)image.get() );
 
-				template < size_t N >
-				void initialize( const ILstring filename, unsigned (&flags)[N] ) {
-					impl.reset( new image_impl );
-					ilBindImage( *this );
-
-					unsigned origin = 0;
-					for ( unsigned i = 0 ; i < N ; ++i ) {
-						switch ( flags[i] ) {
-							case 0: //null flag (to avoid 0-length-array problem)
-								break;
-							case IL_ORIGIN_LOWER_LEFT:
-							case IL_ORIGIN_UPPER_LEFT:
-								assert(!origin); origin = flags[i];
-								break;
-							default:
-								assert(!"reached");
-						}
-					}
-
-					ILboolean enable_origin = !ilIsEnabled( IL_ORIGIN_SET ) && origin;
-					if (enable_origin) ilEnable( IL_ORIGIN_SET );
-					if (origin) ilOriginFunc( origin );
-					assert( ilLoadImage( filename ) );
-					if (enable_origin) ilDisable( IL_ORIGIN_SET );
-				}
-
-				unsigned width()  const { ilBindImage(*this); return ilGetInteger( IL_IMAGE_WIDTH  ); }
-				unsigned height() const { ilBindImage(*this); return ilGetInteger( IL_IMAGE_HEIGHT ); }
-			};
+				return image;
+			}
 		}
 	}
 }

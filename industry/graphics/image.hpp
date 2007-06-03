@@ -9,8 +9,9 @@
 #ifndef IG_INDUSTRY_GRAPHICS_IMAGE
 #define IG_INDUSTRY_GRAPHICS_IMAGE
 
-#include <industry/graphics/image.hpp>
+#include <industry/graphics/color.hpp>
 #include <boost/multi_array.hpp>
+#include <boost/shared_ptr.hpp>
 #include <algorithm>
 #include <memory>
 

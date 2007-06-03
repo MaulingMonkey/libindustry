@@ -34,8 +34,8 @@ int main () {
 
 		using namespace industry::api;
 		using namespace industry::api::opengl;
-		opengl::canvas example1(  "..\\demos\\opengl1\\libindustry.png" );
-		opengl::canvas example2(  "..\\demos\\opengl1\\libindustry.png" );
+		opengl::canvas example1(  "..\\data\\libindustry.png"  );
+		opengl::canvas example2(  "..\\data\\libindustry.png"  );
 
 		int x=600, y=450;
 

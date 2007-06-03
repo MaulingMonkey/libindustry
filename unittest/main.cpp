@@ -32,6 +32,7 @@ typedef void (*test_function_ptr)();
 
 void test_algorithm();
 void test_algorithm_concepts();
+void test_api_devil();
 void test_api_freetype();
 void test_factory();
 void test_graphics();
@@ -70,6 +71,7 @@ test_suite * init_unit_test_suite( int , char *[] ) {
 
 	test->add(BOOST_TEST_CASE(test_algorithm_transform_memberptr));
 	test->add(BOOST_TEST_CASE(test_algorithm_transform));
+	test->add(BOOST_TEST_CASE(test_api_devil));
 	test->add(BOOST_TEST_CASE(test_api_freetype));
 	test->add(BOOST_TEST_CASE(test_algorithm_call));
 	test->add(BOOST_TEST_CASE(test_factory));

@@ -71,7 +71,7 @@ opengl::display_list generate_test_list_1() {
 opengl::display_list generate_test_list_2() {
 	using namespace opengl;
 
-	test_texture_t test_texture_2( "..\\demos\\opengl1\\libindustry.png" );
+	test_texture_t test_texture_2( "..\\data\\libindustry.png" );
 	
 	pod::tuple< texcoord2f , vertex2f > data[] = {
 		{0.0f, 0.0f, -200.0f, -150.0f},
