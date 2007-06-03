@@ -53,6 +53,17 @@ namespace industry {
 			}
 		};
 		template < typename T > struct rgba;
+		template < typename T > struct greyscale {
+			T grey;
+
+			greyscale(): grey() {}
+			greyscale( T grey ): grey(grey) {}
+
+			      T& operator[]( unsigned i )       { assert(i==0); return grey; }
+			const T& operator[]( unsigned i ) const { assert(i==0); return grey; }
+		private:
+			T max() { return T(boost::is_same<T,unsigned char>::value ? 1 : 255); }
+		};
 		template < typename T > struct rgb {
 			T red, green, blue;
 
@@ -62,16 +73,20 @@ namespace industry {
 
 			      T& operator[]( unsigned i )       { switch (i) { case 0: return red; case 1: return green; case 2: return blue; default: assert(0); } }
 			const T& operator[]( unsigned i ) const { switch (i) { case 0: return red; case 1: return green; case 2: return blue; default: assert(0); } }
+		private:
+			T max() { return T(boost::is_same<T,unsigned char>::value ? 1 : 255); }
 		};
 		template < typename T > struct rgba {
 			T red, green, blue, alpha;
 
 			rgba(): red(), green(), blue(), alpha() {}
-			rgba( const rgb<T>& o ): red(o.red), green(o.green), blue(o.blue), alpha() {}
+			rgba( const rgb<T>& o ): red(o.red), green(o.green), blue(o.blue), alpha(max()) {}
 			rgba( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
 
 			      T& operator[]( unsigned i )       { switch (i) { case 0: return red; case 1: return green; case 2: return blue; case 3: return alpha; default: assert(0); } }
 			const T& operator[]( unsigned i ) const { switch (i) { case 0: return red; case 1: return green; case 2: return blue; case 3: return alpha; default: assert(0); } }
+		private:
+			T max() { return T(boost::is_same<T,unsigned char>::value ? 1 : 255); }
 		};
 
 		BOOST_MPL_HAS_XXX_TRAIT_DEF( interface_color_type );

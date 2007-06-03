@@ -11,6 +11,7 @@
 
 #include <industry/api/opengl/import.hpp>
 #include <industry/api/opengl/types.hpp>
+#include <industry/graphics/color.hpp>
 #include <industry/nil.hpp>
 #include <boost/array.hpp>
 
@@ -22,6 +23,15 @@ namespace industry {
 			namespace detail {
 				template < typename T > struct is_a_color { enum { value = false }; };
 				template < typename T , size_t N > struct is_a_color< color<T,N> > { enum { value = true }; };
+
+				template < typename T > GLenum get_format_of( const graphics::rgb      <T>& ) { return GL_RGB;  }
+				template < typename T > GLenum get_format_of( const graphics::rgba     <T>& ) { return GL_RGBA; }
+				template < typename T > GLenum get_format_of( const graphics::greyscale<T>& ) { return GL_LUMINANCE; }
+				template < typename T > GLenum get_format_of( const T& ) { return get_format_of( typename T::interface_color_type() ); }
+
+				template < template < typename > class TT > GLenum get_type_of( const TT<unsigned char>& ) { return GL_UNSIGNED_BYTE; }
+				template < template < typename > class TT > GLenum get_type_of( const TT<float>        & ) { return GL_FLOAT; }
+				template < template < typename > class TT > GLenum get_type_of( const TT<double>       & ) { return GL_DOUBLE; }
 			}
 
 			template < typename T > struct color< T, 1 > {
