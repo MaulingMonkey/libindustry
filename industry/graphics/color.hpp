@@ -17,6 +17,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/array.hpp>
 #include <climits>
@@ -24,6 +25,8 @@
 namespace industry {
 	namespace graphics {
 		template < template < typename > class ColorT > struct packed565 {
+			typedef ColorT<unsigned char> interface_color_type;
+
 			unsigned short data;
 
 			static const size_t         lshift0=11    , lshift1= 5    , lshift2= 0    ;
@@ -43,17 +46,18 @@ namespace industry {
 			}
 
 			operator ColorT<unsigned char>() const {
-				return ColorT<unsigned char>( ((data>>lshift0)&mask0) << cshift0
-				                            , ((data>>lshift1)&mask1) << cshift1
-				                            , ((data>>lshift2)&mask2) << cshift2
+				return ColorT<unsigned char>( (unsigned char)((data>>lshift0)&mask0) << cshift0
+				                            , (unsigned char)((data>>lshift1)&mask1) << cshift1
+				                            , (unsigned char)((data>>lshift2)&mask2) << cshift2
 				                            );
 			}
 		};
-
+		template < typename T > struct rgba;
 		template < typename T > struct rgb {
 			T red, green, blue;
 
 			rgb(): red(), green(), blue() {}
+			rgb( const rgba<T>& o ): red(o.red), green(o.green), blue(o.blue) {}
 			rgb( T red, T green, T blue ): red(red), green(green), blue(blue) {}
 
 			      T& operator[]( unsigned i )       { switch (i) { case 0: return red; case 1: return green; case 2: return blue; default: assert(0); } }
@@ -63,10 +67,19 @@ namespace industry {
 			T red, green, blue, alpha;
 
 			rgba(): red(), green(), blue(), alpha() {}
+			rgba( const rgb<T>& o ): red(o.red), green(o.green), blue(o.blue), alpha() {}
 			rgba( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
 
 			      T& operator[]( unsigned i )       { switch (i) { case 0: return red; case 1: return green; case 2: return blue; case 3: return alpha; default: assert(0); } }
 			const T& operator[]( unsigned i ) const { switch (i) { case 0: return red; case 1: return green; case 2: return blue; case 3: return alpha; default: assert(0); } }
+		};
+
+		BOOST_MPL_HAS_XXX_TRAIT_DEF( interface_color_type );
+		template < typename T > struct get_interface_color_type {
+		private:
+			template < typename T > struct do_get { typedef typename T::interface_color_type type; };
+		public:
+			typedef typename boost::mpl::eval_if< has_interface_color_type<T>, do_get<T>, boost::mpl::identity<T> >::type type;
 		};
 	}
 }
