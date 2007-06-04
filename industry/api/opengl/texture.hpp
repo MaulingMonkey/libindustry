@@ -105,31 +105,31 @@ namespace industry {
 					GLuint dimms[] = { GLuint(source.shape()[0]), GLuint(source.shape()[1]) };
 					if (!is_within_limits(0,dimms)) {
 						unsigned limit = std::max( max_texture_size() , max_rectangular_texture_size() );
-						ilTexImage( dimms[0], dimms[1], 1, T::components, T::format_enum, T::component_type_enum, const_cast< T* >( source.data() ) );
+						ilTexImage( dimms[0], dimms[1], 1, detail::get_components_of(T()), detail::get_format_of(T()), detail::get_type_of(T()), const_cast< T* >( source.data() ) );
 						iluImageParameter( ILU_FILTER , ILU_SCALE_LANCZOS3 );
 						iluScale( limit, limit, 1 );
 						dimms[0] = limit;
 						dimms[1] = limit;
 					}
-					do_create(texture_type_for(dimms),dimms,T::format_enum,T::component_type_enum,source.data());
+					do_create(texture_type_for(dimms),dimms,detail::get_format_of(T()),detail::get_type_of(T()),source.data());
 					iluScale(1,1,1);
 				}
 				template < typename T >
 				texture( unsigned w, unsigned h , const std::vector<T> & data ) {
 					assert( w*h <= data.size() );
 					GLuint dimms[] = {w,h};
-					do_create(texture_type_for(dimms),dimms,T::format_enum,T::component_type_enum,&data[0]);
+					do_create(texture_type_for(dimms),dimms,detail::get_format_of(T()),detail::get_type_of(T()),&data[0]);
 				}
 				~texture() {
 				}
 
 				template < typename T >
 				void blit( GLuint x, GLuint y, const boost::multi_array<T,2>& source ) {
-					do_blit( x, y, source.shape()[0], source.shape()[1], T::format_enum, T::component_type_enum, source.data() );
+					do_blit( x, y, source.shape()[0], source.shape()[1], detail::get_format_of(T()), detail::get_type_of(T()), source.data() );
 				}
 				template < typename T >
 				void blit( GLuint x, GLuint y, GLuint w, GLuint h, const T* source ) {
-					do_blit( x, y, w, h, T::format_enum, T::component_type_enum, source );
+					do_blit( x, y, w, h, detail::get_format_of(T()), detail::get_type_of(T()), source );
 				}
 			private:
 				void do_create( GLenum type , const GLuint (&dimms)[2] , GLenum format, GLenum component, const void* data ) {

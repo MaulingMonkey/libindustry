@@ -21,73 +21,41 @@ namespace industry {
 			template < typename T , unsigned N > struct color;
 
 			namespace detail {
-				template < typename T > struct is_a_color { enum { value = false }; };
-				template < typename T , size_t N > struct is_a_color< color<T,N> > { enum { value = true }; };
+				template < typename T >  struct is_a_color                           { enum { value = false }; };
+				template < typename T >  struct is_a_color< graphics::rgb      <T> > { enum { value = true  }; };
+				template < typename T >  struct is_a_color< graphics::rgba     <T> > { enum { value = true  }; };
+				template < typename T >  struct is_a_color< graphics::greyscale<T> > { enum { value = true  }; };
 
-				template < typename T > GLenum get_format_of( const graphics::rgb      <T>& ) { return GL_RGB;  }
-				template < typename T > GLenum get_format_of( const graphics::rgba     <T>& ) { return GL_RGBA; }
-				template < typename T > GLenum get_format_of( const graphics::greyscale<T>& ) { return GL_LUMINANCE; }
-				template < typename T > GLenum get_format_of( const T& ) { return get_format_of( typename T::interface_color_type() ); }
+				template < typename T > inline GLenum get_format_of( const graphics::rgb      <T>& ) { return GL_RGB;  }
+				template < typename T > inline GLenum get_format_of( const graphics::rgba     <T>& ) { return GL_RGBA; }
+				template < typename T > inline GLenum get_format_of( const graphics::greyscale<T>& ) { return GL_LUMINANCE; }
+				template < typename T > inline GLenum get_format_of( const T& ) { return get_format_of( typename T::interface_color_type() ); }
 
-				template < template < typename > class TT > GLenum get_type_of( const TT<unsigned char>& ) { return GL_UNSIGNED_BYTE; }
-				template < template < typename > class TT > GLenum get_type_of( const TT<float>        & ) { return GL_FLOAT; }
-				template < template < typename > class TT > GLenum get_type_of( const TT<double>       & ) { return GL_DOUBLE; }
+				template < typename T > inline GLuint get_components_of( const graphics::rgb      <T>& ) { return 3; }
+				template < typename T > inline GLuint get_components_of( const graphics::rgba     <T>& ) { return 4; }
+				template < typename T > inline GLuint get_components_of( const graphics::greyscale<T>& ) { return 1; }
+				template < typename T > inline GLuint get_components_of( const T& ) { return get_components_of( typename T::interface_color_type() ); }
+
+				template < template < typename > class TT > inline GLenum get_type_of( const TT<unsigned char>& ) { return GL_UNSIGNED_BYTE; }
+				template < template < typename > class TT > inline GLenum get_type_of( const TT<float>        & ) { return GL_FLOAT; }
+				template < template < typename > class TT > inline GLenum get_type_of( const TT<double>       & ) { return GL_DOUBLE; }
 			}
 
-			template < typename T > struct color< T, 1 > {
-				enum                                 { components = 3 };
-				typedef T                              component_type;
-				typedef boost::array< T, components >  pod_type;
-				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
-				static const GLenum                    format_enum = GL_LUMINANCE;
+			typedef graphics::greyscale< GLfloat  > color1f;
+			typedef graphics::greyscale< GLdouble > color1d;
+			typedef graphics::greyscale< GLubyte  > color1ub;
 
-				T luminance;
-				color(): luminance() {}
-				color( pod_type pod ): luminance(pod[0]) {}
-				color( T luminance ): luminance(luminance) {}
-			};
+			typedef graphics::rgb< GLfloat  >       color3f;
+			typedef graphics::rgb< GLdouble >       color3d;
+			typedef graphics::rgb< GLubyte  >       color3ub;
 
-			template < typename T > struct color< T, 3 > {
-				enum                                 { components = 3 };
-				typedef T                              component_type;
-				typedef boost::array< T, components >  pod_type;
-				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
-				static const GLenum                    format_enum = GL_RGB;
+			typedef graphics::rgba< GLfloat  >      color4f;
+			typedef graphics::rgba< GLdouble >      color4d;
+			typedef graphics::rgba< GLubyte  >      color4ub;
 
-				T red, green, blue;
-				color(): red(), green(), blue() {}
-				color( pod_type pod ): red(pod[0]), green(pod[1]), blue(pod[2]) {}
-				color( T red, T green, T blue ): red(red), green(green), blue(blue) {}
-			};
-
-			template < typename T > struct color< T, 4 > {
-				enum                                 { components = 4 };
-				typedef T                              component_type;
-				typedef boost::array< T, components >  pod_type;
-				static const GLenum                    component_type_enum = detail::type_to_enum< T >::value;
-				static const GLenum                    format_enum = GL_RGBA;
-
-				T red, green, blue, alpha;
-				color(): red(), green(), blue(), alpha() {}
-				color( pod_type pod ): red(pod[0]), green(pod[1]), blue(pod[2]), alpha(pod[3]) {}
-				color( T red, T green, T blue, T alpha ): red(red), green(green), blue(blue), alpha(alpha) {}
-			};
-
-			typedef color< GLfloat , 1 > color1f;
-			typedef color< GLdouble, 1 > color1d;
-			typedef color< GLubyte , 1 > color1ub;
-
-			typedef color< GLfloat , 3 > color3f;
-			typedef color< GLdouble, 3 > color3d;
-			typedef color< GLubyte , 3 > color3ub;
-
-			typedef color< GLfloat , 4 > color4f;
-			typedef color< GLdouble, 4 > color4d;
-			typedef color< GLubyte , 4 > color4ub;
-
-			inline void glColor( const color1f & c ) { ::glColor3f ( c.luminance, c.luminance, c.luminance ); }
-			inline void glColor( const color1d & c ) { ::glColor3d ( c.luminance, c.luminance, c.luminance ); }
-			inline void glColor( const color1ub& c ) { ::glColor3ub( c.luminance, c.luminance, c.luminance ); }
+			inline void glColor( const color1f & c ) { ::glColor3f ( c.grey, c.grey, c.grey ); }
+			inline void glColor( const color1d & c ) { ::glColor3d ( c.grey, c.grey, c.grey ); }
+			inline void glColor( const color1ub& c ) { ::glColor3ub( c.grey, c.grey, c.grey ); }
 
 			inline void glColor( const color3f & c ) { ::glColor3f ( c.red, c.green, c.blue ); }
 			inline void glColor( const color3d & c ) { ::glColor3d ( c.red, c.green, c.blue ); }
@@ -99,20 +67,24 @@ namespace industry {
 
 			inline void glColor( industry::nil ) {}
 
-			template < typename T > inline void glClearColor( const color< T, 1 >& c ) {
-				::glClearColor( static_cast<GLdouble>(c.luminance), static_cast<GLdouble>(c.luminance), static_cast<GLdouble>(c.luminance), 0.0 );
-			}
-			template < typename T > inline void glClearColor( const color< T, 3 >& c ) {
-				::glClearColor( static_cast<GLdouble>(c.red), static_cast<GLdouble>(c.green), static_cast<GLdouble>(c.blue), 0.0 );
-			}
-			template < typename T > inline void glClearColor( const color< T, 4 >& c ) {
-				::glClearColor( static_cast<GLdouble>(c.red), static_cast<GLdouble>(c.green), static_cast<GLdouble>(c.blue), static_cast<GLdouble>(c.alpha) );
+			inline void glClearColor( const color1f & c ) { ::glClearColor( (GLclampf)c.grey, (GLclampf)c.grey, (GLclampf)c.grey, 0.0f); }
+			inline void glClearColor( const color1d & c ) { ::glClearColor( (GLclampf)c.grey, (GLclampf)c.grey, (GLclampf)c.grey, 0.0f); }
+			inline void glClearColor( const color1ub& c ) { ::glClearColor( 255.0f *  c.grey, 255.0f *  c.grey, 255.0f *  c.grey, 0.0f); }
+
+			inline void glClearColor( const color3f & c ) { ::glClearColor( (GLclampf)c.red, (GLclampf)c.green, (GLclampf)c.blue, 0.0f); }
+			inline void glClearColor( const color3d & c ) { ::glClearColor( (GLclampf)c.red, (GLclampf)c.green, (GLclampf)c.blue, 0.0f); }
+			inline void glClearColor( const color3ub& c ) { ::glClearColor( 255.0f *  c.red, 255.0f *  c.green, 255.0f *  c.blue, 0.0f); }
+
+			inline void glClearColor( const color4f & c ) { ::glClearColor( (GLclampf)c.red, (GLclampf)c.green, (GLclampf)c.blue, (GLclampf)c.alpha ); }
+			inline void glClearColor( const color4d & c ) { ::glClearColor( (GLclampf)c.red, (GLclampf)c.green, (GLclampf)c.blue, (GLclampf)c.alpha ); }
+			inline void glClearColor( const color4ub& c ) { ::glClearColor( 255.0f *  c.red, 255.0f *  c.green, 255.0f *  c.blue, 255.0f *  c.alpha ); }
+
+			template < typename T > inline void glClearColor( const T& c ) { glClearColor( typename T::interface_color_type(c) ); }
+
+			template < typename T > inline void glColorPointer( const T* c ) {
+				::glColorPointer( detail::get_components_of(T()), detail::get_type_of(T()), sizeof(T), c );
 			}
 
-			template < typename T , size_t N >
-			inline void glColorPointer( const color<T,N> *list ) {
-				::glColorPointer( N, color<T,N>::component_type_enum, sizeof(color<T,N>), &(list->x) );
-			}
 			inline void glColorPointer( industry::nil ) {}
 		}
 	}
