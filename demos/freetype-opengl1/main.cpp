@@ -16,6 +16,7 @@
 
 namespace freetype = ::industry::api::freetype;
 namespace opengl   = ::industry::api::opengl;
+namespace fx       = ::industry::graphics;
 namespace math     = ::industry::math;
 
 int main () {
@@ -30,9 +31,9 @@ int main () {
 		std::vector< opengl::color1ub > greyness( 800*600, opengl::color1ub(0x10) );
 		canvas.blit( 0, 0, 800, 600, &greyness[0] );
 
-		boost::multi_array< FT_Byte, 2 > data( boost::extents[100][100] );
+		fx::image< fx::greyscale<unsigned char> > data( 100, 100 );
 		courier.char_blit( 'H', math::vector<int,2>(50,50), data );
-		canvas.blit( 400, 300, 100, 100, (opengl::color1ub*) data.data() );
+		canvas.blit( 400, 300, 100, 100, data.data() );
 
 		while( true ) {
 			SDL_Event e;
