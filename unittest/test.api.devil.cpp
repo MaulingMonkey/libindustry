@@ -27,11 +27,11 @@ void test_api_devil() {
 	BOOST_CHECK_NO_THROW( i2 = load<rgba<unsigned char> >( "..\\data\\libindustry.png" ) );
 
 	if (i1) {
-		BOOST_CHECK_EQUAL( i1->width()  , 800 );
-		BOOST_CHECK_EQUAL( i1->height() , 600 );
+		BOOST_CHECK_EQUAL( i1->width()  , 800u );
+		BOOST_CHECK_EQUAL( i1->height() , 600u );
 	}
 	if (i2) {
-		BOOST_CHECK_EQUAL( i2->width()  , 800 );
-		BOOST_CHECK_EQUAL( i2->height() , 600 );
+		BOOST_CHECK_EQUAL( i2->width()  , 800u );
+		BOOST_CHECK_EQUAL( i2->height() , 600u );
 	}
 }

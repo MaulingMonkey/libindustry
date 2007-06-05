@@ -11,7 +11,8 @@
 
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable: 4800 ) //STFU about uint -> bool
+#pragma warning( disable: 4800 ) // STFU about uint -> bool
+#pragma warning( disable: 4715 ) // STFU about not all control paths return a value -- no sane fallback, sadly, assert()ed bug.
 #endif //def _MSC_VER
 
 #include <boost/static_assert.hpp>
@@ -96,6 +97,28 @@ namespace industry {
 		public:
 			typedef typename boost::mpl::eval_if< has_interface_color_type<T>, do_get<T>, boost::mpl::identity<T> >::type type;
 		};
+
+		namespace detail {
+			template < typename T > struct component_scale;
+			template <> struct component_scale< unsigned char > { static const unsigned value = 255; };
+			template <> struct component_scale< unsigned int  > { static const unsigned value =   1; };
+
+			template < typename DestColor , typename SrcColor > struct color_conversion;
+
+			template < typename T > struct color_conversion< rgb <T>, greyscale<T> > { static rgb <T> from( const greyscale<T>& c ) { return rgb <T>( c.grey, c.grey, c.grey ); } };
+			template < typename T > struct color_conversion< rgba<T>, greyscale<T> > { static rgba<T> from( const greyscale<T>& c ) { return rgba<T>( c.grey, c.grey, c.grey ); } };
+
+
+			template < template < typename > class DestTT, template < typename > class SrcTT, typename T > struct color_conversion< DestTT<T>, SrcTT<T> > {
+				//static DestTT<T> from( const SrcTT<T>& c ) { return DestTT<T>
+			};
+		}
+#if 0
+		template < typename DestColorT , typename SrcColorT >
+		DestColorT color_cast( const SrcColorT& color ) {
+			return detail::color_conversion< DestColorT, SrcColorT >::from( color );
+		}
+#endif
 	}
 }
 

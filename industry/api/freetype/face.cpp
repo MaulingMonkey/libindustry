@@ -35,18 +35,18 @@ namespace industry {
 				assert( FT_Get_Kerning( impl->handle, left_glyph, right_glyph, FT_KERNING_DEFAULT, &kern ) );
 				return kern;
 			}
-			void face::char_blit( FT_ULong charcode, math::vector<int,2> offset, graphics::image< graphics::greyscale<unsigned char> > & target ) const {
+			void face::char_blit( FT_ULong charcode, math::vector<int,2> offset, graphics::image_view< graphics::greyscale<unsigned char> > & target ) const {
 				offset.x += impl->handle->glyph->bitmap_left;
 				offset.y += impl->handle->glyph->bitmap_top;
 				FT_Load_Char( impl->handle, charcode, FT_LOAD_RENDER );
 				const FT_Bitmap & bitmap = impl->handle->glyph->bitmap;
 				assert( bitmap.pixel_mode == FT_PIXEL_MODE_GRAY );
-				assert( 0 <= offset.x && offset.x < target.width() );
-				assert( 0 <= offset.y && offset.y < target.height() );
+				assert( 0 <= offset.x && unsigned(offset.x) < target.width() );
+				assert( 0 <= offset.y && unsigned(offset.y) < target.height() );
 
-				for ( int y = 0 ; y < bitmap.rows ; ++y ) {
-					for ( int x = 0 ; x < bitmap.width ; ++x ) {
-						target[ x+offset.x ][ y+offset.y ] = *(bitmap.buffer + x + y * bitmap.pitch);
+				for ( unsigned y = 0 ; y < unsigned(bitmap.rows) ; ++y ) {
+					for ( unsigned x = 0 ; x < unsigned(bitmap.width) ; ++x ) {
+						target(x+unsigned(offset.x),y+unsigned(offset.y)) = *(bitmap.buffer + x + y * bitmap.pitch);
 					}
 				}
 			}

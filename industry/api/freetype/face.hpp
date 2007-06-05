@@ -49,7 +49,7 @@ namespace industry {
 
 				FT_Glyph_Metrics char_metrics( FT_ULong charcode ) const;
 				FT_Vector char_kerning( FT_ULong left, FT_ULong right ) const;
-				void char_blit( FT_ULong c, math::vector<int,2> offset, graphics::image< graphics::greyscale<unsigned char> > & target ) const;
+				void char_blit( FT_ULong c, math::vector<int,2> offset, graphics::image_view< graphics::greyscale<unsigned char> > & target ) const;
 			private:
 				void initialize( const boost::shared_ptr< detail::library_data >& library, const std::string& name );
 			};

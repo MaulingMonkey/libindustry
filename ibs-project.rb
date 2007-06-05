@@ -66,7 +66,7 @@ program( 'demo-opengl1' ) {
 	dependancy :opengl
 	dependancy :devil
 	sources "demos/opengl1/**/*.{c,h}pp"
-	msvc_supress_warnings  4267, 4312
+	msvc_supress_warnings  4244, 4267, 4312
 }
 
 program( 'demo-opengl2' ) {

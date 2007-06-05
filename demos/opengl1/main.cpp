@@ -35,13 +35,14 @@ test_texture_t generate_test_texture_1() {
 	const size_t tiles = 5;
 
 	try {
-		boost::multi_array< opengl::color3ub, 2 > data( boost::extents[size][size] );
+		typedef boost::multi_array< opengl::color3ub, 2 >::size_type datai;
+		boost::multi_array< opengl::color3ub, 2 > data( boost::extents[datai(size)][datai(size)] );
 
-		for ( unsigned x = 0 ; x < size ; ++x ) {
-			for ( unsigned y = 0 ; y < size ; ++y ) {
-				const double r = (std::sin( x*2*pi/size * tiles )+1)  /  2  *  255.0;
-				const double g = (std::sin( y*2*pi/size * tiles )+1)  /  2  *  255.0;
-				const double b = ( (x+y)*255.0 * tiles )   /  2   /  size;
+		for ( datai x = 0 ; x < size ; ++x ) {
+			for ( datai y = 0 ; y < size ; ++y ) {
+				const double r = (std::sin( GLint(x)*2*pi/size * tiles )+1)  /  2  *  255.0;
+				const double g = (std::sin( GLint(y)*2*pi/size * tiles )+1)  /  2  *  255.0;
+				const double b = ( GLint(x+y)*255.0 * tiles )   /  2   /  size;
 
 				data[x][y] = opengl::color3ub( GLubyte(r), GLubyte(g), GLubyte(b) );
 			}

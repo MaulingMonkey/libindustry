@@ -18,7 +18,7 @@ void test_api_freetype() {
 	locator loc(lib);
 	face_info info;
 	BOOST_CHECK_NO_THROW(   info=loc.find_face_info("14pt Courier New bold")   );
-	BOOST_CHECK_EQUAL   (   info.size    ,   14    );
+	BOOST_CHECK_EQUAL   (   info.size    ,   14u    );
 	BOOST_CHECK_EQUAL   (   info.filename,   std::string(std::getenv("WINDIR"))+"\\Fonts\\COURBD.TTF"   );
 	BOOST_CHECK_THROW   (   loc.find_face_info("12pt Lolercakes Italic"),   font_not_found );
 	BOOST_CHECK_THROW   (   face(lib,"24pt Pineapple Bold"),   font_not_found );
