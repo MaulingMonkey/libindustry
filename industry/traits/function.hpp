@@ -53,6 +53,12 @@ struct function_traits <R (*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 	static const unsigned int arity = n;
 };
 
+template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (*)(BOOST_PP_ENUM_PARAMS(n,A) ...)> {
+	typedef R (signature)(BOOST_PP_ENUM_PARAMS(n,A) ...) ;
+	static const bool is_member_function = false;
+	static const unsigned int arity = n;
+};
 #undef n
 
 #elif defined(IG_INDUSTRY_FUNCTION_TRAIT_ITOR)
@@ -66,6 +72,12 @@ struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A))> {
 	static const unsigned int arity = n;
 };
 
+template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A) ...)> {
+	typedef R (signature)(BOOST_PP_ENUM_PARAMS(n,A) ...) ;
+	static const bool is_member_function = false;
+	static const unsigned int arity = n;
+};
 #undef n
 
 #else //!IG_INDUSTRY_FUNCTION_TRAIT_ITOR
@@ -80,12 +92,25 @@ struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A)) const> {
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A) ...) const> {
+	typedef R (signature)(const C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A) ...);
+	static const bool is_member_function = true;
+	static const unsigned int arity = n;
+};
+
+template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
 struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 	typedef R (signature)(C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A)) ;
 	static const bool is_member_function = true;
 	static const unsigned int arity = n;
 };
 
+template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
+struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A) ...)> {
+	typedef R (signature)(C* BOOST_PP_ENUM_TRAILING_PARAMS(n, A) ...) ;
+	static const bool is_member_function = true;
+	static const unsigned int arity = n;
+};
 #undef n
 
 #endif
