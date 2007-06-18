@@ -18,7 +18,7 @@ def do_scan_and_export()
 	tokenized_root = $project_root.split('/')-['.']
 	raise "Error:  $project_root contains filesystem dependant elements (..)" if tokenized_root.member? '..'
 	raise "Error:  $project_root contains environment dependant elements"     if tokenized_root.find {|e| e =~ /\$\(.*?\)/}
-	$inverse_project_root = tokenized_root.collect{|discarded| '..'}.join('/')
+	$inverse_project_root = tokenized_root.collect{|discarded| '..'}.join('\\')
 	$inverse_project_root = '.' if $inverse_project_root.empty? # TODO:  Test effects of
 	
 	File.makedirs( $project_root ) unless File.exists? $project_root
@@ -43,7 +43,7 @@ Dir[ "ibs-lib/toolchains/*.rb" ].each do |toolchain|
 	load toolchain
 	
 	load 'ibs-project.rb'
-	do_scan_and_export()  #  Update SVN version
+	do_scan_and_export() unless File.exists? 'ibs-project-local.rb' #  Update SVN version
 	
 	if File.exists? 'ibs-project-local.rb'
 		base_sets = {}

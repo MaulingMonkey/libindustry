@@ -14,9 +14,9 @@
 project_root   './projects/'
 
 dependancy( :ruby ) {
-	add_include_paths  ENV['RUBYINCLUDE']
-	add_library_paths  ENV['RUBYLIB']
-	add_library        "msvcr80-ruby#{VERSION.split('.')[0..1].join}.lib"
+  add_include_paths  ENV['RUBYINCLUDE'] if ENV['RUBYINCLUDE']
+  add_library_paths  ENV['RUBYLIB'] if ENV['RUBYLIB']
+	add_library "msvcr80-ruby#{VERSION.split('.')[0..1].join}.lib"
 }
 
 dependancy( :boost ) {
