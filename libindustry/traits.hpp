@@ -5,7 +5,7 @@
 //  1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-//
+//  $LastChangeDate$ - $Author$
 
 #ifndef LIB_INDUSTRY_TRAITS_F19517B3_5275_4bc4_A7F6_3BEBC3706580
 #define LIB_INDUSTRY_TRAITS_F19517B3_5275_4bc4_A7F6_3BEBC3706580
