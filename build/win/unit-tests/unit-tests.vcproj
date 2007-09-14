@@ -40,8 +40,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\libindustry"
+				AdditionalIncludeDirectories="..\..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				GeneratePreprocessedFile="0"
+				KeepComments="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -186,7 +188,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\libindustry\traits\function_traits.hpp"
+				RelativePath="..\..\..\industry\traits\function_traits.hpp"
 				>
 			</File>
 		</Filter>
