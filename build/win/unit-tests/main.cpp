@@ -7,7 +7,7 @@
 //
 //  $LastChangedDate$ - $Author$
 
-#include <traits.hpp>
+#include <traits/function_traits.hpp>
 
 int main() {
 }
