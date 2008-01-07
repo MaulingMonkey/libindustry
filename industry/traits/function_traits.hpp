@@ -28,9 +28,9 @@ namespace industry {
 #include BOOST_PP_ITERATE()
 
 }
-#endif //IG_INDUSTRY_FUNCTION_TRAITS2
+#endif //IG_INDUSTRY_FUNCTION_TRAITS
 
-#else
+#else // BOOST_PP_IS_ITERATING
 
 #define n BOOST_PP_ITERATION()
 
@@ -44,7 +44,7 @@ struct function_traits <R (*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 	static const bool has_var_arg = false;
 
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, nil))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, nil)
 };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -55,7 +55,7 @@ struct function_traits <R (*)(BOOST_PP_ENUM_PARAMS(n,A) ...)> {
 	static const bool has_var_arg = true;
 
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -66,7 +66,7 @@ struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A))> {
 	static const bool has_var_arg = false;
 
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -77,7 +77,7 @@ struct function_traits <R (BOOST_PP_ENUM_PARAMS(n,A) ...)> {
 	static const bool has_var_arg = true;
 
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -89,7 +89,7 @@ struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A)) const> {
 
 	typedef C class_type;
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -101,7 +101,7 @@ struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A) ...) const> {
 
 	typedef C class_type;
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -113,7 +113,7 @@ struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A))> {
 
 	typedef C class_type;
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
 
 template<class C, class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>
@@ -125,7 +125,10 @@ struct function_traits <R (C::*)(BOOST_PP_ENUM_PARAMS(n,A) ...)> {
 
 	typedef C class_type;
 	typedef R result_type;
-	BOOST_PP_EXPR_IF(n, BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T))
+	BOOST_PP_REPEAT_FROM_TO(0, n, DECL, T)
 };
+
+#undef DECL
 #undef n
-#endif
+
+#endif // BOOST_PP_IS_ITERATING
