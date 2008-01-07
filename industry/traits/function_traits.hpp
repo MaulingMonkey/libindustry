@@ -5,7 +5,7 @@
 //  1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-//  $LastChangedDate: 2007-09-13 22:09:48 -0700 (Thu, 13 Sep 2007) $ - $Author: washuhibiki $
+//  $LastChangedDate$ - $Author$
 #if !BOOST_PP_IS_ITERATING
 #ifndef IG_INDUSTRY_FUNCTION_TRAITS
 #define IG_INDUSTRY_FUNCTION_TRAITS
