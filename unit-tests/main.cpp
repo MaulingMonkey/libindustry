@@ -1,11 +1,10 @@
-// Lib Industry
+// Copyright (c) 2006-2008 Sean Kent
 //
-//  Copyright Sean Kent 2003-2004. Use, modification and
-//  distribution is subject to the Boost Software License, Version
-//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt )
 //
-//  $LastChangedDate$ - $Author$
+// $LastChangedBy$ - $LastChangedDate$
 
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/unit_test.hpp>
