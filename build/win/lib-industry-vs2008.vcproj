@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="msvcrt-ruby190.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -157,6 +158,38 @@
 					RelativePath="..\..\industry\traits\function_traits.hpp"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="languages"
+				>
+				<Filter
+					Name="ruby"
+					>
+					<File
+						RelativePath="..\..\industry\languages\ruby\ruby.hpp"
+						>
+					</File>
+					<Filter
+						Name="detail"
+						>
+						<File
+							RelativePath="..\..\industry\languages\ruby\detail\class.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\languages\ruby\detail\do_call.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\languages\ruby\detail\ruby_value.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\languages\ruby\detail\wrap_retarded_ruby.hpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

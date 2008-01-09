@@ -129,10 +129,13 @@ private
 		dirs.each do |d|
 			name = d.basename.to_s
 			if (check_create_filter_for(d.to_s,name))
+				give_vcproj_context
 				new_node = xml.add_element( "Filter" )
 				new_node.attributes["Name"] = name
 				@changes = true
-				puts "  Created filter #{name}"
+				puts "    Created filter #{name}"
+				
+				scan( File.join(*[path,name].compact), d, new_node )
 			end
 		end
 		
@@ -155,7 +158,16 @@ private
 		files.reject! {|f| $files[f].ignore? }
 		files.each do |f|
 			give_vcproj_context
-			puts "    Warning:  No corresponding file entry to #{f}"
+			next if $files[f].ignore?
+			
+			if $files[f].auto_add?
+				new_node = xml.add_element( "File" )
+				new_node.attributes["RelativePath"] = (dir+f.basename).relative_path_from(@projpath).to_s.gsub("/","\\")
+				@changes = true
+				puts "    Created flie entry for #{f}"
+			else
+				puts "    Warning:  No corresponding file entry to #{f}"
+			end
 		end
 	end
 end
