@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -49,6 +49,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\unit-test-objs\"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -173,10 +174,6 @@
 		/>
 	</References>
 	<Files>
-		<File
-			RelativePath="..\..\unit-tests\main.cpp"
-			>
-		</File>
 		<Filter
 			Name="languages"
 			>
@@ -185,6 +182,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="api"
+			>
+			<Filter
+				Name="windows"
+				>
+				<File
+					RelativePath="..\..\unit-tests\api\windows\registry.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<File
+			RelativePath="..\..\unit-tests\main.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

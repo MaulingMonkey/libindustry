@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -41,11 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\lib-industry-objs\"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -151,6 +153,10 @@
 				RelativePath="..\..\industry\compileme.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\industry\config.hpp"
+				>
+			</File>
 			<Filter
 				Name="traits"
 				>
@@ -191,10 +197,162 @@
 					</Filter>
 				</Filter>
 			</Filter>
-			<File
-				RelativePath="..\..\industry\config.hpp"
+			<Filter
+				Name="api"
 				>
-			</File>
+				<Filter
+					Name="windows"
+					>
+					<File
+						RelativePath="..\..\industry\api\windows\config.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\api\windows\import.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\api\windows\registry.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\api\windows\registry.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\api\windows\tstring.hpp"
+						>
+					</File>
+					<Filter
+						Name="registry"
+						>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\config.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\errors.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\errors.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\key.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\key.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\key_iterator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\key_iterator.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\value.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\value.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\value_iterator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\industry\api\windows\registry\value_iterator.hpp"
+							>
+						</File>
+						<Filter
+							Name="detail"
+							>
+							<File
+								RelativePath="..\..\industry\api\windows\registry\detail\key_data.hpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\industry\api\windows\registry\detail\value_data.hpp"
+								>
+							</File>
+						</Filter>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="iterator"
+				>
+				<File
+					RelativePath="..\..\industry\iterator\cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\cast_base.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\const_cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\dynamic_cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\multi.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\n.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\numeric.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\reinterpret_cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\static_cast.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\traits.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\virtual_bidirectional.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\virtual_forward.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\industry\iterator\virtual_random_access.hpp"
+					>
+				</File>
+				<Filter
+					Name="detail"
+					>
+					<File
+						RelativePath="..\..\industry\iterator\detail\virtual_impl.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\iterator\detail\virtual_impl_interfaces.hpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

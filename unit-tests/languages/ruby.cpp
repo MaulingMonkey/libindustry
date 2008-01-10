@@ -6,7 +6,6 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
-#include <boost/test/execution_monitor.hpp>
 #include <boost/test/auto_unit_test.hpp>
 #include <industry/languages/ruby/ruby.hpp>
 
@@ -39,8 +38,6 @@ namespace {
 			def("mul_by_inc", &Empty::mul_by_inc);
 	}
 }
-
-#define BOOST_TEST_MODULE industry::language::ruby tests
 
 BOOST_AUTO_TEST_CASE( basic_invokation_test )
 {

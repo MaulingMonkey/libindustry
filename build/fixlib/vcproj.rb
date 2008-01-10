@@ -164,7 +164,7 @@ private
 				new_node = xml.add_element( "File" )
 				new_node.attributes["RelativePath"] = (dir+f.basename).relative_path_from(@projpath).to_s.gsub("/","\\")
 				@changes = true
-				puts "    Created flie entry for #{f}"
+				puts "    Created file entry for #{f}"
 			else
 				puts "    Warning:  No corresponding file entry to #{f}"
 			end

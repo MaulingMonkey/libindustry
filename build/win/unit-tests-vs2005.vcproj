@@ -184,6 +184,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="api"
+			>
+			<Filter
+				Name="windows"
+				>
+				<File
+					RelativePath="..\..\unit-tests\api\windows\registry.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
