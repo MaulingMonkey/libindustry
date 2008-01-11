@@ -39,7 +39,7 @@ namespace {
 	}
 }
 
-BOOST_AUTO_TEST_CASE( basic_invokation_test )
+BOOST_AUTO_TEST_CASE( basic_invocation_test )
 {
 	test_value = 0;
 	Init_MyTestModule();
