@@ -13,7 +13,7 @@
 #ifndef IG_INDUSTRY_ITERATOR_MULTI
 #define IG_INDUSTRY_ITERATOR_MULTI
 
-#include <industry/iterator/traits.hpp>
+#include <industry/traits/iterator_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/function_traits.hpp>
 #include <boost/type_traits/is_same.hpp>

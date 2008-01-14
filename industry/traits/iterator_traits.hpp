@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2007 Michael B. Edwin Rickert
+// Copyright (c) 2006-2008 Michael B. Edwin Rickert
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,6 @@
 #define IG_INDUSTRY_ITERATOR_TRAITS
 
 #include <industry/config.hpp>
-#include <industry/member_function_ptr_traits.hpp>
-#include <boost/type_traits/function_traits.hpp>
 #include <iterator>
 
 namespace industry {

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_SCL_SECURE_NO_WARNINGS"
 				GeneratePreprocessedFile="0"
 				KeepComments="false"
 				MinimalRebuild="true"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_SCL_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -193,6 +193,30 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="iterator"
+			>
+			<File
+				RelativePath="..\..\unit-tests\iterator\cast_iterator_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unit-tests\iterator\multi_iterator_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unit-tests\iterator\virtual_iterator_tests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="traits"
+			>
+			<File
+				RelativePath="..\..\unit-tests\traits\iterator_traits_tests.cpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\unit-tests\main.cpp"

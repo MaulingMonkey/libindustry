@@ -196,6 +196,30 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="iterator"
+			>
+			<File
+				RelativePath="..\..\unit-tests\iterator\cast_iterator_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unit-tests\iterator\multi_iterator_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\unit-tests\iterator\virtual_iterator_tests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="traits"
+			>
+			<File
+				RelativePath="..\..\unit-tests\traits\iterator_traits_tests.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

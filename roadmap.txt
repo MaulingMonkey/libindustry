@@ -1,0 +1,3 @@
+Near future TODO list:
+
+1)  Make build system verify the existance of File entries

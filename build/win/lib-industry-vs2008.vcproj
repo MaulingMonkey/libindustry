@@ -164,6 +164,10 @@
 					RelativePath="..\..\industry\traits\function_traits.hpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\industry\traits\iterator_traits.hpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="languages"
@@ -322,10 +326,6 @@
 				</File>
 				<File
 					RelativePath="..\..\industry\iterator\static_cast.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\industry\iterator\traits.hpp"
 					>
 				</File>
 				<File
