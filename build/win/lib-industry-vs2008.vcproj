@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -176,7 +176,23 @@
 					Name="ruby"
 					>
 					<File
+						RelativePath="..\..\industry\languages\ruby\eval.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\languages\ruby\eval.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\industry\languages\ruby\ruby.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\languages\ruby\value.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\languages\ruby\value.ruby.cpp"
 						>
 					</File>
 					<Filter

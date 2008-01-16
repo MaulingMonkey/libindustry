@@ -7,6 +7,7 @@
 // $LastChangedBy$ - $LastChangedDate$
 
 #include <boost/test/auto_unit_test.hpp>
+#include <boost/test/execution_monitor.hpp>
 #include <industry/languages/ruby/ruby.hpp>
 
 #ifdef _M_X64
@@ -37,7 +38,12 @@ namespace {
 			def("work2", &Empty::work2).
 			def("mul_by_inc", &Empty::mul_by_inc);
 	}
+
+	// prevent Boost.Test from detecting GCed objects as leaks:
+	struct cleaner { ~cleaner() { rb_eval_string( "GC.start" ); } } instance;
 }
+
+BOOST_AUTO_TEST_SUITE( ruby_tests )
 
 BOOST_AUTO_TEST_CASE( basic_invocation_test )
 {
@@ -48,14 +54,13 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 1 );
 	rb_eval_string("MyTestClass.new.work2" );
 	BOOST_CHECK_EQUAL( test_value, 3 );
-	rb_eval_string("GC.start"); // prevent Boost.Test from detecting GCed objects as leaks
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )
 {
+	Init_MyTestModule();
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(2)")), 4 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(3)")), 6 );
-	rb_eval_string("GC.start"); // prevent Boost.Test from detecting GCed objects as leaks
 }
 
 BOOST_AUTO_TEST_CASE( big_long_scripts ) {
@@ -67,7 +72,13 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 		test_class.work2\n\
 		");
 	BOOST_CHECK_EQUAL( test_value, 3 );
-	rb_eval_string("GC.start"); // prevent Boost.Test from detecting GCed objects as leaks
 }
+
+BOOST_AUTO_TEST_CASE( value_and_eval ) {
+	Init_MyTestModule();
+	value v = eval( "MyTestClass.new.mul_by_inc(2)" );
+}
+
+BOOST_AUTO_TEST_SUITE_END() // ruby_tests
 
 #endif
