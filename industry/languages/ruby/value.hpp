@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_LANGUAGES_RUBY_VALUE
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
+#include <industry/languages/ruby/detail/ruby_value.hpp>
 
 namespace industry { namespace languages { namespace ruby {
 	class value;
@@ -21,6 +22,8 @@ namespace industry { namespace languages { namespace ruby {
 		lazy_value( const lazy_value& );
 	public:
 		lazy_value( VALUE v ): value_(v) {}
+
+		template < typename T > T to() const { return detail::ruby_value<T>::from(value_); }
 	};
 	class value {
 		VALUE value_;
@@ -30,6 +33,8 @@ namespace industry { namespace languages { namespace ruby {
 		value( const lazy_value& );
 		value( VALUE );
 		~value();
+
+		template < typename T > T to() const { return detail::ruby_value<T>::from(value_); }
 	};
 }}}
 

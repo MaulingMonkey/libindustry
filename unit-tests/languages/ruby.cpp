@@ -19,9 +19,9 @@ using namespace industry::languages::ruby;
 namespace {
 	unsigned int test_value;
 
-	struct Empty {
+	struct MyTestClass {
 		unsigned int inc;
-		Empty(): inc(2) {}
+		MyTestClass(): inc(2) {}
 
 		void work2() const { test_value += inc; }
 
@@ -33,10 +33,10 @@ namespace {
 	}
 
 	INDUSTRY_RUBY_MODULE(MyTestModule) {
-		class_<Empty>("MyTestClass").
+		class_<MyTestClass>("MyTestClass").
 			def("work1", work1).
-			def("work2", &Empty::work2).
-			def("mul_by_inc", &Empty::mul_by_inc);
+			def("work2", &MyTestClass::work2).
+			def("mul_by_inc", &MyTestClass::mul_by_inc);
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -76,7 +76,11 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	Init_MyTestModule();
-	value v = eval( "MyTestClass.new.mul_by_inc(2)" );
+	BOOST_CHECK_EQUAL( eval              ( "MyTestClass.new.mul_by_inc(2)" ).to<int>(), 4 );
+	BOOST_CHECK_EQUAL( eval<int>         ( "MyTestClass.new.mul_by_inc(2)" )          , 4 );
+	BOOST_CHECK_EQUAL( eval<MyTestClass*>( "MyTestClass.new" )->mul_by_inc(2)         , 4 );
+
+	value v = eval("MyTestClass.new");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ruby_tests
