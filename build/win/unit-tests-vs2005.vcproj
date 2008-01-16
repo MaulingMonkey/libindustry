@@ -220,6 +220,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="math"
+			>
+			<File
+				RelativePath="..\..\unit-tests\math\vector_tests.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
