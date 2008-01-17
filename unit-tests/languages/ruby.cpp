@@ -76,11 +76,12 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	Init_MyTestModule();
-	BOOST_CHECK_EQUAL( eval              ( "MyTestClass.new.mul_by_inc(2)" ).to<int>(), 4 );
-	BOOST_CHECK_EQUAL( eval<int>         ( "MyTestClass.new.mul_by_inc(2)" )          , 4 );
-	BOOST_CHECK_EQUAL( eval<MyTestClass*>( "MyTestClass.new" )->mul_by_inc(2)         , 4 );
-
-	value v = eval("MyTestClass.new");
+	
+	value instance = eval("MyTestClass.new");
+	BOOST_CHECK_EQUAL( eval              ( "MyTestClass.new.mul_by_inc(2)" ).to<int>()     , 4 );
+	BOOST_CHECK_EQUAL( eval<int>         ( "MyTestClass.new.mul_by_inc(2)" )               , 4 );
+	BOOST_CHECK_EQUAL( eval<MyTestClass*>( "MyTestClass.new" )->  mul_by_inc  (2)          , 4 );
+	BOOST_CHECK_EQUAL(                   ( instance           ->*"mul_by_inc")(2).to<int>(), 4 );
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ruby_tests

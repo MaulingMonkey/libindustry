@@ -33,4 +33,22 @@ namespace industry { namespace languages { namespace ruby {
 	{
 		rb_gc_unregister_address(&value_);
 	}
+
+
+
+	value_function::value_function( VALUE v, const char *str )
+		: self(v)
+		, id( rb_intern(str) )
+	{
+		rb_gc_register_address(&self);
+	}
+	value_function::value_function( VALUE v, const char *str, unsigned strlen )
+		: self(v)
+		, id( rb_intern2(str,strlen) )
+	{
+		rb_gc_register_address(&self);
+	}
+	value_function::~value_function() {
+		rb_gc_unregister_address(&self);
+	}
 }}}
