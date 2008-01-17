@@ -29,6 +29,31 @@ namespace industry { namespace languages { namespace ruby {
 	{
 		rb_gc_register_address(&value_);
 	}
+	value::value( double d )
+		: value_(DOUBLE2NUM(d))
+	{
+		rb_gc_register_address(&value_);
+	}
+	value::value( int i )
+		: value_(INT2NUM(i))
+	{
+		rb_gc_register_address(&value_);
+	}
+	value::value( unsigned int i )
+		: value_(UINT2NUM(i))
+	{
+		rb_gc_register_address(&value_);
+	}
+	value::value( const char * str )
+		: value_(rb_str_new2(str))
+	{
+		rb_gc_register_address(&value_);
+	}
+	value::value( const std::string& str )
+		: value_(rb_str_new(str.c_str(),str.size()))
+	{
+		rb_gc_register_address(&value_);
+	}
 	value::~value()
 	{
 		rb_gc_unregister_address(&value_);

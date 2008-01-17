@@ -82,6 +82,10 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	BOOST_CHECK_EQUAL( eval<int>         ( "MyTestClass.new.mul_by_inc(2)" )               , 4 );
 	BOOST_CHECK_EQUAL( eval<MyTestClass*>( "MyTestClass.new" )->  mul_by_inc  (2)          , 4 );
 	BOOST_CHECK_EQUAL(                   ( instance           ->*"mul_by_inc")(2).to<int>(), 4 );
+
+	BOOST_CHECK_EQUAL(     value(4), 4 );
+	BOOST_CHECK( value(4) != 8 );
+	BOOST_CHECK( value(4)-4 );
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ruby_tests
