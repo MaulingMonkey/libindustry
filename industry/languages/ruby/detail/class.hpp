@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_CLASS
 
 #include <industry/traits/function_traits.hpp>
+#include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 #include <stdarg.h>
@@ -27,11 +28,11 @@ namespace industry { namespace languages { namespace ruby {
 					Fn,
 					boost::function<Fn>::arity,
 					boost::is_same<T,
-						typename boost::remove_const<
-							typename boost::remove_pointer<
-								typename boost::function<Fn>::arg1_type
-							>::type
-						>::type
+					typename boost::remove_const<
+					typename boost::remove_pointer<
+					typename boost::function<Fn>::arg1_type
+					>::type
+					>::type
 					>::value
 				>::call(f, self, args);
 			}
@@ -64,6 +65,37 @@ namespace industry { namespace languages { namespace ruby {
 				class_n<T, typename industry::function_traits<Fn2>::signature, N+1>::get(f);
 				rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((class_n<T, typename industry::function_traits<Fn2>::signature, N+1>::call_proxy)), industry::function_traits<Fn2>::arity);
 				return class_n<T, typename industry::function_traits<Fn2>::signature, N+1>();
+			}
+
+			template<class Type>
+			class_n& const_(std::string const& name, Type value) {
+				rb_define_const(class_<T>::get_class(), name.c_str(), detail::ruby_value<Type>::to(value));
+				return *this;
+			}
+
+			template<class V>
+			class_n<T, void(), N+1> var(std::string const& name, V T::* p) {
+				var_n<T, V, N+1>::reg(p);
+				rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((var_n<T, V, N+1>::get)), 0);
+				rb_define_method(::industry::languages::ruby::class_<T>::get_class(), (name + "=").c_str(), RUBY_METHOD_FUNC((var_n<T, V, N+1>::set)), 1);
+				return class_n<T, void(), N+1>();
+			}
+		};
+
+		template<class C, class T, unsigned int N>
+		struct var_n {
+			static T C::* reg(T C::* addr = 0) {
+				static T C::* p = addr;
+				return p;
+			}
+
+			static VALUE get(VALUE self) {
+				return ruby_value<T>::to(ruby_value<C*>::from(self)->*reg());
+			}
+
+			static VALUE set(VALUE self, VALUE value) {
+				(ruby_value<C*>::from(self)->*reg()) = ruby_value<T>::from(value);
+				return Qnil;
 			}
 		};
 	}

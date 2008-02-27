@@ -63,6 +63,20 @@ namespace industry { namespace languages { namespace ruby {
 			rb_define_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
 			return f_proxy_class();
 		}
+
+		template<class Type>
+		class_& const_(std::string const& name, Type value) {
+			rb_define_const(class_<T>::get_class(), name.c_str(), detail::ruby_value<Type>::to(value));
+			return *this;
+		}
+
+		template<class V>
+		detail::class_n<T, void(), 0> var(std::string const& name, V T::* p) {
+			detail::var_n<T, V, 0>::reg(p);
+			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::get)), 0);
+			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::set)), 1);
+			return detail::class_n<T, void(), 0>();
+		}
 	};
 }}}
 

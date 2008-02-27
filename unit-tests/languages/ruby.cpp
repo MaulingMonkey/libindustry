@@ -34,8 +34,10 @@ namespace {
 
 	INDUSTRY_RUBY_MODULE(MyTestModule) {
 		class_<MyTestClass>("MyTestClass").
+			var("inc2", &MyTestClass::inc).
 			def("work1", work1).
 			def("work2", &MyTestClass::work2).
+			var("inc", &MyTestClass::inc).
 			def("mul_by_inc", &MyTestClass::mul_by_inc);
 	}
 
@@ -59,6 +61,8 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )
 {
 	Init_MyTestModule();
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc")), 2);
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc = 5")), 5);
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(2)")), 4 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(3)")), 6 );
 }
@@ -72,6 +76,16 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 		test_class.work2\n\
 		");
 	BOOST_CHECK_EQUAL( test_value, 3 );
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("\
+		test_class = MyTestClass.new\n\
+		test_class.inc = 7\n\
+		test_class.inc2\n\
+		")), 7);
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("\
+		test_class = MyTestClass.new\n\
+		test_class.inc = 7\n\
+		test_class.mul_by_inc(2)\n\
+		")), 14);
 }
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {
