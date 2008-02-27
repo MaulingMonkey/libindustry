@@ -38,7 +38,8 @@ namespace {
 			def("work1", work1).
 			def("work2", &MyTestClass::work2).
 			var("inc", &MyTestClass::inc).
-			def("mul_by_inc", &MyTestClass::mul_by_inc);
+			def("mul_by_inc", &MyTestClass::mul_by_inc).
+			const_("Multiplicand", 4);
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -65,6 +66,7 @@ BOOST_AUTO_TEST_CASE( arguments_and_return_test )
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc = 5")), 5);
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(2)")), 4 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(3)")), 6 );
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(MyTestClass::Multiplicand)")), 8 );
 }
 
 BOOST_AUTO_TEST_CASE( big_long_scripts ) {

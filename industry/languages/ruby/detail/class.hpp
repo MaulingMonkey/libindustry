@@ -69,7 +69,11 @@ namespace industry { namespace languages { namespace ruby {
 
 			template<class Type>
 			class_n& const_(std::string const& name, Type value) {
-				rb_define_const(class_<T>::get_class(), name.c_str(), detail::ruby_value<Type>::to(value));
+				static bool runOnce = false;
+				if(!runOnce) {
+					rb_define_const(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), ruby_value<Type>::to(value));
+					runOnce = true;
+				}
 				return *this;
 			}
 
