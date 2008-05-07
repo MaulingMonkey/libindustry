@@ -12,6 +12,11 @@
 #include <string>
 #include <iostream>
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable: 4127 ) // conditional expression is constant -- do {...} while(0) idiom used by Data_Wrap_Struct
+#endif
+
 namespace industry { namespace languages { namespace ruby { namespace detail {
 	template<class T> struct class_;
 	template<class T> struct ruby_value;
@@ -40,6 +45,26 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 		}
 	};
 
+	template <class T> struct ruby_value< const T > : ruby_value<T> {};
+	template <class T> struct ruby_value< const T&> : ruby_value<T> {};
+	template <class T> struct ruby_value<       T&> : ruby_value<T> {};
+
+#if 0 // TODO: Do we want/need something like this? Decide! Completely untested --pandamojo
+	template<class T> struct ruby_value {
+		static VALUE to(const T& ref) {
+			T* ptr = ALLOC(T);
+			*ptr = ref;
+			return Data_Wrap_Struct(class_<T>::get_class(), 0, class_<T>::free_type, ptr);
+		}
+
+		static T from(VALUE v) {
+			T* ptr;
+			Data_Get_Struct(v, T, ptr);
+			return *ptr;
+		}
+	};
+#endif
+
 	template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
 	template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
 	template<> struct ruby_value<int>   { static VALUE to(int   v) { return INT2NUM(v); } static int   from(VALUE v) {return NUM2INT(v);  } };
@@ -56,5 +81,9 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 	template<> struct ruby_value<const char*> { static VALUE to(const char* v) { return rb_str_new2(v); } static const char* from(VALUE v) {return STR2CSTR(v); } };
 	template<> struct ruby_value<std::string> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 }}}}
+
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
 
 #endif//IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE

@@ -20,7 +20,13 @@
 #include <boost/preprocessor/tuple/to_list.hpp>
 #include <boost/type_traits.hpp>
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable: 4100 ) // unreferenced formal parameters
+#endif
+
 namespace industry { namespace languages { namespace ruby {
+
 	template<class T>
 	struct class_;
 
@@ -44,6 +50,11 @@ namespace industry { namespace languages { namespace ruby {
 		};
 	}
 }}}
+
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
+
 #endif//IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_DO_CALL
 #else //BOOST_PP_IS_ITERATING
 

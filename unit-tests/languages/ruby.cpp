@@ -31,7 +31,7 @@ namespace {
 
 		int multi_arg_mul(int x, int y) { return x * y; }
 
-		void arr(std::string n) { name = n; }
+		void arr(const std::string& n) { name = n; }
 	};
 
 	void work1() {
@@ -74,6 +74,7 @@ BOOST_AUTO_TEST_CASE( arguments_and_return_test )
 	Init_MyTestModule();
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc")), 2);
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc = 5")), 5);
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc = 0x12345678")), 0x12345678);
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(2)")), 4 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(3)")), 6 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.multi_arg_mul(3, 2)")), 6 );

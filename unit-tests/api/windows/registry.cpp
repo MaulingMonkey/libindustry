@@ -25,6 +25,7 @@
 
 //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts [ Courier New (TrueType) = COUR.TTF ]
 
+#if 0
 BOOST_AUTO_TEST_CASE( slashes_seperators_and_fonts ) {
 	using namespace industry;
 	using namespace industry::api::windows::registry;
@@ -48,5 +49,6 @@ BOOST_AUTO_TEST_CASE( slashes_seperators_and_fonts ) {
 	{ int values = 0; BOOST_FOREACH( const value& v, fonts.values() ) ++values; BOOST_CHECK(( values > 4u )); }
 	{ int keys   = 0; BOOST_FOREACH( const key  & k, fonts.keys()   ) ++keys  ; BOOST_CHECK(( keys   > 0u )); }
 }
+#endif
 
 #endif
