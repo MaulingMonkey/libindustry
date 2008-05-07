@@ -18,14 +18,20 @@ using namespace industry::languages::ruby;
 
 namespace {
 	unsigned int test_value;
+	std::string name;
 
 	struct MyTestClass {
 		unsigned int inc;
+
 		MyTestClass(): inc(2) {}
 
 		void work2() const { test_value += inc; }
 
 		int mul_by_inc(int j) const { return j*inc; }
+
+		int multi_arg_mul(int x, int y) { return x * y; }
+
+		void arr(std::string n) { name = n; }
 	};
 
 	void work1() {
@@ -39,7 +45,9 @@ namespace {
 			def("work2", &MyTestClass::work2).
 			var("inc", &MyTestClass::inc).
 			def("mul_by_inc", &MyTestClass::mul_by_inc).
-			const_("Multiplicand", 4);
+			const_("Multiplicand", 4).
+			def("arr", &MyTestClass::arr).
+			def("multi_arg_mul", &MyTestClass::multi_arg_mul);
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -57,6 +65,8 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 1 );
 	rb_eval_string("MyTestClass.new.work2" );
 	BOOST_CHECK_EQUAL( test_value, 3 );
+	rb_eval_string("MyTestClass.new.arr('hello')");
+	BOOST_CHECK_EQUAL( name, "hello");
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )
@@ -66,6 +76,7 @@ BOOST_AUTO_TEST_CASE( arguments_and_return_test )
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.inc = 5")), 5);
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(2)")), 4 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(3)")), 6 );
+	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.multi_arg_mul(3, 2)")), 6 );
 	BOOST_CHECK_EQUAL( NUM2UINT(rb_eval_string("MyTestClass.new.mul_by_inc(MyTestClass::Multiplicand)")), 8 );
 }
 

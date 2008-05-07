@@ -49,8 +49,8 @@ namespace industry { namespace languages { namespace ruby {
 
 #define n BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(i) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(i),_type))
-#define DO_WRAP_VALUE(x,i,d) (ruby_value<FUNCTION_ARG_TYPE(i)>::from((VALUE)*(args+i)))
-#define DO_WRAP_VALUE_MEMBER(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(BOOST_PP_INC(i))>::from((VALUE)*(args+i)))
+#define DO_WRAP_VALUE(x,i,d) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(*(((VALUE*)args) + i)))
+#define DO_WRAP_VALUE_MEMBER(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(BOOST_PP_INC(i))>::from(*(((VALUE*)args) + i)))
 
 template<class T, class Fn>
 struct do_call_is_void<T, Fn, n, false, false> {
