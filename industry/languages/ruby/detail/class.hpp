@@ -67,6 +67,13 @@ namespace industry { namespace languages { namespace ruby {
 				return class_n<T, typename industry::function_traits<Fn2>::signature, N+1>();
 			}
 
+			template<class Fn2>
+			class_n<T, typename industry::function_traits<Fn2>::signature, N+1> singleton_def(std::string const& name, Fn2 f) {
+				class_n<T, typename industry::function_traits<Fn2>::signature, N+1>::get(f);
+				rb_define_singleton_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((class_n<T, typename industry::function_traits<Fn2>::signature, N+1>::call_proxy)), industry::function_traits<Fn2>::arity);
+				return class_n<T, typename industry::function_traits<Fn2>::signature, N+1>();
+			}
+
 			template<class Type>
 			class_n& const_(std::string const& name, Type value) {
 				static bool runOnce = false;

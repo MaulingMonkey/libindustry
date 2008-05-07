@@ -22,7 +22,6 @@ namespace industry { namespace languages { namespace ruby {
 		VALUE value_;
 
 		lazy_value();
-		lazy_value( const lazy_value& );
 	public:
 		lazy_value( VALUE v ): value_(v) {}
 

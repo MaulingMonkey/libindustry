@@ -56,11 +56,23 @@ namespace industry { namespace languages { namespace ruby {
 			rb_define_alloc_func(get_class(), alloc_type);
 		}
 
+		class_( VALUE existing_class ) {
+			get_class(existing_class);
+		}
+
 		template<class Fn2>
 		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> def(std::string const& name, Fn2 f) {
 			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
 			f_proxy_class::get(f);
 			rb_define_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
+			return f_proxy_class();
+		}
+
+		template<class Fn2>
+		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> singleton_def(std::string const& name, Fn2 f) {
+			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
+			f_proxy_class::get(f);
+			rb_define_singleton_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
 			return f_proxy_class();
 		}
 
