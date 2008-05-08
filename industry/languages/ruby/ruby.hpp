@@ -51,6 +51,11 @@ namespace industry { namespace languages { namespace ruby {
 			return Data_Wrap_Struct(klass, 0, free_type, ptr);
 		}
 
+		static VALUE clone_type( const T& original ) {
+			T* ptr = new T(original);
+			return Data_Wrap_Struct(get_class(), 0, free_type, ptr);
+		}
+
 		class_(std::string const& name) {
 			get_class(rb_define_class(name.c_str(), rb_cObject));
 			rb_define_alloc_func(get_class(), alloc_type);
