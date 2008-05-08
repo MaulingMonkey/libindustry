@@ -117,6 +117,7 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 
 	value array_test = eval("[1, 2, 3]");
 	BOOST_CHECK_EQUAL(array_test[1], 2);
+	BOOST_CHECK_EQUAL(array_test.length(), 3);
 	BOOST_CHECK_EQUAL(     value(4), 4 );
 	BOOST_CHECK( value(4) != 8 );
 	BOOST_CHECK( value(4)-4 );
