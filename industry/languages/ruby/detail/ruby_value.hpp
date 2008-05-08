@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 
 #include <boost/intrusive_ptr.hpp>
+#include <boost/ref.hpp>
 #include <memory>
 #include <string>
 
@@ -30,6 +31,19 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T> struct ruby_value<const T*> { // Ownership does not transfer
 			static VALUE to(const T* ptr) { return Data_Wrap_Struct(class_<T>::get_class(), 0, 0, ptr); }
 			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
+		};
+
+		// TODO: Prevent [c]refs to builtin types?
+		template<class T> struct ruby_value< boost::reference_wrapper<T> > { // Ownership does not transfer
+			static VALUE to( const boost::reference_wrapper<T>& ref ) { return Data_Wrap_Struct(class_<T>::get_class(), 0, 0, ref.get_pointer()); }
+			// no from -- use ruby_value<T&>::from instead
+		};
+		template<class T> struct ruby_value< boost::reference_wrapper<const T> > { // Ownership does not transfer
+			/*
+			 * We're not so masochistic as to try and get Ruby to respect constness, are we?
+			 * Maybe const_cast a freezed VALUE?  Probably leave this to be done explicitly by the end user.
+			 */
+			// no from -- use ruby_value<const T&>::from instead
 		};
 
 		template<class T> struct ruby_value< std::auto_ptr<T> > { // Ownership DOES transfer
@@ -60,18 +74,24 @@ namespace industry { namespace languages { namespace ruby {
 
 		// No boost::scoped_ptr<T> -- use get() to explicitly use non-transfering ownership
 		// No boost::shared_ptr<T> -- use get() to explicitly use non-transfering ownership
-		//    TODO:  Write ownership sharing to/from for shared_ptr, at least when using enable_shared_from_this)
+		//    TODO:  Write ownership sharing to/from for shared_ptr, at least when using enable_shared_from_this?
 
 		template <class T> struct ruby_value< const T > : ruby_value<T> {};
-		template <class T> struct ruby_value< const T&> : ruby_value<T> {};
-		template <class T> struct ruby_value<       T&> : ruby_value<T> {};
 
-#if 0 // TODO: Do we want/need something like this? Decide! Completely untested --pandamojo
+		// FIXME:  ruby_value< const T& >::from overrides ruby_value<char, short, std::string, etc>
+		template <class T> struct ruby_value< const T&> : ruby_value<const T> {
+			// Uses ruby_value<const T>::to -- use boost::cref to pass to ruby by reference!
+			static const T& from( VALUE v ) { const T* ptr; Data_Get_Struct(v,const T,ptr); return *ptr; }
+		};
+		template <class T> struct ruby_value<       T&> : ruby_value<T> {
+			// Uses ruby_value<T>::to -- use boost::ref to pass to ruby by reference!
+			static T& from( VALUE v ) { T* ptr; Data_Get_Struct(v,T,ptr); return *ptr; }
+		};
+
 		template<class T> struct ruby_value {
 			static VALUE to(const T& ref) { return class_<T>::clone_type(ref); }
 			static T from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return *ptr; }
 		};
-#endif
 
 		template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
 		template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
@@ -87,7 +107,8 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<> struct ruby_value<char*> { static VALUE to(char* v) { return rb_str_new2(v); } static char* from(VALUE v) {return STR2CSTR(v); } };
 		template<> struct ruby_value<const char*> { static VALUE to(const char* v) { return rb_str_new2(v); } static const char* from(VALUE v) {return STR2CSTR(v); } };
-		template<> struct ruby_value<std::string> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
+		template<> struct ruby_value<      std::string > { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
+		template<> struct ruby_value<const std::string&> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 	}
 }}}
 
