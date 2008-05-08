@@ -13,6 +13,7 @@
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <boost/preprocessor.hpp>
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 namespace industry { namespace languages { namespace ruby {
 	class value;
@@ -108,7 +109,10 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator< ( const value& lhs, const value& rhs ) { return (lhs ->* "<" )(rhs); }
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
 
-		value operator[] (std::size_t index) const { return value(rb_ary_entry(value_, index)); }
+		template<class T>
+		value operator[] (T const& index) const {
+			return ((*this) ->* "[]")(index);
+		}
 		std::size_t length() const { return RARRAY(value_)->len; }
 		// TODO: operator[]
 		// TODO: assignment operators

@@ -121,6 +121,9 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	BOOST_CHECK_EQUAL(     value(4), 4 );
 	BOOST_CHECK( value(4) != 8 );
 	BOOST_CHECK( value(4)-4 );
+
+	value hash_test = eval("{'a' => 1, 'b' => 2, 'c' => 3}");
+	BOOST_CHECK_EQUAL(hash_test["a"], 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ruby_tests
