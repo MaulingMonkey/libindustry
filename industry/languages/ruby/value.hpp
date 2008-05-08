@@ -110,10 +110,8 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
 
 		template<class T>
-		value operator[] (T const& index) const {
-			return ((*this) ->* "[]")(index);
-		}
-		std::size_t length() const { return RARRAY(value_)->len; }
+		value operator[] (T const& index) const { return ((*this) ->* "[]")(index); }
+		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
 		// TODO: operator[]
 		// TODO: assignment operators
 	};
