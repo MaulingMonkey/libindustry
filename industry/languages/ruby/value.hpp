@@ -108,6 +108,7 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator< ( const value& lhs, const value& rhs ) { return (lhs ->* "<" )(rhs); }
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
 
+		value operator[] (std::size_t index) { return value(rb_ary_entry(value_, index)); }
 		// TODO: operator[]
 		// TODO: assignment operators
 	};

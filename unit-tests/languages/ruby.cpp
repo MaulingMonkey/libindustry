@@ -16,7 +16,11 @@
 #else
 using namespace industry::languages::ruby;
 
+#define TEST_ASSERT(t,e) struct e {}; assert<e,t>::value
 namespace {
+	template<class ErrorCode, bool Test> struct assert;
+	template<class ErrorCode> struct assert<ErrorCode, true> { static const bool value = true; };
+
 	unsigned int test_value;
 	std::string name;
 
@@ -58,6 +62,7 @@ BOOST_AUTO_TEST_SUITE( ruby_tests )
 
 BOOST_AUTO_TEST_CASE( basic_invocation_test )
 {
+	TEST_ASSERT(false,static_cast_test_case);
 	test_value = 0;
 	Init_MyTestModule();
 	BOOST_CHECK_EQUAL( test_value, 0 );
