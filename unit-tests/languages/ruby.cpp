@@ -62,7 +62,6 @@ BOOST_AUTO_TEST_SUITE( ruby_tests )
 
 BOOST_AUTO_TEST_CASE( basic_invocation_test )
 {
-	TEST_ASSERT(false,static_cast_test_case);
 	test_value = 0;
 	Init_MyTestModule();
 	BOOST_CHECK_EQUAL( test_value, 0 );
@@ -116,6 +115,8 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	BOOST_CHECK_EQUAL( eval<MyTestClass*>( "MyTestClass.new" )->  mul_by_inc  (2)          , 4 );
 	BOOST_CHECK_EQUAL(                   ( instance           ->*"mul_by_inc")(2).to<int>(), 4 );
 
+	value array_test = eval("[1, 2, 3]");
+	BOOST_CHECK_EQUAL(array_test[1], 2);
 	BOOST_CHECK_EQUAL(     value(4), 4 );
 	BOOST_CHECK( value(4) != 8 );
 	BOOST_CHECK( value(4)-4 );
