@@ -33,7 +33,7 @@ namespace industry { namespace languages { namespace ruby {
 		if(error) {
 			std::ostringstream errorText;
 			value backtrace = eval("$@");
-			if(backtrace != Qnil) {
+			if(!is_nil(backtrace)) {
 				for(std::size_t i = 0; i < backtrace.length(); ++i) {
 					errorText<<"\tfrom "<<backtrace[i].to<std::string>()<<std::endl;
 				}
