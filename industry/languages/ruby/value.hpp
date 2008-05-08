@@ -13,7 +13,7 @@
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <boost/preprocessor.hpp>
 #include <string>
-#include <boost/lexical_cast.hpp>
+#include <stdexcept>
 
 namespace industry { namespace languages { namespace ruby {
 	class value;
@@ -114,6 +114,11 @@ namespace industry { namespace languages { namespace ruby {
 		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
 		// TODO: operator[]
 		// TODO: assignment operators
+	};
+
+	class ruby_error : std::runtime_error {
+	public:
+		ruby_error(std::string const& message) : std::runtime_error(message) {}
 	};
 
 	namespace detail {

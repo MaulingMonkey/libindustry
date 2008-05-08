@@ -16,8 +16,14 @@ namespace industry { namespace languages { namespace ruby {
 	lazy_value eval( const char *       str );
 	lazy_value eval( const std::string& str );
 
+	lazy_value safe_eval( const char *       str );
+	lazy_value safe_eval( const std::string& str );
+
 	template < typename T > T eval( const char*        str ) { return eval(str).to<T>(); }
 	template < typename T > T eval( const std::string& str ) { return eval(str).to<T>(); }
+
+	template < typename T > T safe_eval( const char*        str ) { return eval(str).to<T>(); }
+	template < typename T > T safe_eval( const std::string& str ) { return eval(str).to<T>(); }
 }}}
 
 #endif //ndef IG_INDUSTRY_LANGUAGES_RUBY_EVAL
