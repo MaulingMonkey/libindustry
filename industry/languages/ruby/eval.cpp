@@ -25,10 +25,7 @@ namespace industry { namespace languages { namespace ruby {
 	lazy_value safe_eval( const char* str ) {
 		struct protector {
 			static VALUE body(VALUE arg) {
-				std::string s = detail::ruby_value<std::string>::from(arg);
-				s = std::accumulate(s.begin(), s.end(), std::string(), protector::indent);
-				std::string evl = "begin\n\t" + s + "\nrescue\n\t$__err__=$!\nraise\nend\nx";
-				return rb_eval_string(evl.c_str());
+				return rb_eval_string(detail::ruby_value<std::string>::from(arg).c_str());
 			}
 
 		private:
@@ -43,7 +40,7 @@ namespace industry { namespace languages { namespace ruby {
 		VALUE result = rb_protect(protector::body, detail::ruby_value<std::string>::to(str), &error);
 		if(error) {
 			std::ostringstream errorText;
-			value backtrace = eval("$__err__");
+			value backtrace = eval("$!");
 
 			errorText<<detail::ruby_value<std::string>::from(rb_obj_as_string(backtrace.get_value()))<<std::endl;
 
