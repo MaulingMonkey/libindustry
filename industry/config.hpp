@@ -52,7 +52,11 @@
 
 //INDUSTRY_EXPORT - ???
 #ifndef INDUSTRY_EXPORT
+#if defined( _USRDLL )
+#define INDUSTRY_EXPORT __declspec(dllexport)
+#else
 #define INDUSTRY_EXPORT
+#endif
 #endif //ndef INDUSTRY_EXPORT
 
 #endif //ndef IG_INDUSTRY_CONFIG
