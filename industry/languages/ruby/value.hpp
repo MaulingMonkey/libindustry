@@ -112,7 +112,7 @@ namespace industry { namespace languages { namespace ruby {
 		
 		template<class Destination, class Source>
 		friend Destination value_static_cast(const value& self) {
-			if(class_<boost::remove_pointer<Source>::type>::get_class() == CLASS_OF(self.value_)) {
+			if(class_<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type>::get_class() == CLASS_OF(self.value_)) {
 				return static_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
 			if(boost::is_pointer<Destination>::value)
@@ -122,7 +122,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Destination, class Source>
 		friend Destination value_dynamic_cast(const value& self) {
-			if(class_<boost::remove_pointer<Source>::type>::get_class() == CLASS_OF(self.value_)) {
+			if(class_<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type>::get_class() == CLASS_OF(self.value_)) {
 				return dynamic_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
 			if(boost::is_pointer<Destination>::value)

@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	BOOST_CHECK_EQUAL(safe_eval<int>("2"), 2);
 
 	value safe_cast_test = eval("MyTestClass.new");
-	BOOST_CHECK((value_safe_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) != 0));
+	BOOST_CHECK((value_static_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) != 0));
 	BOOST_CHECK((value_dynamic_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) == 0));
 }
 
