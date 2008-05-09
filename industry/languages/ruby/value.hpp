@@ -109,8 +109,6 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator< ( const value& lhs, const value& rhs ) { return (lhs ->* "<" )(rhs); }
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
 
-		friend bool is_nil(const value& self) { return self.value_ == Qnil; }
-
 		template<class T>
 		value operator[] (T const& index) const { return ((*this) ->* "[]")(index); }
 		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
