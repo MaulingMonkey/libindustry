@@ -8,6 +8,7 @@
 
 #include <industry/languages/ruby/eval.hpp>
 #include <sstream>
+#include <numeric>
 
 namespace industry { namespace languages { namespace ruby {
 	lazy_value eval( const std::string& str ) {
@@ -24,7 +25,17 @@ namespace industry { namespace languages { namespace ruby {
 	lazy_value safe_eval( const char* str ) {
 		struct protector {
 			static VALUE body(VALUE arg) {
-				return rb_eval_string(detail::ruby_value<const char*>::from(arg));
+				std::string s = detail::ruby_value<std::string>::from(arg);
+				s = std::accumulate(s.begin(), s.end(), std::string(), protector::indent);
+				std::string evl = "begin\n\t" + s + "\nrescue\n\t$__err__=$!\nraise\nend\nx";
+				return rb_eval_string(evl.c_str());
+			}
+
+		private:
+			static std::string indent(std::string const& was, char c) {
+				if(c == '\n')
+					return was + "\n\t";
+				return was + c;
 			}
 		};
 
@@ -32,10 +43,14 @@ namespace industry { namespace languages { namespace ruby {
 		VALUE result = rb_protect(protector::body, detail::ruby_value<std::string>::to(str), &error);
 		if(error) {
 			std::ostringstream errorText;
-			value backtrace = eval("$@");
+			value backtrace = eval("$__err__");
+
+			errorText<<detail::ruby_value<std::string>::from(rb_obj_as_string(backtrace.get_value()))<<std::endl;
+
 			if(backtrace) {
-				for(std::size_t i = 0; i < backtrace.length(); ++i) {
-					errorText<<"\tfrom "<<backtrace[i].to<std::string>()<<std::endl;
+				value ary = (backtrace ->* "backtrace")();
+				for(std::size_t i = 0; i < ary.length(); ++i) {
+					errorText<<"\tfrom "<<ary[i].to<std::string>()<<std::endl;
 				}
 			}
 

@@ -11,6 +11,7 @@
 #include <industry/languages/ruby/ruby.hpp>
 #include <functional>
 #include <memory>
+#include <iostream>
 
 #ifdef _M_X64
 #pragma message( "X64 platform not supported." )
@@ -151,6 +152,13 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 
 	value hash_test = eval("{'a' => 1, 'b' => 2, 'c' => 3}");
 	BOOST_CHECK_EQUAL(hash_test["a"], 1);
+
+	RUBY_INIT_STACK
+	try {
+		safe_eval("M.new");
+	} catch(ruby_error& err) {
+		std::cout<<err.what()<<std::endl;
+	}
 }
 
 BOOST_AUTO_TEST_CASE( ownership_and_such ) {

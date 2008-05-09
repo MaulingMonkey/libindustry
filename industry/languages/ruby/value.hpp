@@ -84,6 +84,7 @@ namespace industry { namespace languages { namespace ruby {
 		void true_bool() const {}
 	public:
 		operator bool_type() const { return RTEST(value_) ? &value::true_bool : 0; }
+		VALUE get_value() const { return value_; }
 
 		friend value operator! ( const value& self ) { return self ? Qfalse : Qtrue ; }
 		friend value operator+ ( const value& self ) { return (self ->* "+@")(); }
@@ -116,7 +117,7 @@ namespace industry { namespace languages { namespace ruby {
 		// TODO: assignment operators
 	};
 
-	class ruby_error : std::runtime_error {
+	class ruby_error : public std::runtime_error {
 	public:
 		ruby_error(std::string const& message) : std::runtime_error(message) {}
 	};
