@@ -111,7 +111,7 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
 		
 		template<class Destination, class Source>
-		friend Destination safe_cast_static(const value& self) {
+		friend Destination value_static_cast(const value& self) {
 			if(class_<boost::remove_pointer<Source>::type>::get_class() == CLASS_OF(self.value_)) {
 				return static_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
@@ -121,7 +121,7 @@ namespace industry { namespace languages { namespace ruby {
 		}
 
 		template<class Destination, class Source>
-		friend Destination safe_cast_dynamic(const value& self) {
+		friend Destination value_dynamic_cast(const value& self) {
 			if(class_<boost::remove_pointer<Source>::type>::get_class() == CLASS_OF(self.value_)) {
 				return dynamic_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
