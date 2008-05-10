@@ -40,10 +40,16 @@ namespace {
 
 		void arr(const std::string& n) { name = n; }
 
+		virtual int inherited() { return 1; }
+
 		virtual ~MyTestClass() {}
 	};
 
 	struct MyDerivedTestClass : MyTestClass {
+	};
+
+	struct MyOtherDerivedTestClass : MyTestClass {
+		int inherited() { return 2; }
 	};
 
 	class MyIntrusiveTestClass {
@@ -78,13 +84,16 @@ namespace {
 			def("mul_by_inc", &MyTestClass::mul_by_inc).
 			const_("Multiplicand", 4).
 			def("arr", &MyTestClass::arr).
-			def("multi_arg_mul", &MyTestClass::multi_arg_mul);
+			def("multi_arg_mul", &MyTestClass::multi_arg_mul).
+			def("inherited", &MyTestClass::inherited);
 
 		class_<MyIntrusiveTestClass>("MyIntrusiveTestClass").
 			def("references", &MyIntrusiveTestClass::get_references);
 
 		class_<MyCopyableTestClass>("MyCopyableTestClass").
 			def("address", &MyCopyableTestClass::get_address);
+
+		class_<MyOtherDerivedTestClass>("MyDerivedTestClass", base<MyTestClass>());
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -163,6 +172,13 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	value safe_cast_test = eval("MyTestClass.new");
 	BOOST_CHECK((value_static_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) != 0));
 	BOOST_CHECK((value_dynamic_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) == 0));
+	BOOST_CHECK_EQUAL((safe_cast_test->*"inherited")().to<int>(), 1);
+	safe_cast_test = eval("4");
+
+	value inheritance_test = eval("MyDerivedTestClass.new");
+	BOOST_CHECK_EQUAL((inheritance_test->*"inherited")().to<int>(), 2);
+	BOOST_CHECK((value_static_cast<MyOtherDerivedTestClass*, MyTestClass*>(inheritance_test) != 0));
+	BOOST_CHECK((value_dynamic_cast<MyOtherDerivedTestClass*, MyTestClass*>(inheritance_test) != 0));
 }
 
 BOOST_AUTO_TEST_CASE( ownership_and_such ) {

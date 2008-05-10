@@ -61,6 +61,11 @@ namespace industry { namespace languages { namespace ruby {
 			rb_define_alloc_func(get_class(), alloc_type);
 		}
 
+		class_(std::string const& name, VALUE baseClass) {
+			get_class(rb_define_class(name.c_str(), baseClass));
+			rb_define_alloc_func(get_class(), alloc_type);
+		}
+
 		class_( VALUE existing_class ) {
 			get_class(existing_class);
 		}
@@ -99,6 +104,11 @@ namespace industry { namespace languages { namespace ruby {
 			return detail::class_n<T, void(), 0>();
 		}
 	};
+
+	template<class T>
+	VALUE base() {
+		return class_<T>::get_class();
+	}
 }}}
 
 #ifdef _MSC_VER
