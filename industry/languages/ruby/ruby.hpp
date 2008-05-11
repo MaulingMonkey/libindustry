@@ -19,6 +19,7 @@
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/class.hpp>
 #include <industry/languages/ruby/eval.hpp>
+#include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
 #include <industry/config.hpp>
 #include <string>
@@ -54,6 +55,11 @@ namespace industry { namespace languages { namespace ruby {
 		static VALUE clone_type( const T& original ) {
 			T* ptr = new T(original);
 			return Data_Wrap_Struct(get_class(), 0, free_type, ptr);
+		}
+
+		class_( const module& module, const std::string& name ) {
+			get_class(rb_define_class_under( module.get_value(), name.c_str(), rb_cObject ));
+			rb_define_alloc_func(get_class(), alloc_type);
 		}
 
 		class_(std::string const& name) {

@@ -184,6 +184,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\industry\languages\ruby\module.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\industry\languages\ruby\ruby.hpp"
 						>
 					</File>

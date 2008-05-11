@@ -10,7 +10,9 @@
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 
 #include <boost/intrusive_ptr.hpp>
+#include <boost/preprocessor.hpp>
 #include <boost/ref.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <memory>
 #include <string>
 
@@ -93,6 +95,7 @@ namespace industry { namespace languages { namespace ruby {
 			static T from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return *ptr; }
 		};
 
+		template<> struct ruby_value<bool>  { static VALUE to(bool  v) { return v?Qtrue:Qfalse; } static bool from(VALUE v) { return RTEST(v); } };
 		template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
 		template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
 		template<> struct ruby_value<int>   { static VALUE to(int   v) { return INT2NUM(v); } static int   from(VALUE v) {return NUM2INT(v);  } };
@@ -109,6 +112,43 @@ namespace industry { namespace languages { namespace ruby {
 		template<> struct ruby_value<const char*> { static VALUE to(const char* v) { return rb_str_new2(v); } static const char* from(VALUE v) {return STR2CSTR(v); } };
 		template<> struct ruby_value<      std::string > { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 		template<> struct ruby_value<const std::string&> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
+
+		template< typename L, typename R > struct ruby_value< std::pair<L,R> > {
+			static VALUE to( const std::pair<L,R>& p ) {
+				return rb_ary_new3( 2, ruby_value<L>::to(p.first), ruby_value<R>::to(p.second) );
+			}
+			static std::pair<L,R> from( VALUE v ) {
+				if ( CLASS_OF(v) != rb_cArray || RARRAY(v)->len != 2 ) {
+					throw std::runtime_error( "Expected an array of length 2" );
+				}
+				return std::pair<L,R>( ruby_value<L>::from(rb_ary_entry(v,0)), ruby_value<R>::from(rb_ary_entry(v,1)) );
+			}
+		};
+		template< typename L, typename R > struct ruby_value< const std::pair<L,R> > : ruby_value< std::pair<L,R> > {};
+
+#define TO_RUBY_VALUE(z,n,tuple) ruby_value<T##n>::to(tuple.get<n>())
+#define FROM_RUBY_VALUE(z,n,unused) ruby_value<T##n>::from(rb_ary_entry(v,n))
+/*---------------------------------------------------------------------------------------------------------------------*/
+#define BOOST_PP_LOCAL_MACRO(N)                                                                                         \
+		template < BOOST_PP_ENUM_PARAMS(N,typename T) > struct ruby_value< boost::tuple<BOOST_PP_ENUM_PARAMS(N,T)> > {  \
+			typedef boost::tuple<BOOST_PP_ENUM_PARAMS(N,T)> tuple_type;                                                 \
+			static VALUE to( const tuple_type& t ) { return rb_ary_new3(N,BOOST_PP_ENUM(N,TO_RUBY_VALUE,t)); }          \
+			static tuple_type from( VALUE v ) {                                                                         \
+				if ( CLASS_OF(v) != rb_cArray || RARRAY(v)->len != N ) {                                                \
+					throw std::runtime_error( "Expected an array of length " #N );                                      \
+				}                                                                                                       \
+				return tuple_type(BOOST_PP_ENUM(N,FROM_RUBY_VALUE,~));                                                  \
+			}                                                                                                           \
+		};                                                                                                              \
+		template < BOOST_PP_ENUM_PARAMS(N,typename T) >                                                                 \
+		struct ruby_value< const boost::tuple<BOOST_PP_ENUM_PARAMS(N,T)>& >                                             \
+			:  ruby_value< boost::tuple<BOOST_PP_ENUM_PARAMS(N,T)> > {};                                                \
+/*---------------------------------------------------------------------------------------------------------------------*/
+#define BOOST_PP_LOCAL_LIMITS (1,10)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef TO_RUBY_VALUE
+#undef FROM_RUBY_VALUE
+#undef BOOST_PP_LOCAL_MACRO
 	}
 }}}
 

@@ -14,6 +14,7 @@
 #include <boost/preprocessor.hpp>
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 namespace industry { namespace languages { namespace ruby {
 	class value;
@@ -109,6 +110,11 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator>=( const value& lhs, const value& rhs ) { return (lhs ->* ">=")(rhs); }
 		friend value operator< ( const value& lhs, const value& rhs ) { return (lhs ->* "<" )(rhs); }
 		friend value operator> ( const value& lhs, const value& rhs ) { return (lhs ->* ">" )(rhs); }
+
+		friend std::ostream& operator<<( std::ostream& os, const value& v ) {
+			os << value(rb_inspect(v.value_)).to<const char*>();
+			return os;
+		}
 		
 		template<class Destination, class Source>
 		friend Destination value_static_cast(const value& self) {

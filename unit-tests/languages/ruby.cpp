@@ -8,6 +8,7 @@
 
 #include <boost/test/auto_unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 #include <industry/languages/ruby/ruby.hpp>
 #include <functional>
 #include <memory>
@@ -172,6 +173,7 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	value safe_cast_test = eval("MyTestClass.new");
 	BOOST_CHECK((value_static_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) != 0));
 	BOOST_CHECK((value_dynamic_cast<MyDerivedTestClass*, MyTestClass*>(safe_cast_test) == 0));
+
 	BOOST_CHECK_EQUAL((safe_cast_test->*"inherited")().to<int>(), 1);
 	safe_cast_test = eval("4");
 
@@ -179,6 +181,35 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	BOOST_CHECK_EQUAL((inheritance_test->*"inherited")().to<int>(), 2);
 	BOOST_CHECK((value_static_cast<MyOtherDerivedTestClass*, MyTestClass*>(inheritance_test) != 0));
 	BOOST_CHECK((value_dynamic_cast<MyOtherDerivedTestClass*, MyTestClass*>(inheritance_test) != 0));
+
+	value i = eval("\
+		class VAE_Inspector\n\
+			def pair3_ok( pair3 )   pair3  == [ -0x12345678, 0x87654321 ]  end\n\
+			def tuple3_ok( tuple3 ) tuple3 == [ 0x12345678, 'sparta', 42 ] end\n\
+		end\n\
+		VAE_Inspector.new\
+	");
+
+	typedef std::pair<int,float> pair_if_t;
+	pair_if_t pair1( 0x12345678, 3.14159265358979323f );
+	pair_if_t pair2 = eval<pair_if_t>("[0x12345678,Math::PI]");
+	BOOST_CHECK_EQUAL( pair1.first , pair2.first );
+	BOOST_CHECK_CLOSE( pair1.second, pair2.second, 0.0001f );
+
+	typedef std::pair<int,unsigned> pair_iu_t;
+	pair_iu_t pair3( -0x12345678, 0x87654321 );
+	BOOST_CHECK( (i->*"pair3_ok")(pair3).to<bool>() );
+
+	typedef boost::tuple<short,int,float> tuple_sif_t;
+	tuple_sif_t tuple1( 0x2468, 0x12345678, 3.14159265358979323f );
+	tuple_sif_t tuple2 = eval<tuple_sif_t>("[0x2468,0x12345678,Math::PI]");
+	BOOST_CHECK_EQUAL( tuple1.get<0>(), tuple2.get<0>() );
+	BOOST_CHECK_EQUAL( tuple1.get<1>(), tuple2.get<1>() );
+	BOOST_CHECK_CLOSE( tuple1.get<2>(), tuple2.get<2>(), 0.0001f );
+
+	typedef boost::tuple<int,std::string,int> tuple_isi_t;
+	tuple_isi_t tuple3( 0x12345678, "sparta", 42 );
+	BOOST_CHECK( (i->*"tuple3_ok")(tuple3).to<bool>() );
 }
 
 BOOST_AUTO_TEST_CASE( ownership_and_such ) {
