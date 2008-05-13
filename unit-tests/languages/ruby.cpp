@@ -74,6 +74,16 @@ namespace {
 		std::size_t get_address() const { return (std::size_t)this; }
 	};
 
+	class MyTestClassWithCallbacks {
+	public:
+		boost::function<float(float,float)> f_ff;
+
+		void avoid_leak_reports() { f_ff.clear(); }
+		float call_f_ff( float a, float b ) { return f_ff(a,b); }
+		void set_f_ff_by_value(       boost::function<float(float,float)>  new_f_ff ) { f_ff = new_f_ff; }
+		void set_f_ff_by_cref ( const boost::function<float(float,float)>& new_f_ff ) { f_ff = new_f_ff; }
+	};
+
 	void work1() {
 		test_value += 1;
 	}
@@ -98,6 +108,13 @@ namespace {
 			def("address", &MyCopyableTestClass::get_address);
 
 		class_<MyOtherDerivedTestClass, MyTestClass>("MyDerivedTestClass");
+
+		class_<MyTestClassWithCallbacks>("MyTestClassWithCallbacks")
+			.def( "avoid_leak_reports", &MyTestClassWithCallbacks::avoid_leak_reports )
+			.def( "call_f_ff"         , &MyTestClassWithCallbacks::call_f_ff          )
+			.def( "set_f_ff_by_value" , &MyTestClassWithCallbacks::set_f_ff_by_value  )
+			.def( "set_f_ff_by_cref"  , &MyTestClassWithCallbacks::set_f_ff_by_cref   )
+			;
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -176,6 +193,18 @@ BOOST_AUTO_TEST_CASE( procs_and_blocks ) {
 	BOOST_CHECK_EQUAL( eval<int>("$quotient")  ,  1 );
 	BOOST_CHECK_EQUAL( eval<int>("$sum")       ,  8 );
 	BOOST_CHECK_EQUAL( eval<int>("$difference"),  2 );
+
+	eval("\
+		mtcwc = MyTestClassWithCallbacks.new\n\
+		mtcwc.set_f_ff_by_cref(  Proc.new { |a,b| a+b } )\n\
+		$a = mtcwc.call_f_ff( 1.2345, 6.7890 )\n\
+		mtcwc.set_f_ff_by_value( Proc.new { |a,b| a*b } )\n\
+		$b = mtcwc.call_f_ff( 1.2345, 6.7890 )\n\
+		mtcwc.avoid_leak_reports\n\
+	");
+
+	BOOST_CHECK_CLOSE( eval<float>("$a"), 8.0235f   , 0.01f );
+	BOOST_CHECK_CLOSE( eval<float>("$b"), 8.3810205f, 0.01f );
 }
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {

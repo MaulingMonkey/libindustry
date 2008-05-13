@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_LANGUAGES_RUBY_CALL_F
 
 #include <industry/languages/ruby/value.hpp>
+#include <boost/function.hpp>
 
 namespace industry { namespace languages { namespace ruby {
 	class call_f {
@@ -36,6 +37,16 @@ namespace industry { namespace languages { namespace ruby {
 #undef   BOOST_PP_LOCAL_LIMITS
 #undef   BOOST_PP_LOCAL_MACRO
 	};
+
+	namespace detail {
+		template < typename Signature > struct ruby_value< boost::function<Signature> > {
+			static boost::function<Signature> from( VALUE v ) { return boost::function<Signature>(call_f(value(v))); }
+		};
+		template < typename Signature > struct ruby_value< const boost::function<Signature>& >
+			: ruby_value< boost::function<Signature> >
+		{
+		};
+	}
 }}}
 
 #endif //ndef IG_INDUSTRY_LANGUAGES_RUBY_CALL_F
