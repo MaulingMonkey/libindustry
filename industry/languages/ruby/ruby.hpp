@@ -6,8 +6,8 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
-#ifndef IG_LANGUAGES_RUBY_RUBY
-#define IG_LANGUAGES_RUBY_RUBY
+#ifndef IG_INDUSTRY_LANGUAGES_RUBY_RUBY
+#define IG_INDUSTRY_LANGUAGES_RUBY_RUBY
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -18,6 +18,7 @@
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/registries.hpp>
+#include <industry/languages/ruby/call_f.hpp>
 #include <industry/languages/ruby/eval.hpp>
 #include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
@@ -102,4 +103,4 @@ namespace industry { namespace languages { namespace ruby {
 #pragma warning( pop )
 #endif
 
-#endif//IG_LANGUAGES_RUBY_RUBY
+#endif//IG_INDUSTRY_LANGUAGES_RUBY_RUBY

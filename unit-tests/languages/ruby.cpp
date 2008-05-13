@@ -9,6 +9,7 @@
 #include <boost/test/auto_unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
+#include <boost/signal.hpp>
 #include <industry/languages/ruby/ruby.hpp>
 #include <functional>
 #include <memory>
@@ -151,6 +152,30 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 		test_class.inc = 7\n\
 		test_class.mul_by_inc(2)\n\
 		")), 14);
+}
+
+BOOST_AUTO_TEST_CASE( procs_and_blocks ) {
+	Init_MyTestModule();
+	boost::function< void (int) > f = call_f(eval( "Proc.new { |n| $a ||= 0; $a += n }" ));
+	f(1);
+	f(2);
+	f(3);
+	BOOST_CHECK_EQUAL( 6, eval<int>("$a") );
+
+	boost::function< int (int,int) > add = call_f(eval( "Proc.new { |a,b| a+b }" ));
+	BOOST_CHECK_EQUAL( add(1,2), 3 );
+	BOOST_CHECK_EQUAL( add(2546,-1234), 1312 );
+
+	boost::signal< int (int,int) > sig;
+	sig.connect(call_f(eval("Proc.new { |a,b| $product     = a*b }")));
+	sig.connect(call_f(eval("Proc.new { |a,b| $quotient    = a/b }")));
+	sig.connect(call_f(eval("Proc.new { |a,b| $sum         = a+b }")));
+	sig.connect(call_f(eval("Proc.new { |a,b| $difference  = a-b }")));
+	BOOST_CHECK_EQUAL( sig(5,3), 2 );
+	BOOST_CHECK_EQUAL( eval<int>("$product")   , 15 );
+	BOOST_CHECK_EQUAL( eval<int>("$quotient")  ,  1 );
+	BOOST_CHECK_EQUAL( eval<int>("$sum")       ,  8 );
+	BOOST_CHECK_EQUAL( eval<int>("$difference"),  2 );
 }
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {
