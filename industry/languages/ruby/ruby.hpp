@@ -64,7 +64,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Fn2>
 		class_& def(std::string const& name, Fn2 f) {
-			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature> f_proxy_class;
 			f_proxy_class::get(name, f);
 			rb_define_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
 			return *this;
@@ -72,7 +72,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Fn2>
 		class_& singleton_def(std::string const& name, Fn2 f) {
-			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature> f_proxy_class;
 			f_proxy_class::get(name, f);
 			rb_define_singleton_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
 			return *this;

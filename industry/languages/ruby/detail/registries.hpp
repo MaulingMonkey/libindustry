@@ -66,7 +66,7 @@ namespace industry { namespace languages { namespace ruby {
 			}
 		};
 
-		template<class T, class Fn, unsigned int N>
+		template<class T, class Fn>
 		struct method_registry {
 			static boost::function<Fn> const& get(std::string const& name, boost::function<Fn> f = boost::function<Fn>()) {
 				static std::map<std::string, boost::function<Fn> > methods;
