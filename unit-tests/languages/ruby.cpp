@@ -41,6 +41,7 @@ namespace {
 
 		void arr(const std::string& n) { name = n; }
 
+		void test() { name = eval<std::string>("caller[0][/`([^']*)'/, 1]"); }
 		virtual int inherited() { return 1; }
 
 		virtual ~MyTestClass() {}
@@ -86,7 +87,8 @@ namespace {
 			const_("Multiplicand", 4).
 			def("arr", &MyTestClass::arr).
 			def("multi_arg_mul", &MyTestClass::multi_arg_mul).
-			def("inherited", &MyTestClass::inherited);
+			def("inherited", &MyTestClass::inherited).
+			def("cal", &MyTestClass::test);
 
 		class_<MyIntrusiveTestClass>("MyIntrusiveTestClass").
 			def("references", &MyIntrusiveTestClass::get_references);
@@ -114,6 +116,8 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 3 );
 	rb_eval_string("MyTestClass.new.arr('hello')");
 	BOOST_CHECK_EQUAL( name, "hello");
+	rb_eval_string("MyTestClass.new.cal");
+	BOOST_CHECK_EQUAL( name, "cal");
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )

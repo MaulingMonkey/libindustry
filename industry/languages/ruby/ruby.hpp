@@ -77,37 +77,37 @@ namespace industry { namespace languages { namespace ruby {
 		}
 
 		template<class Fn2>
-		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> def(std::string const& name, Fn2 f) {
-			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
-			f_proxy_class::get(f);
+		class_& def(std::string const& name, Fn2 f) {
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
+			f_proxy_class::get(name, f);
 			rb_define_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
-			return f_proxy_class();
+			return *this;
 		}
 
 		template<class Fn2>
-		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> singleton_def(std::string const& name, Fn2 f) {
-			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
-			f_proxy_class::get(f);
+		class_& singleton_def(std::string const& name, Fn2 f) {
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
+			f_proxy_class::get(name, f);
 			rb_define_singleton_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
-			return f_proxy_class();
+			return *this;
 		}
 
 		template<class Type>
 		class_& const_(std::string const& name, Type value) {
-			static bool runOnce = false;
-			if(!runOnce) {
+			static std::map<std::string, bool> constants;
+			if(constants.find(name) == constants.end()) {
 				rb_define_const(class_<T>::get_class(), name.c_str(), detail::ruby_value<Type>::to(value));
-				runOnce = true;
+				constants[name] = true;
 			}
 			return *this;
 		}
 
 		template<class V>
-		detail::class_n<T, void(), 0> var(std::string const& name, V T::* p) {
-			detail::var_n<T, V, 0>::reg(p);
-			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::get)), 0);
-			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::set)), 1);
-			return detail::class_n<T, void(), 0>();
+		class_& var(std::string const& name, V T::* p) {
+			detail::variable_registry<T, V>::reg(name, p);
+			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
+			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
+			return *this;
 		}
 	};
 
