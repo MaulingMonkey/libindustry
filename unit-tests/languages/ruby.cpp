@@ -78,12 +78,12 @@ namespace {
 	}
 
 	INDUSTRY_RUBY_MODULE(MyTestModule) {
-		class_<MyTestClass>("MyTestClass").
+		class_<MyTestClass> testClass = class_<MyTestClass>("MyTestClass").
 			var("inc2", &MyTestClass::inc).
 			def("work1", work1).
 			def("work2", &MyTestClass::work2).
-			var("inc", &MyTestClass::inc).
-			def("mul_by_inc", &MyTestClass::mul_by_inc).
+			var("inc", &MyTestClass::inc);
+		testClass.def("mul_by_inc", &MyTestClass::mul_by_inc).
 			const_("Multiplicand", 4).
 			def("arr", &MyTestClass::arr).
 			def("multi_arg_mul", &MyTestClass::multi_arg_mul).
