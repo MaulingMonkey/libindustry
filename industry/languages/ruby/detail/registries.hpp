@@ -18,10 +18,30 @@
 #include <map>
 
 namespace industry { namespace languages { namespace ruby {
-	template<class T>
+	template<class T, class B>
 	struct class_;
 
 	namespace detail {
+		template<class T>
+		struct class_registry {
+			static VALUE get() {
+				return intern();
+			}
+
+			static void set(VALUE v) {
+				intern(v);
+			}
+		private:
+			static VALUE intern(VALUE v = Qnil) {
+				static VALUE result;
+				if(v != Qnil)
+					result = v;
+				return result;
+			}
+		};
+
+		template<> struct class_registry<void> { static VALUE get() { return rb_cObject; } };
+
 		template<class T, class Fn, unsigned int Arity>
 		struct do_call_proxy {
 			static VALUE do_call_o(boost::function<Fn> const& f, VALUE self, va_list args) {

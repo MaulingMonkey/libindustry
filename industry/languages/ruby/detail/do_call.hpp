@@ -27,7 +27,7 @@
 
 namespace industry { namespace languages { namespace ruby {
 
-	template<class T>
+	template<class T, class B>
 	struct class_;
 
 	namespace detail {

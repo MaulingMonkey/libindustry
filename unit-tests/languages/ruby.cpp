@@ -96,7 +96,7 @@ namespace {
 		class_<MyCopyableTestClass>("MyCopyableTestClass").
 			def("address", &MyCopyableTestClass::get_address);
 
-		class_<MyOtherDerivedTestClass>("MyDerivedTestClass", base<MyTestClass>());
+		class_<MyOtherDerivedTestClass, MyTestClass>("MyDerivedTestClass");
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
