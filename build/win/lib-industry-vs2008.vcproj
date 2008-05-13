@@ -203,11 +203,11 @@
 						Name="detail"
 						>
 						<File
-							RelativePath="..\..\industry\languages\ruby\detail\class.hpp"
+							RelativePath="..\..\industry\languages\ruby\detail\do_call.hpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\industry\languages\ruby\detail\do_call.hpp"
+							RelativePath="..\..\industry\languages\ruby\detail\registries.hpp"
 							>
 						</File>
 						<File

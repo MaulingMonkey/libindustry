@@ -17,7 +17,7 @@
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
-#include <industry/languages/ruby/detail/class.hpp>
+#include <industry/languages/ruby/detail/registries.hpp>
 #include <industry/languages/ruby/eval.hpp>
 #include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
