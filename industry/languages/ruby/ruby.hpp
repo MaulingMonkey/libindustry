@@ -17,7 +17,7 @@
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
-#include <industry/languages/ruby/detail/class.hpp>
+#include <industry/languages/ruby/detail/registries.hpp>
 #include <industry/languages/ruby/eval.hpp>
 #include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
@@ -32,17 +32,8 @@ namespace industry { namespace languages { namespace ruby {
 	}\
 	void Do_##name##_Init()
 
-	template<class T>
+	template<class T, class B = void>
 	struct class_ {
-		static VALUE get_class(VALUE v = 0) {
-			static VALUE klass;
-			if(v) {
-				klass = v;
-			}
-
-			return klass;
-		}
-
 		static void free_type(T* ptr) {
 			delete ptr;
 		}
@@ -54,67 +45,57 @@ namespace industry { namespace languages { namespace ruby {
 
 		static VALUE clone_type( const T& original ) {
 			T* ptr = new T(original);
-			return Data_Wrap_Struct(get_class(), 0, free_type, ptr);
+			return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, free_type, ptr);
 		}
 
 		class_( const module& module, const std::string& name ) {
-			get_class(rb_define_class_under( module.get_value(), name.c_str(), rb_cObject ));
-			rb_define_alloc_func(get_class(), alloc_type);
+			detail::class_registry<T>::set((rb_define_class_under( module.get_value(), name.c_str(), rb_cObject )));
+			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
 		}
 
 		class_(std::string const& name) {
-			get_class(rb_define_class(name.c_str(), rb_cObject));
-			rb_define_alloc_func(get_class(), alloc_type);
-		}
-
-		class_(std::string const& name, VALUE baseClass) {
-			get_class(rb_define_class(name.c_str(), baseClass));
-			rb_define_alloc_func(get_class(), alloc_type);
+			detail::class_registry<T>::set(rb_define_class(name.c_str(), detail::class_registry<B>::get()));
+			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
 		}
 
 		class_( VALUE existing_class ) {
-			get_class(existing_class);
+			detail::class_registry<T>::set(existing_class);
 		}
 
 		template<class Fn2>
-		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> def(std::string const& name, Fn2 f) {
-			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
-			f_proxy_class::get(f);
-			rb_define_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
-			return f_proxy_class();
+		class_& def(std::string const& name, Fn2 f) {
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature> f_registry;
+			f_registry::get(name, f);
+			rb_define_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_registry::call_proxy), industry::function_traits<Fn2>::arity);
+			return *this;
 		}
 
 		template<class Fn2>
-		detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> singleton_def(std::string const& name, Fn2 f) {
-			typedef detail::class_n<T, typename industry::function_traits<Fn2>::signature, 0> f_proxy_class;
-			f_proxy_class::get(f);
-			rb_define_singleton_method(class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC(f_proxy_class::call_proxy), industry::function_traits<Fn2>::arity);
-			return f_proxy_class();
+		class_& singleton_def(std::string const& name, Fn2 f) {
+			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature> f_registry;
+			f_registry::get(name, f);
+			rb_define_singleton_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_registry::call_proxy), industry::function_traits<Fn2>::arity);
+			return *this;
 		}
 
 		template<class Type>
 		class_& const_(std::string const& name, Type value) {
-			static bool runOnce = false;
-			if(!runOnce) {
-				rb_define_const(class_<T>::get_class(), name.c_str(), detail::ruby_value<Type>::to(value));
-				runOnce = true;
+			static std::map<std::string, bool> constants;
+			if(constants.find(name) == constants.end()) {
+				rb_define_const(detail::class_registry<T>::get(), name.c_str(), detail::ruby_value<Type>::to(value));
+				constants[name] = true;
 			}
 			return *this;
 		}
 
 		template<class V>
-		detail::class_n<T, void(), 0> var(std::string const& name, V T::* p) {
-			detail::var_n<T, V, 0>::reg(p);
-			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), name.c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::get)), 0);
-			rb_define_method(::industry::languages::ruby::class_<T>::get_class(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::var_n<T, V, 0>::set)), 1);
-			return detail::class_n<T, void(), 0>();
+		class_& var(std::string const& name, V T::* p) {
+			detail::variable_registry<T, V>::reg(name, p);
+			rb_define_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
+			rb_define_method(detail::class_registry<T>::get(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
+			return *this;
 		}
-	};
-
-	template<class T>
-	VALUE base() {
-		return class_<T>::get_class();
-	}
+	};	
 }}}
 
 #ifdef _MSC_VER

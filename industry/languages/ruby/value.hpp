@@ -118,9 +118,9 @@ namespace industry { namespace languages { namespace ruby {
 		
 		template<class Destination, class Source>
 		friend Destination value_static_cast(const value& self) {
-			typedef class_<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
+			typedef detail::class_registry<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
 			
-			if(rb_class_inherited_p(class_type::get_class(), CLASS_OF(self.value_)) != Qnil) {
+			if(rb_class_inherited_p(class_type::get(), CLASS_OF(self.value_)) != Qnil) {
 				return static_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
 			if(boost::is_pointer<Destination>::value)
@@ -130,9 +130,9 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Destination, class Source>
 		friend Destination value_dynamic_cast(const value& self) {
-			typedef class_<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
+			typedef detail::class_registry<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
 
-			if(rb_class_inherited_p(class_type::get_class(), CLASS_OF(self.value_)) != Qnil) {
+			if(rb_class_inherited_p(class_type::get(), CLASS_OF(self.value_)) != Qnil) {
 				return dynamic_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
 			}
 			if(boost::is_pointer<Destination>::value)

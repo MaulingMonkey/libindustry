@@ -22,22 +22,22 @@
 #endif
 
 namespace industry { namespace languages { namespace ruby {
-	template<class T> struct class_;
+	template<class T, class B> struct class_;
 	namespace detail {
 		template<class T> struct ruby_value;
 
 		template<class T> struct ruby_value<T*> { // Ownership does not transfer
-			static VALUE to(T* ptr) { return Data_Wrap_Struct(class_<T>::get_class(), 0, 0, ptr); }
+			static VALUE to(T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
 			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
 		template<class T> struct ruby_value<const T*> { // Ownership does not transfer
-			static VALUE to(const T* ptr) { return Data_Wrap_Struct(class_<T>::get_class(), 0, 0, ptr); }
+			static VALUE to(const T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
 			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
 		};
 
 		// TODO: Prevent [c]refs to builtin types?
 		template<class T> struct ruby_value< boost::reference_wrapper<T> > { // Ownership does not transfer
-			static VALUE to( const boost::reference_wrapper<T>& ref ) { return Data_Wrap_Struct(class_<T>::get_class(), 0, 0, ref.get_pointer()); }
+			static VALUE to( const boost::reference_wrapper<T>& ref ) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ref.get_pointer()); }
 			// no from -- use ruby_value<T&>::from instead
 		};
 		template<class T> struct ruby_value< boost::reference_wrapper<const T> > { // Ownership does not transfer
@@ -49,15 +49,15 @@ namespace industry { namespace languages { namespace ruby {
 		};
 
 		template<class T> struct ruby_value< std::auto_ptr<T> > { // Ownership DOES transfer
-			static VALUE to(std::auto_ptr<T> ptr) { return Data_Wrap_Struct(class_<T>::get_class(), 0, class_<T>::free_type, ptr.release()); }
+			static VALUE to(std::auto_ptr<T> ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, class_<T>::free_type, ptr.release()); }
 		};
 		template<class T> struct ruby_value< std::auto_ptr<const T> > { // Ownership DOES transfer
-			static VALUE to(std::auto_ptr<const T> ptr) { return Data_Wrap_Struct(class_<T>::get_class(), 0, class_<T>::free_type, ptr.release()); }
+			static VALUE to(std::auto_ptr<const T> ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, class_<T>::free_type, ptr.release()); }
 		};
 
 		// TODO: class_ probably needs to handle init differently for intrusive_ptr<T> enabled classes
 		template<class T> struct ruby_value< boost::intrusive_ptr<T> > {
-			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(class_<T>::get_class(), 0, release, ptr.get()); }
+			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, release, ptr.get()); }
 			static boost::intrusive_ptr<T> from(VALUE v) { T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		private:
 			// TODO: Work around ADL-missing compilers by playing in namespace boost::* ?
@@ -66,7 +66,7 @@ namespace industry { namespace languages { namespace ruby {
 		};
 
 		template<class T> struct ruby_value< boost::intrusive_ptr<const T> > {
-			static VALUE to(const boost::intrusive_ptr<const T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(class_<T>::get_class(), 0, release, ptr.get()); }
+			static VALUE to(const boost::intrusive_ptr<const T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, release, ptr.get()); }
 			static boost::intrusive_ptr<const T> from(VALUE v) { const T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		private:
 			// TODO: Work around ADL-missing compilers by playing in namespace boost::* ?
