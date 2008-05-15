@@ -25,15 +25,34 @@
 #include <industry/languages/ruby/value.hpp>
 #include <industry/config.hpp>
 #include <industry/traits/function_traits.hpp>
+#include <iostream>
 #include <string>
 
 namespace industry { namespace languages { namespace ruby {
+
+#ifdef INDUSTRY_OS_LINUX
+#	define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init(); \
+	extern "C" void INDUSTRY_EXPORT Init_##name () {\
+		static bool initialized = false;\
+		if (initialized) {\
+			std::clog << "WARNING:  " #name " not reloaded, linux multi-init seems to be bugged?" << std::endl;\
+			return;\
+		}\
+		initialized = true;\
+		ruby_init();\
+		Do_##name##_Init();\
+	}\
+	void Do_##name##_Init()
+
+#else // ndef INDUSTRY_OS_LINUX
 #	define INDUSTRY_RUBY_MODULE(name) void Do_##name##_Init();\
 	extern "C" void  INDUSTRY_EXPORT Init_##name () {\
 		ruby_init();\
 		Do_##name##_Init();\
 	}\
 	void Do_##name##_Init()
+
+#endif //ndef INDUSTRY_OS_LINUX
 
 	template<class Sig>
 	struct init {

@@ -39,7 +39,7 @@
 #elif defined( __APPLE__ )
 #define INDUSTRY_OS_X
 
-#elif defined( _LINUX )
+#elif defined( linux )
 #define INDUSTRY_OS_LINUX
 
 #else
