@@ -6,9 +6,13 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#include <industry/config.hpp>
+
 #define BOOST_TEST_MODULE     "libindustry unit tests"
 #define BOOST_AUTO_TEST_MAIN
 #include <boost/test/auto_unit_test.hpp>
 #include <boost/test/unit_test.hpp>
+#ifdef INDUSTRY_OS_LINUX
 #include <boost/test/included/unit_test_framework.hpp>
+#endif //def INDUSTRY_OS_LINUX
 #include <industry/traits/function_traits.hpp>

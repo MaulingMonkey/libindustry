@@ -180,6 +180,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\industry\languages\ruby\declarations.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\industry\languages\ruby\eval.cpp"
 						>
 					</File>
