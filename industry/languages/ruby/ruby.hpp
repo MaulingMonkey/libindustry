@@ -65,17 +65,22 @@ namespace industry { namespace languages { namespace ruby {
 	template<class T, class B>
 	struct class_ {
 		static void free_type(T* ptr) {
+			detail::class_registry<T>::destroyed(ptr);
 			delete ptr;
 		}
 
 		static VALUE alloc_type(VALUE klass) {
 			T* ptr = static_cast<T*>(::operator new(sizeof(T)));
-			return Data_Wrap_Struct(klass, 0, free_type, ptr);
+			VALUE v = Data_Wrap_Struct(klass, 0, free_type, ptr);
+			detail::class_registry<T>::created(v, ptr);
+			return v;
 		}
 
 		static VALUE clone_type( const T& original ) {
 			T* ptr = new T(original);
-			return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, free_type, ptr);
+			VALUE v = Data_Wrap_Struct(detail::class_registry<T>::get(), 0, free_type, ptr);
+			detail::class_registry<T>::created(v, ptr);
+			return v;
 		}
 
 		class_( const module& module, const std::string& name ) {

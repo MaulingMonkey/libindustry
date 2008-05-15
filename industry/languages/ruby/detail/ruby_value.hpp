@@ -28,18 +28,57 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T> struct class_registry;
 		template<class T> struct ruby_value;
 
+		template<class T>
+		struct no_ownership_transfer {
+			typedef T type;
+		};
+
+		template<class T>
+		struct no_ownership {
+		};
+
+		template<class T>
+		struct no_ownership_transfer<T*> {
+			typedef no_ownership<T*> type;
+		};
+
+		template<class T>
+		struct no_ownership_transfer<const T*> {
+			typedef no_ownership<const T*> type;
+		};
+
+		template<>
+		struct no_ownership_transfer<char *> {
+			typedef char* type;
+		};
+
+		template<>
+		struct no_ownership_transfer<const char *> {
+			typedef const char* type;
+		};
+
 		template<class T> struct ruby_value<T*> { // Ownership does not transfer
-			static VALUE to(T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			static VALUE to(T* ptr) { return detail::class_registry<T>::obtain(ptr); }
 			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
 		template<class T> struct ruby_value<const T*> { // Ownership does not transfer
-			static VALUE to(const T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			static VALUE to(const T* ptr) { return detail::class_registry<T>::obtain(ptr); }
 			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
+		};
+
+		template<class T> struct ruby_value<no_ownership<T*> > { // Ownership does not transfer
+			static VALUE to(T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
+		};
+
+		template<class T> struct ruby_value<no_ownership<const T*> > { // Ownership does not transfer
+			static VALUE to(T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
 
 		// TODO: Prevent [c]refs to builtin types?
 		template<class T> struct ruby_value< boost::reference_wrapper<T> > { // Ownership does not transfer
-			static VALUE to( const boost::reference_wrapper<T>& ref ) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ref.get_pointer()); }
+			static VALUE to( const boost::reference_wrapper<T>& ref ) { VALUE v = Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ref.get_pointer()); detail::class_registry<T>::created(v, ref.get_pointer()); return v; }
 			// no from -- use ruby_value<T&>::from instead
 		};
 		template<class T> struct ruby_value< boost::reference_wrapper<const T> > { // Ownership does not transfer
