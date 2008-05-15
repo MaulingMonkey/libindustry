@@ -24,6 +24,7 @@
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable: 4100 ) // unreferenced formal parameters
+#pragma warning( disable: 4101 ) // unreferenced formal parameters
 #endif
 
 namespace industry { namespace languages { namespace ruby { namespace detail {

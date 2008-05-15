@@ -129,7 +129,9 @@ namespace {
 			.def( "set_f_ff_by_cref"  , &MyTestClassWithCallbacks::set_f_ff_by_cref   )
 			;
 
-		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).def(init<void(int)>()).def(init<void()>());
+		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).
+			def(init<void(int)>()).
+			def(init<void()>());
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
