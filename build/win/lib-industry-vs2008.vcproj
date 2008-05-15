@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -206,6 +206,10 @@
 					<Filter
 						Name="detail"
 						>
+						<File
+							RelativePath="..\..\industry\languages\ruby\detail\constructor_registry.hpp"
+							>
+						</File>
 						<File
 							RelativePath="..\..\industry\languages\ruby\detail\do_call.hpp"
 							>

@@ -84,6 +84,12 @@ namespace {
 		void set_f_ff_by_cref ( const boost::function<float(float,float)>& new_f_ff ) { f_ff = new_f_ff; }
 	};
 
+	class MyConstructorTest {
+	public:
+		MyConstructorTest() {}
+		MyConstructorTest(int,int) {
+		}
+	};
 	void work1() {
 		test_value += 1;
 	}
@@ -115,6 +121,8 @@ namespace {
 			.def( "set_f_ff_by_value" , &MyTestClassWithCallbacks::set_f_ff_by_value  )
 			.def( "set_f_ff_by_cref"  , &MyTestClassWithCallbacks::set_f_ff_by_cref   )
 			;
+
+		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>());
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -136,6 +144,7 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( name, "hello");
 	rb_eval_string("MyTestClass.new.cal");
 	BOOST_CHECK_EQUAL( name, "cal");
+	rb_eval_string("MyConstructorTest.new(2, 2)");
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )

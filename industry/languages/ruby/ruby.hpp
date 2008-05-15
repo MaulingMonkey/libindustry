@@ -23,6 +23,7 @@
 #include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
 #include <industry/config.hpp>
+#include <industry/traits/function_traits.hpp>
 #include <string>
 
 namespace industry { namespace languages { namespace ruby {
@@ -33,6 +34,14 @@ namespace industry { namespace languages { namespace ruby {
 	}\
 	void Do_##name##_Init()
 
+	template<class Sig>
+	struct init {
+		template<class T>
+		static void reg() {
+			detail::constructor_registry<T, industry::function_traits<Sig>::arity>::reg<Sig>();
+		}
+	};
+
 	template<class T, class B = void>
 	struct class_ {
 		static void free_type(T* ptr) {
@@ -40,7 +49,7 @@ namespace industry { namespace languages { namespace ruby {
 		}
 
 		static VALUE alloc_type(VALUE klass) {
-			T* ptr = new T();
+			T* ptr = static_cast<T*>(::operator new(sizeof(T)));
 			return Data_Wrap_Struct(klass, 0, free_type, ptr);
 		}
 
@@ -52,15 +61,37 @@ namespace industry { namespace languages { namespace ruby {
 		class_( const module& module, const std::string& name ) {
 			detail::class_registry<T>::set((rb_define_class_under( module.get_value(), name.c_str(), rb_cObject )));
 			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
+			def(init<void()>());
 		}
 
 		class_(std::string const& name) {
 			detail::class_registry<T>::set(rb_define_class(name.c_str(), detail::class_registry<B>::get()));
 			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
+			def(init<void()>());
+		}
+
+		template<class Sig>
+		class_(const module& module, const std::string& name, init<Sig>) {
+			detail::class_registry<T>::set((rb_define_class_under( module.get_value(), name.c_str(), rb_cObject )));
+			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
+			def(init<Sig>());
+		}
+
+		template<class Sig>
+		class_(std::string const& name, init<Sig>) {
+			detail::class_registry<T>::set(rb_define_class(name.c_str(), detail::class_registry<B>::get()));
+			rb_define_alloc_func(detail::class_registry<T>::get(), alloc_type);
+			def(init<Sig>());
 		}
 
 		class_( VALUE existing_class ) {
 			detail::class_registry<T>::set(existing_class);
+		}
+
+		template<class Sig>
+		class_& def(init<Sig>) {
+			init<Sig>::reg<T>();
+			return *this;
 		}
 
 		template<class Fn2>

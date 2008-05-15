@@ -9,8 +9,15 @@
 #ifndef IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_CLASS
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_CLASS
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable: 4100 ) // unreferenced formal parameters
+#pragma warning( disable: 4345 )
+#endif
+
 #include <industry/traits/function_traits.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
+#include <industry/languages/ruby/detail/constructor_registry.hpp>
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 #include <stdarg.h>
@@ -22,6 +29,89 @@ namespace industry { namespace languages { namespace ruby {
 	struct class_;
 
 	namespace detail {
+		template<class T, unsigned int Arity>
+		struct constructor_registry {
+			template<class Sig>
+			static void reg() {
+				initialize();
+				constructor_registry_impl<T, Sig, Arity>::reg();
+			}
+
+			static bool initialized(int p = 0) {
+				static bool initted;
+				if(p) {
+					initted = true;
+					constructor_registry<T, Arity - 1>::initialized(1);
+				}
+
+				return initted;
+			}
+			static void initialize() {
+				if(!initialized()) {
+					initialized(1);
+					rb_define_method(detail::class_registry<T>::get(), "initialize", RUBY_METHOD_FUNC(construct), -1);
+				}
+			}
+
+			static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)>& get_constructors() {
+				static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)> constructors;
+				return constructors;
+			}
+
+			static VALUE construct(int argc, VALUE* argv, VALUE self) {
+				if(argc < Arity)
+					return constructor_registry<T, Arity - 1>::construct(argc, argv, self);
+				else if(argc != Arity)
+					rb_raise(rb_eNoMethodError, "No such initializer defined.");
+
+				std::string key;
+				for(int i = 0; i < argc; ++i) {
+					if(CLASS_OF(argv[i]) == rb_cFixnum || CLASS_OF(argv[i]) == rb_cBignum) {
+						key += rb_class2name(rb_cBignum);
+					} else {
+						key += rb_class2name(rb_class_of(argv[0]));
+					}
+				}
+
+				if(get_constructors().find(key) != get_constructors().end()) {
+					return get_constructors()[key](argc, argv, self);
+				} else {
+					rb_raise(rb_eNoMethodError, "No such constructor defined.");
+				}
+
+				return self;
+			}
+		};
+
+		template<class T>
+		struct constructor_registry<T, 0> {
+			template<class Sig>
+			static void reg() {
+				initialize();
+			}
+
+			static bool initialized(int p = 0) {
+				static bool initted;
+
+				return initted;
+			}
+			static void initialize() {
+				if(!initialized()) {
+					initialized(1);
+					rb_define_method(detail::class_registry<T>::get(), "initialize", RUBY_METHOD_FUNC(construct), -1);
+				}
+			}
+
+			static VALUE construct(int argc, VALUE* argv, VALUE self) {
+				if(argc != 0)
+					rb_raise(rb_eNoMethodError, "No such initializer defined.");
+
+				new (ruby_value<T*>::from(self)) T();
+
+				return self;
+			}
+		};
+
 		template<class T>
 		struct class_registry {
 			static VALUE get() {
@@ -104,4 +194,5 @@ namespace industry { namespace languages { namespace ruby {
 		};
 	}
 }}}
+#pragma warning(pop)
 #endif//IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_CLASS
