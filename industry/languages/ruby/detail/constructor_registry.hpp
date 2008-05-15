@@ -57,7 +57,7 @@ struct constructor_registry_impl<T, Sig, n> {
 	static std::string key() {
 		std::string key;
 		VALUE klass;
-		(BOOST_PP_ENUM(n, DO_GEN_KEYPART, BOOST_PP_EMPTY));
+		BOOST_PP_ENUM(n, DO_GEN_KEYPART, BOOST_PP_EMPTY);
 		return key;
 	}
 	static VALUE f(int argc, VALUE* argv, VALUE self) {

@@ -86,8 +86,12 @@ namespace {
 
 	class MyConstructorTest {
 	public:
-		MyConstructorTest() {}
-		MyConstructorTest(int,int) {
+		//MyConstructorTest() {}
+		MyConstructorTest(int x,int y) {
+			test_value = x + y * y;
+		}
+		MyConstructorTest(int x) {
+			test_value = x + x * x;
 		}
 	};
 	void work1() {
@@ -122,7 +126,7 @@ namespace {
 			.def( "set_f_ff_by_cref"  , &MyTestClassWithCallbacks::set_f_ff_by_cref   )
 			;
 
-		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>());
+		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).def(init<void(int)>());
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:

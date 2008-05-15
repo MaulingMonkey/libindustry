@@ -88,13 +88,24 @@ namespace industry { namespace languages { namespace ruby {
 			template<class Sig>
 			static void reg() {
 				initialize();
+				constructor_registry_impl<T, Sig, 0>::reg();
 			}
 
 			static bool initialized(int p = 0) {
 				static bool initted;
 
+				if(p) {
+					initted = true;
+				}
+
 				return initted;
 			}
+
+			static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)>& get_constructors() {
+				static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)> constructors;
+				return constructors;
+			}
+
 			static void initialize() {
 				if(!initialized()) {
 					initialized(1);
@@ -106,7 +117,7 @@ namespace industry { namespace languages { namespace ruby {
 				if(argc != 0)
 					rb_raise(rb_eNoMethodError, "No such initializer defined.");
 
-				new (ruby_value<T*>::from(self)) T();
+				get_constructors()[""](argc, argv, self);
 
 				return self;
 			}
