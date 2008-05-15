@@ -96,6 +96,9 @@ namespace {
 		MyConstructorTest() {
 			test_value = 5;
 		}
+		MyConstructorTest(int x, float y) {
+			test_value = static_cast<int>(y * x);
+		}
 	};
 	void work1() {
 		test_value += 1;
@@ -131,7 +134,8 @@ namespace {
 
 		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).
 			def(init<void(int)>()).
-			def(init<void()>());
+			def(init<void()>()).
+			def(init<void(int, float)>());
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -159,6 +163,8 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 6);
 	rb_eval_string("MyConstructorTest.new");
 	BOOST_CHECK_EQUAL( test_value, 5);
+	rb_eval_string("MyConstructorTest.new(2, 3.5)");
+	BOOST_CHECK_EQUAL( test_value, 7);
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )

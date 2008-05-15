@@ -69,7 +69,7 @@ namespace industry { namespace languages { namespace ruby {
 					if(CLASS_OF(argv[i]) == rb_cFixnum || CLASS_OF(argv[i]) == rb_cBignum) {
 						key += rb_class2name(rb_cBignum);
 					} else {
-						key += rb_class2name(rb_class_of(argv[0]));
+						key += rb_class2name(rb_class_of(argv[i]));
 					}
 				}
 
