@@ -44,7 +44,7 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 #define n BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(i) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(i),_type))
 #define DO_GEN_KEYPART(x,i,d) (key += (rb_class2name((klass = rb_class_of(ruby_value<FUNCTION_ARG_TYPE(i)>::to(FUNCTION_ARG_TYPE(i)()))) == rb_cFixnum ? rb_cBignum : klass)))
-#define DO_WRAP_FUNC(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(*(p++)))
+#define DO_WRAP_FUNC(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(*(p--)))
 
 template<class T, class Sig>
 struct constructor_registry_impl<T, Sig, n> {
@@ -61,7 +61,7 @@ struct constructor_registry_impl<T, Sig, n> {
 		return key;
 	}
 	static VALUE f(int argc, VALUE* argv, VALUE self) {
-		VALUE* p = argv;
+		VALUE* p = argv + argc - 1;
 
 		new (ruby_value<T*>::from(self)) T(BOOST_PP_ENUM(n, DO_WRAP_FUNC, BOOST_PP_EMPTY));
 
