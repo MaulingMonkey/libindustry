@@ -148,7 +148,10 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( name, "hello");
 	rb_eval_string("MyTestClass.new.cal");
 	BOOST_CHECK_EQUAL( name, "cal");
-	rb_eval_string("MyConstructorTest.new(2, 2)");
+	rb_eval_string("MyConstructorTest.new(2, 3)");
+	BOOST_CHECK_EQUAL( test_value, 11);
+	rb_eval_string("MyConstructorTest.new(2)");
+	BOOST_CHECK_EQUAL( test_value, 6);
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )
