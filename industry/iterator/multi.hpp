@@ -19,6 +19,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <iterator>
+#include <cassert>
 
 namespace industry {
 	namespace detail {

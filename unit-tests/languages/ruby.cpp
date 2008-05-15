@@ -142,7 +142,7 @@ namespace {
 	struct cleaner { ~cleaner() { rb_eval_string( "GC.start" ); } } instance;
 }
 
-BOOST_AUTO_TEST_SUITE( ruby_tests )
+BOOST_AUTO_TEST_SUITE( ruby_tests );
 
 BOOST_AUTO_TEST_CASE( basic_invocation_test )
 {
@@ -350,6 +350,6 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 	BOOST_WARN_EQUAL( 1, mitc1->get_references() );
 }
 
-BOOST_AUTO_TEST_SUITE_END() // ruby_tests
+BOOST_AUTO_TEST_SUITE_END(); // ruby_tests
 
 #endif

@@ -10,6 +10,7 @@
 #ifndef IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_DO_CALL
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_DO_CALL
 
+#include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>

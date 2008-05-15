@@ -19,6 +19,7 @@
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/registries.hpp>
 #include <industry/languages/ruby/call_f.hpp>
+#include <industry/languages/ruby/declarations.hpp>
 #include <industry/languages/ruby/eval.hpp>
 #include <industry/languages/ruby/module.hpp>
 #include <industry/languages/ruby/value.hpp>
@@ -38,11 +39,11 @@ namespace industry { namespace languages { namespace ruby {
 	struct init {
 		template<class T>
 		static void reg() {
-			detail::constructor_registry<T, industry::function_traits<Sig>::arity>::reg<Sig>();
+			detail::constructor_registry<T, industry::function_traits<Sig>::arity>::template reg<Sig>();
 		}
 	};
 
-	template<class T, class B = void>
+	template<class T, class B>
 	struct class_ {
 		static void free_type(T* ptr) {
 			delete ptr;
@@ -90,7 +91,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Sig>
 		class_& def(init<Sig>) {
-			init<Sig>::reg<T>();
+			init<Sig>::template reg<T>();
 			return *this;
 		}
 

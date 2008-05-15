@@ -14,7 +14,10 @@
 #include <industry/config.hpp>
 #include <boost/test/auto_unit_test.hpp>
 
-#if defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
+#if !defined( INDUSTRY_OS_WINDOWS )
+// Windows specific unit tests will not be built
+
+#elif defined( _MSC_VER ) && !defined( _MSC_EXTENSIONS )
 #include <boost/preprocessor/stringize.hpp>
 #pragma message( __FILE__ "(" BOOST_PP_STRINGIZE(__LINE__) ") : warning: industry/api/windows/* will not be compiled without language extensions (windows.h pukes)" )
 

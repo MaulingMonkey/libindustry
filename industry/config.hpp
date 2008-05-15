@@ -39,6 +39,9 @@
 #elif defined( __APPLE__ )
 #define INDUSTRY_OS_X
 
+#elif defined( _LINUX )
+#define INDUSTRY_OS_LINUX
+
 #else
 #define INDUSTRY_OS_UNKNOWN
 

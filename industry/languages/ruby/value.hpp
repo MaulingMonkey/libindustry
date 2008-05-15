@@ -12,6 +12,7 @@
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <boost/preprocessor.hpp>
+#include <boost/type_traits.hpp>
 #include <string>
 #include <stdexcept>
 #include <iostream>
@@ -93,7 +94,7 @@ namespace industry { namespace languages { namespace ruby {
 		friend value operator~ ( const value& self ) { return (self ->* "~")(); }
 
 		friend value operator==( const value& lhs, const value& rhs ) { return (lhs ->* "==")(rhs); }
-		friend value operator!=( const value& lhs, const value& rhs ) { return !(lhs ->* "==")(rhs); }
+		friend value operator!=( const value& lhs, const value& rhs ) { return (lhs ->* "!=")(rhs); }
 		friend value operator||( const value& lhs, const value& rhs ) { return lhs ? lhs : rhs; }
 		friend value operator&&( const value& lhs, const value& rhs ) { return lhs ? rhs ? lhs : Qfalse : Qfalse; }
 		friend value operator+ ( const value& lhs, const value& rhs ) { return (lhs ->* "+" )(rhs); }
@@ -118,7 +119,7 @@ namespace industry { namespace languages { namespace ruby {
 		
 		template<class Destination, class Source>
 		friend Destination value_static_cast(const value& self) {
-			typedef detail::class_registry<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
+			typedef detail::class_registry<typename boost::remove_cv<typename boost::remove_reference<typename boost::remove_pointer<Source>::type >::type >::type > class_type;
 			
 			if(rb_class_inherited_p(class_type::get(), CLASS_OF(self.value_)) != Qnil) {
 				return static_cast<Destination>(detail::ruby_value<Source>::from(self.value_));
@@ -130,7 +131,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Destination, class Source>
 		friend Destination value_dynamic_cast(const value& self) {
-			typedef detail::class_registry<boost::remove_cv<boost::remove_reference<boost::remove_pointer<Source>::type>::type>::type> class_type;
+			typedef detail::class_registry<typename boost::remove_cv<typename boost::remove_reference<typename boost::remove_pointer<Source>::type>::type>::type> class_type;
 
 			if(rb_class_inherited_p(class_type::get(), CLASS_OF(self.value_)) != Qnil) {
 				return dynamic_cast<Destination>(detail::ruby_value<Source>::from(self.value_));

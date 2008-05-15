@@ -9,11 +9,13 @@
 #ifndef IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 
+#include <industry/languages/ruby/declarations.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #ifdef _MSC_VER
@@ -22,8 +24,8 @@
 #endif
 
 namespace industry { namespace languages { namespace ruby {
-	template<class T, class B> struct class_;
 	namespace detail {
+		template<class T> struct class_registry;
 		template<class T> struct ruby_value;
 
 		template<class T> struct ruby_value<T*> { // Ownership does not transfer
@@ -126,7 +128,7 @@ namespace industry { namespace languages { namespace ruby {
 		};
 		template< typename L, typename R > struct ruby_value< const std::pair<L,R> > : ruby_value< std::pair<L,R> > {};
 
-#define TO_RUBY_VALUE(z,n,tuple) ruby_value<T##n>::to(tuple.get<n>())
+#define TO_RUBY_VALUE(z,n,tuple) ruby_value<T##n>::to(tuple.template get<n>())
 #define FROM_RUBY_VALUE(z,n,unused) ruby_value<T##n>::from(rb_ary_entry(v,n))
 /*---------------------------------------------------------------------------------------------------------------------*/
 #define BOOST_PP_LOCAL_MACRO(N)                                                                                         \
