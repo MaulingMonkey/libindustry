@@ -64,6 +64,27 @@ namespace industry { namespace languages { namespace ruby {
 		}
 	};
 
+	template<class Policy>
+	struct visibility : Policy { };
+	
+	struct public_visibility {
+		static void define(VALUE klass, const char* name, VALUE(*func)(ANYARGS), int args) {
+			rb_define_method(klass, name, func, args);
+		}
+	};
+
+	struct private_visibility {
+		static void define(VALUE klass, const char* name, VALUE(*func)(ANYARGS), int args) {
+			rb_define_private_method(klass, name, func, args);
+		}
+	};
+
+	struct protected_visibility {
+		static void define(VALUE klass, const char* name, VALUE(*func)(ANYARGS), int args) {
+			rb_define_protected_method(klass, name, func, args);
+		}
+	};
+
 	template<class T, class B>
 	struct class_ {
 		static VALUE alloc_type(VALUE klass) {
@@ -116,9 +137,14 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class Fn2>
 		class_& def(std::string const& name, Fn2 f) {
+			return def(name, f, visibility<public_visibility>());
+		}
+
+		template<class Fn2, class V>
+		class_& def(std::string const& name, Fn2 f, visibility<V> v) {
 			typedef detail::method_registry<T, typename industry::function_traits<Fn2>::signature> f_registry;
 			f_registry::get(name, f);
-			rb_define_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_registry::call_proxy), industry::function_traits<Fn2>::arity);
+			visibility<V>::define(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC(f_registry::call_proxy), industry::function_traits<Fn2>::arity);
 			return *this;
 		}
 
