@@ -11,6 +11,7 @@
 
 #include <industry/languages/ruby/detail/intrusive.hpp>
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
+#include <cassert>
 
 namespace industry { namespace languages { namespace ruby { namespace detail {
 	template < typename T > struct class_registry;
@@ -22,6 +23,7 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 	public:
 		self_aware_base(): v(0) {}
 		self_aware_base(const self_aware_base&): v(0) {}
+		~self_aware_base() { assert(!v || !"Dangling ruby reference!"); }
 
 		VALUE raw_self() {
 			if (!v) v = Data_Wrap_Struct(class_registry<T>::get(),0,intrusive_gc_and_release_or_noop::call<T>,this); // Starts out owned by C++
