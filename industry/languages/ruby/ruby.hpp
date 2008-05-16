@@ -168,9 +168,14 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class V>
 		class_& var(std::string const& name, V T::* p) {
+			return var(name, p, visibility<public_visibility>());
+		}
+
+		template<class V, class Vis>
+		class_& var(std::string const& name, V T::* p, visibility<Vis>) {
 			detail::variable_registry<T, V>::reg(name, p);
-			rb_define_method(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
-			rb_define_method(detail::class_registry<T>::get(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
+			visibility<Vis>::define(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
+			visibility<Vis>::define(detail::class_registry<T>::get(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
 			return *this;
 		}
 	};	
