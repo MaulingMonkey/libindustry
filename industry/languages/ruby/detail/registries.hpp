@@ -16,8 +16,10 @@
 #endif
 
 #include <industry/traits/function_traits.hpp>
+#include <industry/languages/ruby/detail/intrusive.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/constructor_registry.hpp>
+#include <industry/languages/ruby/detail/self_aware_base.hpp>
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 #include <stdarg.h>
@@ -29,6 +31,40 @@ namespace industry { namespace languages { namespace ruby {
 	struct class_;
 
 	namespace detail {
+		extern std::map<void*,VALUE> instances;
+
+		template<class T>
+		struct instance_registry {
+		private:
+			static VALUE get_ruby_value_impl( void* ptr ) {
+				VALUE& v = instances[ptr];
+				if (!v) {
+					intrusive_add_ref_or_noop::call((T*)ptr);
+					v = Data_Wrap_Struct(detail::class_registry<T>::get(),0,intrusive_gc_and_release_or_noop::call<T>,ptr); // assume it's owned by C++
+				}
+				return v;
+			}
+			static VALUE get_ruby_value_impl( detail::self_aware_base<T>* ptr ) { return ptr->raw_self(); }
+
+			static void ruby_gced_impl( void*                       ptr ) { instances.erase(ptr); }
+			static void ruby_gced_impl( detail::self_aware_base<T>* ptr ) { ptr->v = 0; }
+
+			static void ruby_initialized_impl( void* ptr                      , VALUE v ) { assert(!instances[ptr]); instances[ptr] = v; }
+			static void ruby_initialized_impl( detail::self_aware_base<T>* ptr, VALUE v ) { ptr->v = v; }
+		public:
+			static VALUE register_ruby_owned(T* ptr) {
+				VALUE v = get_ruby_value(ptr);
+				RDATA(v)->dfree = RUBY_DATA_FUNC(intrusive_gc_and_release_or_delete::call<T>);
+				return v;
+			}
+			static VALUE get_ruby_value(T* ptr) { return get_ruby_value_impl(ptr); }
+			static void ruby_gced(T* ptr) { ruby_gced_impl(ptr); }
+			static void ruby_initialized(T* ptr, VALUE v) { ruby_initialized_impl(ptr,v); }
+		};
+
+
+
+
 		template<class T, unsigned int Arity>
 		struct constructor_registry {
 			template<class Sig>

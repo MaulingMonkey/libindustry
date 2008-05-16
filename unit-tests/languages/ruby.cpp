@@ -45,6 +45,8 @@ namespace {
 		void test() { name = eval<std::string>("caller[0][/`([^']*)'/, 1]"); }
 		virtual int inherited() { return 1; }
 
+		std::size_t address() const { return std::size_t(this); }
+
 		virtual ~MyTestClass() {}
 	};
 
@@ -100,6 +102,10 @@ namespace {
 			test_value = static_cast<int>(y * x);
 		}
 	};
+
+	class MySelfAwareTest : public self_aware<MySelfAwareTest> {
+	};
+
 	void work1() {
 		test_value += 1;
 	}
@@ -109,7 +115,8 @@ namespace {
 			var("inc2", &MyTestClass::inc).
 			def("work1", work1).
 			def("work2", &MyTestClass::work2).
-			var("inc", &MyTestClass::inc);
+			var("inc", &MyTestClass::inc).
+			def("address", &MyTestClass::address);
 		testClass.def("mul_by_inc", &MyTestClass::mul_by_inc).
 			const_("Multiplicand", 4).
 			def("arr", &MyTestClass::arr).
@@ -136,6 +143,8 @@ namespace {
 			def(init<void(int)>()).
 			def(init<void()>()).
 			def(init<void(int, float)>());
+
+		class_<MySelfAwareTest>("MySelfAwareTest" );
 	}
 
 	// prevent Boost.Test from detecting GCed objects as leaks:
@@ -153,6 +162,10 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 1 );
 	rb_eval_string("MyTestClass.new.work2" );
 	BOOST_CHECK_EQUAL( test_value, 3 );
+
+	rb_eval_string( "GC.start" );
+
+
 	rb_eval_string("MyTestClass.new.arr('hello')");
 	BOOST_CHECK_EQUAL( name, "hello");
 	rb_eval_string("MyTestClass.new.cal");
@@ -165,6 +178,8 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 5);
 	rb_eval_string("MyConstructorTest.new(2, 3.5)");
 	BOOST_CHECK_EQUAL( test_value, 7);
+
+	rb_eval_string( "GC.start" );
 }
 
 BOOST_AUTO_TEST_CASE( arguments_and_return_test )
@@ -313,6 +328,12 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 			def address_of( object )\n\
 				object.address\n\
 			end\n\
+			def check_equal( o1, o2 )\n\
+				o1==o2\n\
+			end\n\
+			def identity(o)\n\
+				o\n\
+			end\n\
 		end\n\
 		");
 
@@ -321,13 +342,20 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 	// Nontransfer of ownership
 	std::auto_ptr<MyTestClass> mtc1( new MyTestClass() );
 	BOOST_CHECK_EQUAL( "MyTestClass", (i->*"class_of")(mtc1.get()).to<std::string>() ); // raw pointer, shouldn't tranfser ownership
+	BOOST_CHECK( (i->*"check_equal")(mtc1.get(), mtc1.get()).to<bool>() ); // we're sharing RDatas, right?
 	BOOST_CHECK( mtc1.get() );
 
-
+	
 	// Transfer of ownership
 	std::auto_ptr<MyTestClass> mtc2( new MyTestClass() );
 	BOOST_CHECK_EQUAL( "MyTestClass", (i->*"class_of")(mtc2).to<std::string>() ); // directly passing auto_ptr, should transfer ownership
 	BOOST_CHECK( !mtc2.get() );
+
+
+	// Evil transfer of ownership
+	std::auto_ptr<MyTestClass> mtc3( new MyTestClass() );
+	MyTestClass* mtc4 = mtc3.get();
+	BOOST_CHECK( (i->*"check_equal")(mtc3,mtc4).to<bool>() ); // we're sharing RDatas, right?
 
 
 	// Shared ownership
@@ -342,6 +370,12 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 	MyCopyableTestClass mctc1;
 	BOOST_CHECK_PREDICATE( std::not_equal_to<std::size_t>(), ( (i->*"address_of")(           mctc1 ).to<std::size_t>() )( mctc1.get_address() ) );
 	BOOST_CHECK_PREDICATE( std::equal_to<std::size_t>()    , ( (i->*"address_of")(boost::ref(mctc1)).to<std::size_t>() )( mctc1.get_address() ) );
+
+
+	// Self awareness
+	value msat1 = eval( "MySelfAwareTest.new" );
+	value msat2 = (i->*"identity")(msat1).to<MySelfAwareTest*>()->self();
+	BOOST_CHECK_EQUAL( msat1, msat2 );
 
 
 	// -- Postconditions --

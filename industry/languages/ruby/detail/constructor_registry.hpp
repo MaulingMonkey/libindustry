@@ -18,7 +18,9 @@
 #include <boost/preprocessor/list/for_each_product.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/to_list.hpp>
+#include <boost/function.hpp>
 #include <boost/type_traits.hpp>
+#include <map>
 #include <string>
 
 #ifdef _MSC_VER
@@ -62,7 +64,10 @@ struct constructor_registry_impl<T, Sig, n> {
 		return key;
 	}
 	static VALUE f(int argc, VALUE* argv, VALUE self) {
-		new (ruby_value<T*>::from(self)) T(BOOST_PP_ENUM(n, DO_WRAP_FUNC, BOOST_PP_EMPTY));
+		T* ptr = ruby_value<T*>::from(self);
+		new (ptr) T(BOOST_PP_ENUM(n, DO_WRAP_FUNC, BOOST_PP_EMPTY));
+		instance_registry<T>::ruby_initialized(ptr,self); // inject self
+		instance_registry<T>::register_ruby_owned(ptr);
 		return self;
 	}
 };

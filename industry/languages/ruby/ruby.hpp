@@ -16,12 +16,14 @@
 #endif
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
+#include <industry/languages/ruby/detail/intrusive.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/registries.hpp>
 #include <industry/languages/ruby/call_f.hpp>
 #include <industry/languages/ruby/declarations.hpp>
 #include <industry/languages/ruby/eval.hpp>
 #include <industry/languages/ruby/module.hpp>
+#include <industry/languages/ruby/self_aware.hpp>
 #include <industry/languages/ruby/value.hpp>
 #include <industry/config.hpp>
 #include <industry/traits/function_traits.hpp>
@@ -64,18 +66,16 @@ namespace industry { namespace languages { namespace ruby {
 
 	template<class T, class B>
 	struct class_ {
-		static void free_type(T* ptr) {
-			delete ptr;
-		}
-
 		static VALUE alloc_type(VALUE klass) {
 			T* ptr = static_cast<T*>(::operator new(sizeof(T)));
-			return Data_Wrap_Struct(klass, 0, free_type, ptr);
+			return Data_Wrap_Struct(klass, 0, detail::intrusive_gc_and_release_or_delete::call<T>, ptr); // Ruby owned
+			// self_aware will have it's value injected after construction
 		}
 
 		static VALUE clone_type( const T& original ) {
 			T* ptr = new T(original);
-			return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, free_type, ptr);
+			detail::instance_registry<T>::register_ruby_owned(ptr);
+			return detail::instance_registry<T>::get_ruby_value(ptr);
 		}
 
 		class_( const module& module, const std::string& name ) {

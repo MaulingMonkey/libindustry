@@ -10,6 +10,7 @@
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 
 #include <industry/languages/ruby/declarations.hpp>
+#include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/ref.hpp>
@@ -26,54 +27,43 @@
 namespace industry { namespace languages { namespace ruby {
 	namespace detail {
 		template<class T> struct class_registry;
+		template<class T> struct instance_registry;
 		template<class T> struct ruby_value;
 
 		template<class T> struct ruby_value<T*> { // Ownership does not transfer
-			static VALUE to(T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			static VALUE to(T* ptr) { return instance_registry<T>::get_ruby_value(ptr); }
 			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
 		template<class T> struct ruby_value<const T*> { // Ownership does not transfer
-			static VALUE to(const T* ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ptr); }
+			// no to   -- We're not making Ruby respect constness (yet)
 			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
 		};
 
 		// TODO: Prevent [c]refs to builtin types?
 		template<class T> struct ruby_value< boost::reference_wrapper<T> > { // Ownership does not transfer
-			static VALUE to( const boost::reference_wrapper<T>& ref ) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, 0, ref.get_pointer()); }
+			static VALUE to( const boost::reference_wrapper<T>& ref ) { return instance_registry<T>::get_ruby_value(ref.get_pointer()); }
 			// no from -- use ruby_value<T&>::from instead
 		};
 		template<class T> struct ruby_value< boost::reference_wrapper<const T> > { // Ownership does not transfer
-			/*
-			 * We're not so masochistic as to try and get Ruby to respect constness, are we?
-			 * Maybe const_cast a freezed VALUE?  Probably leave this to be done explicitly by the end user.
-			 */
+			// no to   -- We're not making Ruby respect constness (yet)
 			// no from -- use ruby_value<const T&>::from instead
 		};
 
-		template<class T> struct ruby_value< std::auto_ptr<T> > { // Ownership DOES transfer
-			static VALUE to(std::auto_ptr<T> ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, class_<T>::free_type, ptr.release()); }
+		template<class T> struct ruby_value< std::auto_ptr<T> > { // Ownership transfers!
+			static VALUE to(std::auto_ptr<T> ptr) { return instance_registry<T>::register_ruby_owned(ptr.release()); }
 		};
-		template<class T> struct ruby_value< std::auto_ptr<const T> > { // Ownership DOES transfer
-			static VALUE to(std::auto_ptr<const T> ptr) { return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, class_<T>::free_type, ptr.release()); }
+		template<class T> struct ruby_value< std::auto_ptr<const T> > { // Ownership transfers!
+			// no to   -- We're not making Ruby respect constness (yet)
 		};
 
-		// TODO: class_ probably needs to handle init differently for intrusive_ptr<T> enabled classes
 		template<class T> struct ruby_value< boost::intrusive_ptr<T> > {
-			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, release, ptr.get()); }
+			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { return instance_registry<T>::get_ruby_value(ptr.get()); }
 			static boost::intrusive_ptr<T> from(VALUE v) { T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
-		private:
-			// TODO: Work around ADL-missing compilers by playing in namespace boost::* ?
-			static void add_ref( T* ptr ) { intrusive_ptr_add_ref(ptr); }
-			static void release( T* ptr ) { intrusive_ptr_release(ptr); }
 		};
 
 		template<class T> struct ruby_value< boost::intrusive_ptr<const T> > {
-			static VALUE to(const boost::intrusive_ptr<const T>& ptr ) { add_ref(ptr.get()); return Data_Wrap_Struct(detail::class_registry<T>::get(), 0, release, ptr.get()); }
+			// no to   -- We're not making Ruby respect constness (yet)
 			static boost::intrusive_ptr<const T> from(VALUE v) { const T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
-		private:
-			// TODO: Work around ADL-missing compilers by playing in namespace boost::* ?
-			static void add_ref( const T* ptr ) { intrusive_ptr_add_ref(ptr); }
-			static void release( const T* ptr ) { intrusive_ptr_release(ptr); }
 		};
 
 		// No boost::scoped_ptr<T> -- use get() to explicitly use non-transfering ownership
