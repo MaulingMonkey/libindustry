@@ -132,27 +132,12 @@ namespace industry { namespace languages { namespace ruby {
 			static void set(VALUE v) {
 				intern(v);
 			}
-
-			static void created(VALUE v, T* p) {
-				instances()[p] = v;
-			}
-			static VALUE obtain(T* p) {
-				return instances()[p];
-			}
-			static void destroyed(T* p) {
-				instances().erase(p);
-			}
 		private:
 			static VALUE intern(VALUE v = Qnil) {
 				static VALUE result;
 				if(v != Qnil)
 					result = v;
 				return result;
-			}
-
-			static std::map<T*, VALUE>& instances() {
-				static std::map<T*, VALUE> inst;
-				return inst;
 			}
 		};
 

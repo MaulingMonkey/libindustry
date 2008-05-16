@@ -43,7 +43,7 @@ namespace industry { namespace languages { namespace ruby {
 			return rb_funcall3( self, id, 0, NULL );
 		}
 
-#		define OPERATOR_CALL_CONVERSION(z,n,arg) detail::ruby_value< typename detail::no_ownership_transfer<A ## n>::type >::to( arg ## n )
+#		define OPERATOR_CALL_CONVERSION(z,n,arg) detail::ruby_value< A ## n >::to( arg ## n )
 #		define OPERATOR_CALL_IMPL( z, n, unused )                                   \
 		template < BOOST_PP_ENUM_PARAMS(n,typename A) >                             \
 		lazy_value operator()( BOOST_PP_ENUM_BINARY_PARAMS( n, A, arg ) ) const {   \
