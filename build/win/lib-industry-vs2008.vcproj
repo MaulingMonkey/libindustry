@@ -215,6 +215,10 @@
 						Name="detail"
 						>
 						<File
+							RelativePath="..\..\industry\languages\ruby\detail\builtins.hpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\industry\languages\ruby\detail\constructor_registry.hpp"
 							>
 						</File>

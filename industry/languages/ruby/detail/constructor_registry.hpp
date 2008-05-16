@@ -46,7 +46,8 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 #else
 #define n BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(i) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(i),_type))
-#define DO_GEN_KEYPART(x,i,d) (key += (rb_class2name((klass = rb_class_of(ruby_value<FUNCTION_ARG_TYPE(i)>::to(FUNCTION_ARG_TYPE(i)()))) == rb_cFixnum ? rb_cBignum : klass)))
+//#define DO_GEN_KEYPART(x,i,d) (key += (rb_class2name((klass = rb_class_of(ruby_value<FUNCTION_ARG_TYPE(i)>::to(FUNCTION_ARG_TYPE(i)()))) == rb_cFixnum ? rb_cBignum : klass)))
+#define DO_GEN_KEYPART(x,i,d) (key += (rb_class2name((klass = class_registry<FUNCTION_ARG_TYPE(i)>::get()) == rb_cFixnum ? rb_cBignum : klass)))
 #define DO_WRAP_FUNC(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(*(argv+i)))
 
 template<class T, class Sig>

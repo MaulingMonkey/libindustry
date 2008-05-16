@@ -16,15 +16,14 @@
 // Types lacking ruby_value<...>::from are unidirectional from C++ to Ruby
 // ruby_value<...>::to is usually missing due to constness and Ruby not respecting it (yet).
 //
-//     TODO:
-// - Figure out a better way to default [const] T[&] so that multiple ruby_value<T> specializations aren't
-//   required for builtin types.
-//
+//     See also:
+// industry/languages/ruby/detail/builtins.hpp for the specializations of "value" (always copied) types
 
 #ifndef IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 
 #include <industry/languages/ruby/declarations.hpp>
+#include <industry/languages/ruby/detail/builtins.hpp>
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/preprocessor.hpp>
@@ -90,25 +89,6 @@ namespace industry { namespace languages { namespace ruby {
 			static VALUE to(const T& ref) { return class_<T>::clone_type(ref); }
 			static T from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return *ptr; }
 		};
-
-		//// OWNERSHIP:  Gives a copy to the other language ///////////////////////////////////////////////////////////
-		template<> struct ruby_value<bool>  { static VALUE to(bool  v) { return v?Qtrue:Qfalse; } static bool from(VALUE v) { return RTEST(v); } };
-		template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
-		template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
-		template<> struct ruby_value<int>   { static VALUE to(int   v) { return INT2NUM(v); } static int   from(VALUE v) {return NUM2INT(v);  } };
-		template<> struct ruby_value<long>  { static VALUE to(long  v) { return LONG2NUM(v);} static long  from(VALUE v) {return NUM2LONG(v); } };
-		template<> struct ruby_value<unsigned char>  { static VALUE to(unsigned char  v) { return UINT2NUM(v); } static unsigned char  from(VALUE v) {return static_cast<unsigned char >(NUM2UINT(v)); } };
-		template<> struct ruby_value<unsigned short> { static VALUE to(unsigned short v) { return UINT2NUM(v); } static unsigned short from(VALUE v) {return static_cast<unsigned short>(NUM2UINT(v)); } };
-		template<> struct ruby_value<unsigned int>   { static VALUE to(unsigned int   v) { return UINT2NUM(v); } static unsigned int   from(VALUE v) {return NUM2UINT(v); } };
-		template<> struct ruby_value<unsigned long>  { static VALUE to(unsigned long  v) { return ULONG2NUM(v);} static unsigned long  from(VALUE v) {return NUM2ULONG(v); } };
-
-		template<> struct ruby_value<float>  { static VALUE to(float  v) { return rb_float_new(v); } static float  from(VALUE v) { return (float)NUM2DBL(v); } };
-		template<> struct ruby_value<double> { static VALUE to(double v) { return rb_float_new(v); } static double from(VALUE v) { return        NUM2DBL(v); } };
-
-		template<> struct ruby_value<char*> { static VALUE to(char* v) { return rb_str_new2(v); } static char* from(VALUE v) {return STR2CSTR(v); } };
-		template<> struct ruby_value<const char*> { static VALUE to(const char* v) { return rb_str_new2(v); } static const char* from(VALUE v) {return STR2CSTR(v); } };
-		template<> struct ruby_value<      std::string > { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
-		template<> struct ruby_value<const std::string&> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 
 		//// OWNERSHIP:  Gives a copy to the other language ///////////////////////////////////////////////////////////
 		// (however, the ownership of inner types is dealt with with their own policies)
