@@ -162,6 +162,7 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T>
 		struct class_registry {
 			static VALUE get() {
+				assert(intern());
 				return intern();
 			}
 
