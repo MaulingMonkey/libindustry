@@ -5,6 +5,21 @@
 // http://www.boost.org/LICENSE_1_0.txt )
 //
 // $LastChangedBy$ - $LastChangedDate$
+//
+//     Notes:
+// Ownership of intrusive_ptr<T> enabled classes is always shared despite descriptions bellow, except where copied.
+// You will still need to use intrusive_ptr<T> or equivalent, of course, on the C++ side of things.
+//
+//     Missing:
+// ruby_value doesn't handle shared_ptr<T> or scoped_ptr<T> and probably never will.  Sharing their ownership
+// is a PITA or impossible, and .get() should be used to make explicit the lack of ownership transfer.
+// Types lacking ruby_value<...>::from are unidirectional from C++ to Ruby
+// ruby_value<...>::to is usually missing due to constness and Ruby not respecting it (yet).
+//
+//     TODO:
+// - Figure out a better way to default [const] T[&] so that multiple ruby_value<T> specializations aren't
+//   required for builtin types.
+//
 
 #ifndef IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
 #define IG_INDUSTRY_LANGAUGES_RUBY_DETAIL_RUBY_VALUE
@@ -21,7 +36,7 @@
 
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable: 4127 ) // conditional expression is constant -- do {...} while(0) idiom used by Data_Wrap_Struct
+#pragma warning( disable: 4127 ) // conditional expression is constant -- the do {...} while(0) idiom used by Data_Wrap_Struct
 #endif
 
 namespace industry { namespace languages { namespace ruby {
@@ -30,63 +45,53 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T> struct instance_registry;
 		template<class T> struct ruby_value;
 
-		template<class T> struct ruby_value<T*> { // Ownership does not transfer
+
+
+		//// OWNERSHIP:  Does not transfer ////////////////////////////////////////////////////////////////////////////
+		template<class T> struct ruby_value<T*> {
 			static VALUE to(T* ptr) { return instance_registry<T>::get_ruby_value(ptr); }
 			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
-		template<class T> struct ruby_value<const T*> { // Ownership does not transfer
-			// no to   -- We're not making Ruby respect constness (yet)
+		template<class T> struct ruby_value<const T*> {
 			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
 		};
 
-		// TODO: Prevent [c]refs to builtin types?
-		template<class T> struct ruby_value< boost::reference_wrapper<T> > { // Ownership does not transfer
+		template<class T> struct ruby_value< boost::reference_wrapper<T> > {
 			static VALUE to( const boost::reference_wrapper<T>& ref ) { return instance_registry<T>::get_ruby_value(ref.get_pointer()); }
-			// no from -- use ruby_value<T&>::from instead
 		};
-		template<class T> struct ruby_value< boost::reference_wrapper<const T> > { // Ownership does not transfer
-			// no to   -- We're not making Ruby respect constness (yet)
-			// no from -- use ruby_value<const T&>::from instead
-		};
-
-		template<class T> struct ruby_value< std::auto_ptr<T> > { // Ownership transfers!
+		
+		//// OWNERSHIP:  Transfers (to Ruby) //////////////////////////////////////////////////////////////////////////
+		template<class T> struct ruby_value< std::auto_ptr<T> > {
 			static VALUE to(std::auto_ptr<T> ptr) { return instance_registry<T>::register_ruby_owned(ptr.release()); }
 		};
-		template<class T> struct ruby_value< std::auto_ptr<const T> > { // Ownership transfers!
-			// no to   -- We're not making Ruby respect constness (yet)
-		};
 
+		//// OWNERSHIP:  Shared (always) //////////////////////////////////////////////////////////////////////////////
+		// (must implement the intrusive_ptr interface, of course)
 		template<class T> struct ruby_value< boost::intrusive_ptr<T> > {
 			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { return instance_registry<T>::get_ruby_value(ptr.get()); }
 			static boost::intrusive_ptr<T> from(VALUE v) { T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		};
 
 		template<class T> struct ruby_value< boost::intrusive_ptr<const T> > {
-			// no to   -- We're not making Ruby respect constness (yet)
 			static boost::intrusive_ptr<const T> from(VALUE v) { const T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		};
 
-		// No boost::scoped_ptr<T> -- use get() to explicitly use non-transfering ownership
-		// No boost::shared_ptr<T> -- use get() to explicitly use non-transfering ownership
-		//    TODO:  Write ownership sharing to/from for shared_ptr, at least when using enable_shared_from_this?
-
+		//// OWNERSHIP:  Gives a copy to Ruby, but does not copy or transfer ownership to C++ /////////////////////////
 		template <class T> struct ruby_value< const T > : ruby_value<T> {};
-
-		// FIXME:  ruby_value< const T& >::from overrides ruby_value<char, short, std::string, etc>
 		template <class T> struct ruby_value< const T&> : ruby_value<const T> {
-			// Uses ruby_value<const T>::to -- use boost::cref to pass to ruby by reference!
+			// Uses ruby_value<const T>::to if available -- use boost::ref to pass to ruby by reference!
 			static const T& from( VALUE v ) { const T* ptr; Data_Get_Struct(v,const T,ptr); return *ptr; }
 		};
 		template <class T> struct ruby_value<       T&> : ruby_value<T> {
 			// Uses ruby_value<T>::to -- use boost::ref to pass to ruby by reference!
 			static T& from( VALUE v ) { T* ptr; Data_Get_Struct(v,T,ptr); return *ptr; }
 		};
-
 		template<class T> struct ruby_value {
 			static VALUE to(const T& ref) { return class_<T>::clone_type(ref); }
 			static T from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return *ptr; }
 		};
 
+		//// OWNERSHIP:  Gives a copy to the other language ///////////////////////////////////////////////////////////
 		template<> struct ruby_value<bool>  { static VALUE to(bool  v) { return v?Qtrue:Qfalse; } static bool from(VALUE v) { return RTEST(v); } };
 		template<> struct ruby_value<char>  { static VALUE to(char  v) { return CHR2FIX(v); } static char  from(VALUE v) {return NUM2CHR(v);  } };
 		template<> struct ruby_value<short> { static VALUE to(short v) { return INT2NUM(v); } static short from(VALUE v) {return static_cast<short>(NUM2INT(v)); } };
@@ -105,6 +110,8 @@ namespace industry { namespace languages { namespace ruby {
 		template<> struct ruby_value<      std::string > { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 		template<> struct ruby_value<const std::string&> { static VALUE to(std::string const& v) { return rb_str_new(v.c_str(), v.length()); } static std::string from(VALUE v) {return STR2CSTR(v); } };
 
+		//// OWNERSHIP:  Gives a copy to the other language ///////////////////////////////////////////////////////////
+		// (however, the ownership of inner types is dealt with with their own policies)
 		template< typename L, typename R > struct ruby_value< std::pair<L,R> > {
 			static VALUE to( const std::pair<L,R>& p ) {
 				return rb_ary_new3( 2, ruby_value<L>::to(p.first), ruby_value<R>::to(p.second) );
