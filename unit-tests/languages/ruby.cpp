@@ -88,7 +88,6 @@ namespace {
 
 	class MyConstructorTest {
 	public:
-		//MyConstructorTest() {}
 		MyConstructorTest(int x,int y) {
 			test_value = x + y * y;
 		}
@@ -100,6 +99,9 @@ namespace {
 		}
 		MyConstructorTest(int x, float y) {
 			test_value = static_cast<int>(y * x);
+		}
+		MyConstructorTest( const std::string& s ) {
+			// TODO:  Something?
 		}
 	};
 
@@ -142,7 +144,8 @@ namespace {
 		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).
 			def(init<void(int)>()).
 			def(init<void()>()).
-			def(init<void(int, float)>());
+			def(init<void(int, float)>()).
+			def(init<void(const std::string&)>());
 
 		class_<MySelfAwareTest>("MySelfAwareTest" );
 	}
@@ -178,6 +181,7 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	BOOST_CHECK_EQUAL( test_value, 5);
 	rb_eval_string("MyConstructorTest.new(2, 3.5)");
 	BOOST_CHECK_EQUAL( test_value, 7);
+	rb_eval_string("MyConstructorTest.new('sparta')");
 
 	rb_eval_string( "GC.start" );
 }
