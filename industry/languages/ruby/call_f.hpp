@@ -25,6 +25,7 @@ namespace industry { namespace languages { namespace ruby {
 	public:
 		call_f( value proc ): proc(proc) {}
 
+		return_proxy operator()() const { return return_proxy((proc->*"call")()); }
 /*------------------------------------------------------------------------------*/
 #define BOOST_PP_LOCAL_MACRO(N)                                                  \
 		template < BOOST_PP_ENUM_PARAMS(N,typename A) >                          \
