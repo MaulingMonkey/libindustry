@@ -62,8 +62,7 @@ namespace industry { namespace languages { namespace ruby {
 			static void ruby_initialized(T* ptr, VALUE v) { ruby_initialized_impl(ptr,v); }
 		};
 
-
-
+		std::map<VALUE,VALUE>& remap_registry();
 
 		template<class T, unsigned int Arity>
 		struct constructor_registry {
@@ -102,11 +101,9 @@ namespace industry { namespace languages { namespace ruby {
 
 				std::string key;
 				for(int i = 0; i < argc; ++i) {
-					if(CLASS_OF(argv[i]) == rb_cFixnum || CLASS_OF(argv[i]) == rb_cBignum) {
-						key += rb_class2name(rb_cBignum);
-					} else {
-						key += rb_class2name(rb_class_of(argv[i]));
-					}
+					VALUE klass = CLASS_OF(argv[i]);
+					if ( remap_registry().find(klass) != remap_registry().end() ) klass = remap_registry()[klass];
+					key += rb_class2name(klass);
 				}
 
 				if(get_constructors().find(key) != get_constructors().end()) {

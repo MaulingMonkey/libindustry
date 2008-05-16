@@ -6,15 +6,23 @@
 //
 // $LastChangedBy$ - $LastChangedDate$
 
+#ifdef RUBY_T_REMAP
+// #define-d by registries.cpp
+RUBY_T_REMAP( rb_cFalseClass, rb_cTrueClass );
+RUBY_T_REMAP( rb_cFixnum    , rb_cBignum    );
+#else // ndef RUBY_T_REMAP
+
+
 #ifndef IG_INDUSTRY_LANGUAGES_RUBY_DETAIL_BUILTINS
 #define IG_INDUSTRY_LANGUAGES_RUBY_DETAIL_BUILTINS
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
+#include <map>
 #include <string>
 
-
-#define RUBY_T_REMAP( origin, equivalent )
-
+namespace industry { namespace languages { namespace ruby { namespace detail {
+	template < typename T > struct class_registry;
+	template < typename T > struct ruby_value;
 
 /*----------------------------------------------------------------------*/
 #define BUILTIN( cpp_t, ruby_t, cpp2ruby, ruby2cpp )                     \
@@ -28,7 +36,6 @@ template<> struct ruby_value<cpp_t const&> {                             \
 };                                                                       \
 template<> struct ruby_value<cpp_t const>:ruby_value<cpp_t> {};          \
 template<> struct ruby_value<cpp_t&>:ruby_value<cpp_t const&>{};         \
-/*---------------------------------------------------------------------*/\
 template<> struct class_registry<cpp_t> {                                \
 	static VALUE get() { return ruby_t; }                                \
 };                                                                       \
@@ -36,14 +43,6 @@ template<> struct class_registry<cpp_t const >:class_registry<cpp_t> {}; \
 template<> struct class_registry<cpp_t const&>:class_registry<cpp_t> {}; \
 template<> struct class_registry<cpp_t&      >:class_registry<cpp_t> {}; \
 /*----------------------------------------------------------------------*/
-
-
-namespace industry { namespace languages { namespace ruby { namespace detail {
-	template < typename T > struct class_registry;
-	template < typename T > struct ruby_value;
-
-	RUBY_T_REMAP( rb_cFalseClass, rb_cTrueClass );
-	RUBY_T_REMAP( rb_cFixnum    , rb_cBignum    );
 
 	//// OWNERSHIP:  Gives a copy to the other language ///////////////////////////////////////////////////////////
 	BUILTIN( bool          , rb_cTrueClass, value?Qtrue:Qfalse  , RTEST(value)                                );
@@ -60,9 +59,10 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 	BUILTIN( char*         , rb_cString   , rb_str_new2(value)  , STR2CSTR(value)                             );
 	BUILTIN( const char*   , rb_cString   , rb_str_new2(value)  , STR2CSTR(value)                             );
 	BUILTIN( std::string   , rb_cString   , rb_str_new(value.empty()?"":value.c_str(),value.size()), STR2CSTR(value) );
-}}}}
 
-#undef RUBY_T_REMAP
 #undef BUILTIN
 
+}}}}
+
 #endif //ndef IG_INDUSTRY_LANGUAGES_RUBY_DETAIL_BUILTINS
+#endif //ndef RUBY_T_MAP
