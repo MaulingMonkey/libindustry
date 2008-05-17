@@ -145,6 +145,8 @@ namespace industry { namespace languages { namespace ruby {
 		template<class T>
 		value operator[] (T const& index) const { return ((*this) ->* "[]")(index); }
 		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
+
+		value get_type() { return rb_class_of(value_); }
 		// TODO: operator[]
 		// TODO: assignment operators
 	};
