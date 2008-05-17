@@ -393,7 +393,16 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 BOOST_AUTO_TEST_CASE( ruby_array_awesomeness ) {
 	std::vector<int> v_i;
 	BOOST_FOREACH( int i , as_array_of<int>(eval("[1,2,3]")) ) v_i.push_back(i);
+	BOOST_CHECK_EQUAL( v_i.size(), 3 );
+	if ( v_i.size() >= 3 ) {
+		BOOST_CHECK_EQUAL( v_i[0], 1 );
+		BOOST_CHECK_EQUAL( v_i[1], 2 );
+		BOOST_CHECK_EQUAL( v_i[2], 3 );
+	}
 
+
+	v_i.clear();
+	BOOST_FOREACH( int i , eval<int[]>("[1,2,3]") ) v_i.push_back(i);
 	BOOST_CHECK_EQUAL( v_i.size(), 3 );
 	if ( v_i.size() >= 3 ) {
 		BOOST_CHECK_EQUAL( v_i[0], 1 );
