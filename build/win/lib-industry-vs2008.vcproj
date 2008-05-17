@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="WINDOWS-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -179,6 +179,10 @@
 					Name="ruby"
 					>
 					<File
+						RelativePath="..\..\industry\languages\ruby\array_iterator.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\industry\languages\ruby\call_f.hpp"
 						>
 					</File>
@@ -192,6 +196,10 @@
 					</File>
 					<File
 						RelativePath="..\..\industry\languages\ruby\eval.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\languages\ruby\exceptions.hpp"
 						>
 					</File>
 					<File

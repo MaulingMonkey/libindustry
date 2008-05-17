@@ -19,6 +19,7 @@
 #include <industry/languages/ruby/detail/intrusive.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/registries.hpp>
+#include <industry/languages/ruby/array_iterator.hpp>
 #include <industry/languages/ruby/call_f.hpp>
 #include <industry/languages/ruby/declarations.hpp>
 #include <industry/languages/ruby/eval.hpp>

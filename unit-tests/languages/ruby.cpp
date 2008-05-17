@@ -9,11 +9,13 @@
 #include <boost/test/auto_unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
+#include <boost/foreach.hpp>
 #include <boost/signal.hpp>
 #include <industry/languages/ruby/ruby.hpp>
 #include <functional>
 #include <memory>
 #include <iostream>
+#include <vector>
 
 #ifdef _M_X64
 #pragma message( "X64 platform not supported." )
@@ -386,6 +388,18 @@ BOOST_AUTO_TEST_CASE( ownership_and_such ) {
 	rb_eval_string( "GC.start" );
 	mtc1->inc = 42;
 	BOOST_WARN_EQUAL( 1, mitc1->get_references() );
+}
+
+BOOST_AUTO_TEST_CASE( ruby_array_awesomeness ) {
+	std::vector<int> v_i;
+	BOOST_FOREACH( int i , as_array_of<int>(eval("[1,2,3]")) ) v_i.push_back(i);
+
+	BOOST_CHECK_EQUAL( v_i.size(), 3 );
+	if ( v_i.size() >= 3 ) {
+		BOOST_CHECK_EQUAL( v_i[0], 1 );
+		BOOST_CHECK_EQUAL( v_i[1], 2 );
+		BOOST_CHECK_EQUAL( v_i[2], 3 );
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END(); // ruby_tests

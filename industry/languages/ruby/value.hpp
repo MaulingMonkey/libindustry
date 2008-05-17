@@ -11,6 +11,7 @@
 
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
+#include <industry/languages/ruby/exceptions.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/type_traits.hpp>
 #include <string>
@@ -146,11 +147,6 @@ namespace industry { namespace languages { namespace ruby {
 		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
 		// TODO: operator[]
 		// TODO: assignment operators
-	};
-
-	class ruby_error : public std::runtime_error {
-	public:
-		ruby_error(std::string const& message) : std::runtime_error(message) {}
 	};
 
 	namespace detail {
