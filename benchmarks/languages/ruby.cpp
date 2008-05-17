@@ -25,9 +25,12 @@ struct foo : self_aware<foo> {
 		// FIXME:  8 seems to be the current maximum number of arguments?
 		i += a1+a2+a3+a4+a5+a6+a7+a8;
 	}
-	void calla( value array ) {
+	void calla1( value array ) {
 		std::vector<int> a(array.length());
 		for ( unsigned i = 0 ; i < a.size() ; ++i ) a[i] = array[i].to<int>();
+	}
+	void calla2( value array ) {
+		std::vector<int> a(array_iterator<int>::begin(array), array_iterator<int>::end(array));
 	}
 
 	void set_f( const boost::function<void()>& new_f ) { f = new_f; }
@@ -41,7 +44,8 @@ INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
 		def( "selfless_call"         , &foo::selfless_call          ).
 		def( "call"                  , &foo::call                   ).
 		def( "call8"                 , &foo::call8                  ).
-		def( "calla"                 , &foo::calla                  ).
+		def( "calla1"                , &foo::calla1                 ).
+		def( "calla2"                , &foo::calla2                 ).
 
 		def( "f="                    , &foo::set_f                  ).
 		def( "call_f_1_000_000_times", &foo::call_f_1_000_000_times );
@@ -88,10 +92,11 @@ void benchmark_ruby() {
 	benchmark_report("Initializing the ruby_benchmarking module", init_time );
 	cout << "\n";
 
-	print_eval("$array1000 = (0...1000).to_a");
-	print_eval("$foo       = Foo.new");
-	print_eval("$foo.f     = lambda{$i+=1}");
-	print_eval("$i         = 0");
+	print_eval("$array1_000     = (0...1_000    ).to_a");
+	print_eval("$array1_000_000 = (0...1_000_000).to_a");
+	print_eval("$foo            = Foo.new");
+	print_eval("$foo.f          = lambda{$i+=1}");
+	print_eval("$i              = 0");
 	cout << "\n";
 
 	benchmark_eval  ("10_000.times{$foo.selfless_call}");
@@ -100,8 +105,12 @@ void benchmark_ruby() {
 	cout << "  # void foo::call() { i += 1; }\n";
 	benchmark_eval  ("10_000.times{$foo.call8(1,2,3,4,5,6,7,8)}");
 	cout << "  # void foo::call8( int a1...a8 ) { i += a1...a8; }\n";
-	benchmark_eval  (" 1_000.times{$foo.calla($array1000)}");
-	cout << "  # void foo::calla( value array ) { for(...) vector[i]=array[i].to<int>(); }\n";
+	benchmark_eval  (" 1_000.times{$foo.calla1($array1_000)}");
+	benchmark_eval  ("     1.times{$foo.calla1($array1_000_000)}");
+	cout << "  # void foo::calla1( value array ) { for(...) vector[i]=array[i].to<int>(); }\n";
+	benchmark_eval  ("10_000.times{$foo.calla2($array1_000)}");
+	benchmark_eval  ("   100.times{$foo.calla2($array1_000_000)}");
+	cout << "  # void foo::calla2( value array ) { vector(array_iterator<int>::begin,end); }\n";
 	benchmark_eval  ("$foo.call_f_1_000_000_times");
 	cout << "  # void foo::call_f_1_000_000_times() { for(int i=0; i<1000000; ++i ) f(); }\n";
 	cout << "\n";
