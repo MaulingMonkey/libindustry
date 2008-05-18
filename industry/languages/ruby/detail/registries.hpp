@@ -219,21 +219,28 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class C, class T>
 		struct variable_registry {
-			static T C::* reg(std::string const& name, T C::* addr = 0) {
-				static std::map<std::string, T C::*> vars;
-				if(addr) {
-					vars[name] = addr;
-					vars[name + "="] = addr;
-				}
-				return vars[name];
+			static void reg_reader(std::string const& name, T C::* addr ) {
+				vars(name) = addr;
+			}
+			static void reg_writer(std::string const& name, T C::* addr ) {
+				vars(name + "=") = addr;
+			}
+			static void reg(std::string const& name, T C::* addr ) {
+				vars(name) = addr;
+				vars(name + "=") = addr;
+			}
+
+			static T C::*& vars( std::string const& name ) {
+				static std::map<std::string, T C::*> storage;
+				return storage[name];
 			}
 
 			static VALUE get(VALUE self) {
-				return ruby_value<T>::to(ruby_value<C*>::from(self)->*reg(detail::ruby_value<std::string>::from(rb_eval_string("caller[0][/`([^']*)'/, 1]"))));
+				return ruby_value<T>::to(ruby_value<C*>::from(self)->*vars(detail::ruby_value<std::string>::from(rb_eval_string("caller[0][/`([^']*)'/, 1]"))));
 			}
 
 			static VALUE set(VALUE self, VALUE value) {
-				(ruby_value<C*>::from(self)->*reg(detail::ruby_value<std::string>::from(rb_eval_string("caller[0][/`([^']*)'/, 1]")))) = ruby_value<T>::from(value);
+				(ruby_value<C*>::from(self)->*vars(detail::ruby_value<std::string>::from(rb_eval_string("caller[0][/`([^']*)'/, 1]")))) = ruby_value<T>::from(value);
 				return Qnil;
 			}
 		};

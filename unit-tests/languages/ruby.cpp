@@ -141,6 +141,7 @@ namespace {
 			.def( "call_f_ff"         , &MyTestClassWithCallbacks::call_f_ff          )
 			.def( "set_f_ff_by_value" , &MyTestClassWithCallbacks::set_f_ff_by_value  )
 			.def( "set_f_ff_by_cref"  , &MyTestClassWithCallbacks::set_f_ff_by_cref   )
+			.attr_writer( "f_ff"      , &MyTestClassWithCallbacks::f_ff               )
 			;
 
 		class_<MyConstructorTest>("MyConstructorTest", init<void(int,int)>()).
@@ -250,11 +251,14 @@ BOOST_AUTO_TEST_CASE( procs_and_blocks ) {
 		$a = mtcwc.call_f_ff( 1.2345, 6.7890 )\n\
 		mtcwc.set_f_ff_by_value( Proc.new { |a,b| a*b } )\n\
 		$b = mtcwc.call_f_ff( 1.2345, 6.7890 )\n\
+		mtcwc.f_ff = Proc.new { |a,b| a-b }\n\
+		$c = mtcwc.call_f_ff( 1.2345, 6.7890 )\n\
 		mtcwc.avoid_leak_reports\n\
 	");
 
 	BOOST_CHECK_CLOSE( eval<float>("$a"), 8.0235f   , 0.01f );
 	BOOST_CHECK_CLOSE( eval<float>("$b"), 8.3810205f, 0.01f );
+	BOOST_CHECK_CLOSE( eval<float>("$c"),-5.5545f   , 0.01f );
 }
 
 BOOST_AUTO_TEST_CASE( value_and_eval ) {

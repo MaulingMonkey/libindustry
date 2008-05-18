@@ -167,16 +167,49 @@ namespace industry { namespace languages { namespace ruby {
 			return *this;
 		}
 
+		template<class V, class Vis>
+		class_& attr_reader(std::string const& name, V T::* p, visibility<Vis> ) {
+			detail::variable_registry<T, V>::reg_reader(name, p);
+			visibility<Vis>::define(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
+			return *this;
+		}
+		template<class V, class Vis>
+		class_& attr_writer(std::string const& name, V T::* p, visibility<Vis> ) {
+			detail::variable_registry<T, V>::reg_writer(name, p);
+			visibility<Vis>::define(detail::class_registry<T>::get(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
+			return *this;
+		}
+		template<class V, class Vis>
+		class_& attr_accessor(std::string const& name, V T::* p, visibility<Vis> ) {
+			attr_reader( name, p, visibility<Vis>() );
+			attr_writer( name, p, visibility<Vis>() );
+			return *this;
+		}
+		template<class V>
+		class_& attr_reader(std::string const& name, V T::* p ) {
+			attr_reader( name, p, visibility<public_visibility>() );
+			return *this;
+		}
+		template<class V>
+		class_& attr_writer(std::string const& name, V T::* p ) {
+			attr_writer( name, p, visibility<public_visibility>() );
+			return *this;
+		}
+		template<class V>
+		class_& attr_accessor(std::string const& name, V T::* p ) {
+			attr_accessor( name, p, visibility<public_visibility>() );
+			return *this;
+		}
+
 		template<class V>
 		class_& var(std::string const& name, V T::* p) {
-			return var(name, p, visibility<public_visibility>());
+			attr_accessor(name, p, visibility<public_visibility>());
+			return *this;
 		}
 
 		template<class V, class Vis>
 		class_& var(std::string const& name, V T::* p, visibility<Vis>) {
-			detail::variable_registry<T, V>::reg(name, p);
-			visibility<Vis>::define(detail::class_registry<T>::get(), name.c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::get)), 0);
-			visibility<Vis>::define(detail::class_registry<T>::get(), (name + "=").c_str(), RUBY_METHOD_FUNC((detail::variable_registry<T, V>::set)), 1);
+			attr_accessor(name, p, visibility<Vis>());
 			return *this;
 		}
 	};	
