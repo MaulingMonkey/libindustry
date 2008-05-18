@@ -144,6 +144,7 @@ namespace industry { namespace languages { namespace ruby {
 
 		template<class T>
 		value operator[] (T const& index) const { return ((*this) ->* "[]")(index); }
+		value operator[] (std::size_t index) const { return CLASS_OF(value_) == rb_cArray ? rb_ary_entry(value_, index) : CLASS_OF(value_) == rb_cHash ? rb_hash_lookup(value_, detail::ruby_value<std::size_t>::to(index)) : ((*this) ->* "[]")(index); }
 		std::size_t length() const { return ((*this) ->* "length")().to<std::size_t>(); }
 
 		value get_type() { return rb_class_of(value_); }
