@@ -76,15 +76,9 @@ void benchmark_ruby() {
 	using namespace boost;
 	using namespace std;
 
-#ifdef _DEBUG
-	cout << "Ruby Benchmarks (DEBUG MODE)\n"
-	     << "============================\n"
+	cout << "Ruby Benchmarks\n"
+	     << "===============\n"
 		 ;
-#else
-	cout << "Ruby Benchmarks (Release Mode)\n"
-	     << "==============================\n"
-		 ;
-#endif
 
 	timer t;
 	Init_ruby_benchmarking();
