@@ -220,6 +220,13 @@ BOOST_AUTO_TEST_CASE( big_long_scripts ) {
 		test_class.inc = 7\n\
 		test_class.mul_by_inc(2)\n\
 		")), 14);
+
+	eval("class MyTestClass\n\
+			def tm\n\
+				self.mul_by_inc(3);\n\
+			end\n\
+		 end");
+	BOOST_CHECK_EQUAL(eval<int>("MyTestClass.new.tm"), 6);
 }
 
 BOOST_AUTO_TEST_CASE( procs_and_blocks ) {
