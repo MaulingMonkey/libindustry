@@ -108,8 +108,8 @@ void benchmark_ruby() {
 	benchmark_eval  (" 1_000.times{$foo.calla1($array1_000)}");
 	benchmark_eval  ("     1.times{$foo.calla1($array1_000_000)}");
 	cout << "  # void foo::calla1( value array ) { for(...) vector[i]=array[i].to<int>(); }\n";
-	benchmark_eval  ("10_000.times{$foo.calla2($array1_000)}");
-	benchmark_eval  ("   100.times{$foo.calla2($array1_000_000)}");
+	benchmark_eval  (" 1_000.times{$foo.calla2($array1_000)}");
+	benchmark_eval  ("     1.times{$foo.calla2($array1_000_000)}");
 	cout << "  # void foo::calla2( value array ) { vector(array_iterator<int>::begin,end); }\n";
 	benchmark_eval  ("$foo.call_f_1_000_000_times");
 	cout << "  # void foo::call_f_1_000_000_times() { for(int i=0; i<1000000; ++i ) f(); }\n";
