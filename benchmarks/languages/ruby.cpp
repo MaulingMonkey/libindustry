@@ -33,10 +33,16 @@ struct foo : self_aware<foo> {
 		std::vector<int> a(array_iterator<int>::begin(array), array_iterator<int>::end(array));
 	}
 
+	void filln() {
+		std::vector<int> a(1000000);
+		std::generate_n(a.begin(), a.size(), f2);
+	}
 	void set_f( const boost::function<void()>& new_f ) { f = new_f; }
+	void set_f2(const boost::function<int()>& new_f2 ) { f2 = new_f2; }
 	void call_f_1_000_000_times() { for ( int i = 0 ; i < 1000000 ; ++i ) f(); }
 
 	boost::function<void()> f;
+	boost::function<int()> f2;
 };
 
 INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
@@ -48,7 +54,9 @@ INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
 		def( "calla2"                , &foo::calla2                 ).
 
 		def( "f="                    , &foo::set_f                  ).
-		def( "call_f_1_000_000_times", &foo::call_f_1_000_000_times );
+		def( "call_f_1_000_000_times", &foo::call_f_1_000_000_times ).
+		def( "f2="                   , &foo::set_f2                 ).
+		def( "filln"                 , &foo::filln                  );
 }
 
 void benchmark_report( const char* description, double time ) {
@@ -90,6 +98,8 @@ void benchmark_ruby() {
 	print_eval("$array1_000_000 = (0...1_000_000).to_a");
 	print_eval("$foo            = Foo.new");
 	print_eval("$foo.f          = lambda{$i+=1}");
+	print_eval("$foo.f2         = Proc.new{$q += 1}");
+	print_eval("$q              = 0");
 	print_eval("$i              = 0");
 	cout << "\n";
 
@@ -105,6 +115,8 @@ void benchmark_ruby() {
 	benchmark_eval  ("10_000.times{$foo.calla2($array1_000)}");
 	benchmark_eval  ("   100.times{$foo.calla2($array1_000_000)}");
 	cout << "  # void foo::calla2( value array ) { vector(array_iterator<int>::begin,end); }\n";
+	benchmark_eval  ("$foo.filln");
+	cout << "  # void foo::filln() { std::generate(vector.begin(), 1000000, f2); }\n";
 	benchmark_eval  ("$foo.call_f_1_000_000_times");
 	cout << "  # void foo::call_f_1_000_000_times() { for(int i=0; i<1000000; ++i ) f(); }\n";
 	cout << "\n";
