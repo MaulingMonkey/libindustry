@@ -17,6 +17,7 @@
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <iterator>
 
 namespace industry { namespace languages { namespace ruby {
 	class value;
@@ -72,6 +73,19 @@ namespace industry { namespace languages { namespace ruby {
 		value( unsigned int );
 		value( const char * );
 		value( const std::string& );
+
+		template < typename Iterator >
+		value( Iterator begin, Iterator end ) {
+			value_ = Qnil;
+			rb_gc_register_address(&value_);
+			value_ = rb_ary_new();
+			
+			for ( Iterator i = begin ; i != end ; ++i ) {
+				VALUE element = detail::ruby_value< typename std::iterator_traits<Iterator>::value_type >::to(*i);
+				rb_ary_push( value_, element );
+			}
+		}
+
 		~value();
 
 

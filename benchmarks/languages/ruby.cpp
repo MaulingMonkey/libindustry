@@ -11,6 +11,7 @@ using namespace industry::languages::ruby;
 
 namespace {
 	int i2 = 0;
+	std::vector<int> array_1_000_000(1000000);
 }
 
 struct foo : self_aware<foo> {
@@ -43,6 +44,10 @@ struct foo : self_aware<foo> {
 
 	boost::function<void()> f;
 	boost::function<int()> f2;
+
+	value make_array_1_000_000() {
+		return value( array_1_000_000.begin(), array_1_000_000.end() );
+	}
 };
 
 INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
@@ -56,7 +61,17 @@ INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
 		def( "f="                    , &foo::set_f                  ).
 		def( "call_f_1_000_000_times", &foo::call_f_1_000_000_times ).
 		def( "f2="                   , &foo::set_f2                 ).
-		def( "filln"                 , &foo::filln                  );
+		def( "filln"                 , &foo::filln                  ).
+		
+		def( "make_array_1_000_000"  , &foo::make_array_1_000_000   );
+
+	eval("\
+		class Foo\n\
+			def mul2(array)\n\
+				array.collect! {|i| i*2}\n\
+			end\n\
+		end\n\
+	");
 }
 
 void benchmark_report( const char* description, double time ) {
@@ -83,6 +98,8 @@ void print_eval( const char* expr ) {
 void benchmark_ruby() {
 	using namespace boost;
 	using namespace std;
+
+	for ( unsigned i = 0 ; i < array_1_000_000.size() ; ++i ) array_1_000_000[i] = i;
 
 	cout << "Ruby Benchmarks\n"
 	     << "===============\n"
@@ -119,6 +136,8 @@ void benchmark_ruby() {
 	cout << "  # void foo::filln() { std::generate(vector.begin(), 1000000, f2); }\n";
 	benchmark_eval  ("$foo.call_f_1_000_000_times");
 	cout << "  # void foo::call_f_1_000_000_times() { for(int i=0; i<1000000; ++i ) f(); }\n";
+	benchmark_eval  ("    10.times{$foo.make_array_1_000_000}");
+	cout << "  # value foo::make_array_1_000_000() { return value( begin, end ); }\n";
 	cout << "\n";
 
 	print_eval("$foo");

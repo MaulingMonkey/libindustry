@@ -329,6 +329,9 @@ BOOST_AUTO_TEST_CASE( value_and_eval ) {
 	typedef boost::tuple<int,std::string,int> tuple_isi_t;
 	tuple_isi_t tuple3( 0x12345678, "sparta", 42 );
 	BOOST_CHECK( (i->*"tuple3_ok")(tuple3).to<bool>() );
+
+	int array1[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	value varray1( array1+0, array1+10 );
 }
 
 BOOST_AUTO_TEST_CASE( ownership_and_such ) {
