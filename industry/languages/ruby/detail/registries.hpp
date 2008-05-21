@@ -175,6 +175,10 @@ namespace industry { namespace languages { namespace ruby {
 			}
 		};
 
+		template < typename T > struct class_registry<      T&> : class_registry<T> {};
+		template < typename T > struct class_registry<const T > : class_registry<T> {};
+		template < typename T > struct class_registry<const T&> : class_registry<T> {};
+
 		template<> struct class_registry<void> { static VALUE get() { return rb_cObject; } };
 
 		template<class T, class Fn, unsigned int Arity>
