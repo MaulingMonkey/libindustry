@@ -52,7 +52,7 @@
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\unit-test-objs\"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
