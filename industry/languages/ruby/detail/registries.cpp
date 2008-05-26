@@ -10,19 +10,4 @@
 
 namespace industry { namespace languages { namespace ruby { namespace detail {
 	std::map<void*,VALUE> instances;
-
-	std::map<VALUE,VALUE>& remap_registry() {
-		static bool initialized = false;
-		static std::map<VALUE,VALUE> r;
-
-		if (!initialized) {
-
-#define RUBY_T_REMAP( origin, equivalent ) r[origin]=equivalent;
-#include <industry/languages/ruby/detail/builtins.hpp>
-#undef RUBY_T_REMAP
-
-			initialized = true;
-		}
-		return r;
-	}
 }}}}

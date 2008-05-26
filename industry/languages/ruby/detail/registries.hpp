@@ -20,11 +20,13 @@
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/detail/constructor_registry.hpp>
 #include <industry/languages/ruby/detail/self_aware_base.hpp>
+#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 #include <stdarg.h>
 #include <industry/languages/ruby/detail/do_call.hpp>
 #include <map>
+#include <vector>
 
 namespace industry { namespace languages { namespace ruby {
 	template<class T, class B>
@@ -62,7 +64,10 @@ namespace industry { namespace languages { namespace ruby {
 			static void ruby_initialized(T* ptr, VALUE v) { ruby_initialized_impl(ptr,v); }
 		};
 
-		std::map<VALUE,VALUE>& remap_registry();
+		struct constructor_registry_entry {
+			bool  (*matches)(int, VALUE*, VALUE); // is constructor overload viable?
+			VALUE (*f      )(int, VALUE*, VALUE); // constructor implementation (in-place new)
+		};
 
 		template<class T, unsigned int Arity>
 		struct constructor_registry {
@@ -88,8 +93,8 @@ namespace industry { namespace languages { namespace ruby {
 				}
 			}
 
-			static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)>& get_constructors() {
-				static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)> constructors;
+			static std::vector<constructor_registry_entry>& get_constructors() {
+				static std::vector<constructor_registry_entry> constructors;
 				return constructors;
 			}
 
@@ -99,19 +104,11 @@ namespace industry { namespace languages { namespace ruby {
 				else if(argc != Arity)
 					rb_raise(rb_eNoMethodError, "No such initializer defined.");
 
-				std::string key;
-				for(int i = 0; i < argc; ++i) {
-					VALUE klass = CLASS_OF(argv[i]);
-					if ( remap_registry().find(klass) != remap_registry().end() ) klass = remap_registry()[klass];
-					key += rb_class2name(klass);
-				}
 
-				if(get_constructors().find(key) != get_constructors().end()) {
-					return get_constructors()[key](argc, argv, self);
-				} else {
-					rb_raise(rb_eNoMethodError, "No such constructor defined.");
+				BOOST_FOREACH( const constructor_registry_entry& entry, get_constructors() ) {
+					if ( (*entry.matches)(argc,argv,self) ) return (*entry.f)(argc,argv,self);
 				}
-
+				rb_raise(rb_eNoMethodError, "No such constructor defined.");
 				return self;
 			}
 		};
@@ -134,8 +131,8 @@ namespace industry { namespace languages { namespace ruby {
 				return initted;
 			}
 
-			static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)>& get_constructors() {
-				static std::map<std::string, VALUE(*)(int, VALUE*, VALUE)> constructors;
+			static std::vector<constructor_registry_entry>& get_constructors() {
+				static std::vector<constructor_registry_entry> constructors;
 				return constructors;
 			}
 
@@ -150,7 +147,9 @@ namespace industry { namespace languages { namespace ruby {
 				if(argc != 0)
 					rb_raise(rb_eNoMethodError, "No such initializer defined.");
 
-				get_constructors()[""](argc, argv, self);
+				BOOST_FOREACH( const constructor_registry_entry& entry, get_constructors() ) {
+					if ( (*entry.matches)(argc,argv,self) ) return (*entry.f)(argc,argv,self);
+				}
 
 				return self;
 			}

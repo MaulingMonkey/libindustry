@@ -46,25 +46,25 @@ namespace industry { namespace languages { namespace ruby { namespace detail {
 #else
 #define n BOOST_PP_ITERATION()
 #define FUNCTION_ARG_TYPE(i) BOOST_PP_CAT(typename func_type::arg, BOOST_PP_CAT(BOOST_PP_INC(i),_type))
-#define DO_GEN_KEYPART(x,i,d) key += rb_class2name(class_registry<FUNCTION_ARG_TYPE(i)>::get())
-#define DO_WRAP_FUNC(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(*(argv+i)))
+#define DO_TEST_FUNC_ARG(z,i,data) if (!ruby_value<FUNCTION_ARG_TYPE(i)>::is_a(argv[i])) return false;
+#define DO_WRAP_FUNC_ARG(z,i,data) (ruby_value<FUNCTION_ARG_TYPE(i)>::from(argv[i]))
 
 template<class T, class Sig>
 struct constructor_registry_impl<T, Sig, n> {
 	typedef boost::function<Sig> func_type;
 	static void reg() {
-		std::map<std::string, VALUE(*)(int, VALUE*, VALUE)>& m = constructor_registry<T, n>::get_constructors();
-		m[key()] = f;
+		std::vector<constructor_registry_entry>& m = constructor_registry<T, n>::get_constructors();
+		constructor_registry_entry entry = { &test_match , &f };
+		m.push_back(entry);
 	}
 	
-	static std::string key() {
-		std::string key;
-		BOOST_PP_ENUM(n, DO_GEN_KEYPART, BOOST_PP_EMPTY);
-		return key;
+	static bool test_match(int argc, VALUE* argv, VALUE self) {
+		BOOST_PP_REPEAT(n, DO_TEST_FUNC_ARG, BOOST_PP_EMPTY); // returns false if mismatch
+		return true;
 	}
 	static VALUE f(int argc, VALUE* argv, VALUE self) {
 		T* ptr = ruby_value<T*>::from(self);
-		new (ptr) T(BOOST_PP_ENUM(n, DO_WRAP_FUNC, BOOST_PP_EMPTY));
+		new (ptr) T(BOOST_PP_ENUM(n, DO_WRAP_FUNC_ARG, BOOST_PP_EMPTY));
 		instance_registry<T>::ruby_initialized(ptr,self); // inject self
 		instance_registry<T>::register_ruby_owned(ptr);
 		return self;

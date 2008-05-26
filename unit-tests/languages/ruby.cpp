@@ -103,7 +103,10 @@ namespace {
 			test_value = static_cast<int>(y * x);
 		}
 		MyConstructorTest( const std::string& s ) {
-			// TODO:  Something?
+			test_value = 42;
+		}
+		MyConstructorTest( value v ) {
+			test_value = (v->*"object_id")().to<unsigned>();
 		}
 	};
 
@@ -148,7 +151,8 @@ namespace {
 			def(init<void(int)>()).
 			def(init<void()>()).
 			def(init<void(int, float)>()).
-			def(init<void(const std::string&)>());
+			def(init<void(const std::string&)>()).
+			def(init<void(value)>());
 
 		class_<MySelfAwareTest>("MySelfAwareTest" );
 	}
@@ -185,6 +189,9 @@ BOOST_AUTO_TEST_CASE( basic_invocation_test )
 	rb_eval_string("MyConstructorTest.new(2, 3.5)");
 	BOOST_CHECK_EQUAL( test_value, 7);
 	rb_eval_string("MyConstructorTest.new('sparta')");
+	BOOST_CHECK_EQUAL( test_value, 42);
+	rb_eval_string("MyConstructorTest.new(:sparta)");
+	BOOST_CHECK_EQUAL( test_value, eval<int>(":sparta.object_id") );
 
 	rb_eval_string( "GC.start" );
 }

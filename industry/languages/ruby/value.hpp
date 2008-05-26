@@ -168,8 +168,8 @@ namespace industry { namespace languages { namespace ruby {
 	};
 
 	namespace detail {
-		template <> struct ruby_value<lazy_value> { static VALUE to( const lazy_value& v ) { return v.value_; } /* no corresponding from() */ };
-		template <> struct ruby_value<value     > { static VALUE to( const value     & v ) { return v.value_; } static value from( VALUE v ) { return value(v); } };
+		template <> struct ruby_value<lazy_value> { static VALUE to( const lazy_value& v ) { return v.value_; } static bool is_a( VALUE value ) { return true; } /* no corresponding from() */ };
+		template <> struct ruby_value<value     > { static VALUE to( const value     & v ) { return v.value_; } static bool is_a( VALUE value ) { return true; } static value from( VALUE v ) { return value(v); } };
 	}
 }}}
 
