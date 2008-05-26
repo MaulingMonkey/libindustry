@@ -48,11 +48,11 @@ namespace industry { namespace languages { namespace ruby {
 
 		//// OWNERSHIP:  Does not transfer ////////////////////////////////////////////////////////////////////////////
 		template<class T> struct ruby_value<T*> {
-			static VALUE to(T* ptr) { return instance_registry<T>::get_ruby_value(ptr); }
-			static T* from(VALUE v) { T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
+			static VALUE to(T* ptr) { return ptr ? instance_registry<T>::get_ruby_value(ptr) : Qnil; }
+			static T* from(VALUE v) { if (v==Qnil) return 0; T* ptr; Data_Get_Struct(v, T, ptr); return ptr; }
 		};
 		template<class T> struct ruby_value<const T*> {
-			static const T* from(VALUE v) { const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
+			static const T* from(VALUE v) { if (v==Qnil) return 0; const T* ptr; Data_Get_Struct(v, const T, ptr); return ptr; }
 		};
 
 		template<class T> struct ruby_value< boost::reference_wrapper<T> > {
@@ -61,18 +61,18 @@ namespace industry { namespace languages { namespace ruby {
 		
 		//// OWNERSHIP:  Transfers (to Ruby) //////////////////////////////////////////////////////////////////////////
 		template<class T> struct ruby_value< std::auto_ptr<T> > {
-			static VALUE to(std::auto_ptr<T> ptr) { return instance_registry<T>::register_ruby_owned(ptr.release()); }
+			static VALUE to(std::auto_ptr<T> ptr) { return ptr.get() ? instance_registry<T>::register_ruby_owned(ptr.release()) : Qnil; }
 		};
 
 		//// OWNERSHIP:  Shared (always) //////////////////////////////////////////////////////////////////////////////
 		// (must implement the intrusive_ptr interface, of course)
 		template<class T> struct ruby_value< boost::intrusive_ptr<T> > {
-			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { return instance_registry<T>::get_ruby_value(ptr.get()); }
-			static boost::intrusive_ptr<T> from(VALUE v) { T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
+			static VALUE to(const boost::intrusive_ptr<T>& ptr ) { return ptr.get() ? instance_registry<T>::get_ruby_value(ptr.get()) : Qnil; }
+			static boost::intrusive_ptr<T> from(VALUE v) { if (v==Qnil) return boost::intrusive_ptr<T>(); T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		};
 
 		template<class T> struct ruby_value< boost::intrusive_ptr<const T> > {
-			static boost::intrusive_ptr<const T> from(VALUE v) { const T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
+			static boost::intrusive_ptr<const T> from(VALUE v) { if (v==Qnil) return boost::intrusive_ptr<const T>(); const T* ptr; Data_Get_Struct(v,T,ptr); return ptr; }
 		};
 
 		//// OWNERSHIP:  Gives a copy to Ruby, but does not copy or transfer ownership to C++ /////////////////////////
