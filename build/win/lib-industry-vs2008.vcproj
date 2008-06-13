@@ -161,6 +161,10 @@
 				RelativePath="..\..\industry\config.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\industry\type.hpp"
+				>
+			</File>
 			<Filter
 				Name="traits"
 				>
@@ -201,6 +205,10 @@
 					</File>
 					<File
 						RelativePath="..\..\industry\languages\ruby\exceptions.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\industry\languages\ruby\id.hpp"
 						>
 					</File>
 					<File
@@ -425,10 +433,6 @@
 					>
 				</File>
 			</Filter>
-			<File
-				RelativePath="..\..\industry\type.hpp"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

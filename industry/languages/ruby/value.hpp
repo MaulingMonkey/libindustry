@@ -12,6 +12,7 @@
 #include <industry/languages/ruby/detail/wrap_retarded_ruby.hpp>
 #include <industry/languages/ruby/detail/ruby_value.hpp>
 #include <industry/languages/ruby/exceptions.hpp>
+#include <industry/languages/ruby/id.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/type_traits.hpp>
 #include <string>
@@ -34,12 +35,11 @@ namespace industry { namespace languages { namespace ruby {
 	};
 
 	class value_function {
+		// NOTE:  This is only meant to be used in temporary expressions -- self is not registered with the GC system, assumes there's an in-scope ruby::value or equivalent
 		VALUE self;
 		ID    id;
 	public:
-		value_function( VALUE, const char* str );
-		value_function( VALUE, const char* str, unsigned strlen );
-		~value_function();
+		value_function( VALUE self, const ruby::id& id ): self(self), id(id.get_id()) {}
 
 		lazy_value operator()() const {
 			return rb_funcall3( self, id, 0, NULL );
@@ -89,10 +89,7 @@ namespace industry { namespace languages { namespace ruby {
 		~value();
 
 
-		value_function operator->*( const char *       str ) const { return value_function(value_,str); }
-		value_function operator->*( const std::string& str ) const { return value_function(value_,str.c_str(),str.size()); }
-		template < size_t N >
-		value_function operator->*( const char (&str)[N]   ) const { return value_function(value_,str,N-1); }
+		value_function operator->*( const ruby::id& id ) const { return value_function(value_,id); }
 
 		template < typename T > T to() const { return detail::ruby_value<T>::from(value_); }
 

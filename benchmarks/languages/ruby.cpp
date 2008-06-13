@@ -72,6 +72,18 @@ INDUSTRY_RUBY_MODULE( ruby_benchmarking ) {
 			end\n\
 		end\n\
 	");
+
+	eval("\
+		class Bar\n\
+			def initialize()\n\
+				@i = 0\n\
+			end\n\
+			def call()\n\
+				@i += 1\n\
+			end\n\
+			attr_reader :i\n\
+		end\n\
+	");
 }
 
 void benchmark_report( const char* description, double time ) {
@@ -83,6 +95,13 @@ void benchmark_eval( const char* expr ) {
 	eval(expr);
 	const double e = t.elapsed();
 	benchmark_report(expr,e);
+}
+
+#define BENCHMARK( cppexpr ) {       \
+	timer t;                         \
+	cppexpr                          \
+	const double e = t.elapsed();    \
+	benchmark_report( #cppexpr, e ); \
 }
 
 void print_eval( const char* expr ) {
@@ -98,6 +117,7 @@ void print_eval( const char* expr ) {
 void benchmark_ruby() {
 	using namespace boost;
 	using namespace std;
+	using namespace industry::languages::ruby;
 
 	for ( unsigned i = 0 ; i < array_1_000_000.size() ; ++i ) array_1_000_000[i] = i;
 
@@ -138,9 +158,15 @@ void benchmark_ruby() {
 	cout << "  # void foo::call_f_1_000_000_times() { for(int i=0; i<1000000; ++i ) f(); }\n";
 	benchmark_eval  ("    10.times{$foo.make_array_1_000_000}");
 	cout << "  # value foo::make_array_1_000_000() { return value( begin, end ); }\n";
+
+	value bar = eval("$bar = Bar.new");
+	const id call( "call" );
+
+	BENCHMARK( for ( int i = 0 ; i < 1000000 ; ++i ) (bar->*call)(); );
 	cout << "\n";
 
 	print_eval("$foo");
 	print_eval("$i");
+	print_eval("$bar.i");
 	cout << "\n";
 }
