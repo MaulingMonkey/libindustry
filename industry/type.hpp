@@ -13,6 +13,7 @@
 #ifndef IG_INDUSTRY_TYPE
 #define IG_INDUSTRY_TYPE
 
+#include <functional>
 #include <typeinfo>
 
 #ifdef _MSC_VER
@@ -24,17 +25,29 @@ namespace industry {
 	class type {
 		const std::type_info * info;
 	public:
-		type( void ) : info( 0 ) {}
-		type( const std::type_info & src ) : info( & src ) {}
-		type( const type & other ) : info( other.info ) {}
+		type( void ) throw(): info( 0 ) {}
+#ifdef NO_TYPEINFO_DUPLICATES
+		type( const std::type_info& src ): info( & src ) {}
+#else
+		type( const std::type_info& src ); // can throw std::bad_alloc
+#endif
+		type( const type & other ) throw() : info( other.info ) {}
+
+		const char* name() const { return info->name(); }
 		
 		friend bool operator==( const type & lhs , const type & rhs ) {
-			return *(lhs.info) == *(rhs.info);
+			return lhs.info == rhs.info;
 		}
 		friend bool operator< ( const type & lhs , const type & rhs ) {
-			return lhs.info->before( *(rhs.info) );
+			std::less<const std::type_info*> comp;
+			return comp(lhs.info,rhs.info);
 		}
+
+		template < typename T > static type id() { static const type t(typeid(T)); return t; }
 	};
+
+	template < typename T > inline type dynamic_type_of( const T& expr ) { return typeid(expr); }
+	template < typename T > inline type static_type_of ( const T& expr ) { return type::id<T>(); }
 }
 
 #ifdef _MSC_VER
