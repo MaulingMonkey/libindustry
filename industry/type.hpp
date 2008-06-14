@@ -23,25 +23,17 @@
 
 namespace industry {
 	class type {
-		const std::type_info * info;
+		unsigned info;
 	public:
 		type( void ) throw(): info( 0 ) {}
-#ifdef NO_TYPEINFO_DUPLICATES
-		type( const std::type_info& src ): info( & src ) {}
-#else
 		type( const std::type_info& src ); // can throw std::bad_alloc
-#endif
 		type( const type & other ) throw() : info( other.info ) {}
 
-		const char* name() const { return info->name(); }
+		const char* name() const throw();
+		unsigned key() const { return info; }
 		
-		friend bool operator==( const type & lhs , const type & rhs ) {
-			return lhs.info == rhs.info;
-		}
-		friend bool operator< ( const type & lhs , const type & rhs ) {
-			std::less<const std::type_info*> comp;
-			return comp(lhs.info,rhs.info);
-		}
+		friend bool operator==( const type & lhs , const type & rhs ) { return lhs.info == rhs.info; }
+		friend bool operator< ( const type & lhs , const type & rhs ) { return lhs.info  < rhs.info; }
 
 		template < typename T > static type id() { static const type t(typeid(T)); return t; }
 	};

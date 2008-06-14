@@ -9,29 +9,43 @@
 #include <industry/type.hpp>
 #include <boost/foreach.hpp>
 #include <map>
+#include <vector>
 
 namespace industry {
-#ifndef NO_TYPEINFO_DUPLICATES
+	namespace {
+		typedef std::map< const std::type_info*, unsigned > types_t;
+		typedef types_t::value_type type_entry;
+
+		std::vector< const std::type_info* > infos;
+		types_t types;
+	}
+
+	const char* type::name() const throw() {
+		return infos[info]->name();
+	}
+
 	type::type( const std::type_info& src ) {
-		typedef std::map< const std::type_info*, const std::type_info* > type_list_t;
-		static type_list_t types;
+		types_t::iterator entry = types.find(&src);
+		if ( entry != types.end() ) {
+			info = entry->second;
+			return;
+		}
 
-		const std::type_info*& entry = types[&src];
-		info = entry;
-		if (info) return;
-
+#ifndef NO_TYPEINFO_DUPLICATES
 		// Search for duplicates
-		BOOST_FOREACH( type_list_t::value_type& t, types ) {
+		BOOST_FOREACH( type_entry& t, types ) {
 			if ( *t.first == src ) {
-				entry = t.first; // register duplicate
-				info = entry;
+				types.insert(entry,std::make_pair(&src,t.second));
+				info = t.second;
 				return;
 			}
 		}
-
-		entry = &src; // register new entry
-		info = entry;
-		return;
-	}
 #endif
+
+		// register new entry
+		infos.push_back(&src);
+		unsigned newid = static_cast<unsigned>(infos.size());
+		types.insert(entry,std::make_pair(&src,newid));
+		info = newid;
+	}
 }
