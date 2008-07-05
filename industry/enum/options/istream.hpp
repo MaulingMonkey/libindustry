@@ -21,7 +21,7 @@
 #include <cctype>
 
 /////////////////////////////////// #define INDUSTRY_IMPL_ENUM_OPTION_is_* ( T , VALUES ) ///////
-#define INDUSTRY_IMPL_ENUM_IS_VALUE_ARRAY( z, T, element ) std::map< std::string , T :: _ >::value_type( BOOST_PP_STRINGIZE(element) , T :: element ),
+#define INDUSTRY_IMPL_ENUM_IS_VALUE_ARRAY( z, T, element ) std::map< std::string , T :: _ >::value_type( BOOST_PP_STRINGIZE(element) , T :: BOOST_PP_CAT(_,element) ),
 /*------------------------------------------------------------------------------------*/
 #define INDUSTRY_IMPL_ENUM_OPTION_is_any_case_naked( T, VALUES )                       \
 inline std::istream& operator>>( std::istream& is, T & self ) {                        \

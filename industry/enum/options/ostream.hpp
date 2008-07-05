@@ -24,9 +24,9 @@
                                                  return os;                                                        \
                                              }                                                                     \
 /*-- Unique implementations: -------------------------------------------------------------------------------------*/
-#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_same_case_naked(  z, T, element ) case T :: element: { static const char s[] = BOOST_PP_STRINGIZE(element); /* no changes */                                os << s; } break;
-#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_capitalize_naked( z, T, element ) case T :: element: { static       char s[] = BOOST_PP_STRINGIZE(element); s[0] = std::upcase(s[0]);                       os << s; } break;
-#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_upper_case_naked( z, T, element ) case T :: element: { static       char s[] = BOOST_PP_STRINGIZE(element); std::transform(s,boost::end(s),s,std::upcase);  os << s; } break;
+#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_same_case_naked(  z, T, element ) case T :: BOOST_PP_CAT(_,element): { static const char s[] = BOOST_PP_STRINGIZE(element); /* no changes */                                os << s; } break;
+#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_capitalize_naked( z, T, element ) case T :: BOOST_PP_CAT(_,element): { static       char s[] = BOOST_PP_STRINGIZE(element); s[0] = std::upcase(s[0]);                       os << s; } break;
+#define INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_upper_case_naked( z, T, element ) case T :: BOOST_PP_CAT(_,element): { static       char s[] = BOOST_PP_STRINGIZE(element); std::transform(s,boost::end(s),s,std::upcase);  os << s; } break;
 #define INDUSTRY_IMPL_ENUM_OPTION_os_same_case_naked(  T, VALUES ) INDUSTRY_IMPL_ENUM_PRE_OS_OPTION(T) BOOST_PP_SEQ_FOR_EACH( INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_same_case_naked , T, VALUES ) INDUSTRY_IMPL_ENUM_POST_OS_OPTION()
 #define INDUSTRY_IMPL_ENUM_OPTION_os_capitalize_naked( T, VALUES ) INDUSTRY_IMPL_ENUM_PRE_OS_OPTION(T) BOOST_PP_SEQ_FOR_EACH( INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_capitalize_naked, T, VALUES ) INDUSTRY_IMPL_ENUM_POST_OS_OPTION()
 #define INDUSTRY_IMPL_ENUM_OPTION_os_upper_case_naked( T, VALUES ) INDUSTRY_IMPL_ENUM_PRE_OS_OPTION(T) BOOST_PP_SEQ_FOR_EACH( INDUSTRY_IMPL_ENUM_OS_SWITCH_CASE_os_upper_case_naked, T, VALUES ) INDUSTRY_IMPL_ENUM_POST_OS_OPTION()
