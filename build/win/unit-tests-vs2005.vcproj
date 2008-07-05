@@ -231,6 +231,10 @@
 		<Filter
 			Name="enum"
 			>
+			<File
+				RelativePath="..\..\unit-tests\enum\enum_tests.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

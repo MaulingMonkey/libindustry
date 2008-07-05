@@ -13,5 +13,6 @@
 #include <industry/enum/enum.hpp>
 #include <industry/enum/options/istream.hpp>
 #include <industry/enum/options/ostream.hpp>
+#include <industry/enum/options/scope.hpp>
 
 #endif //ndef IG_INDUSTRY_ENUM

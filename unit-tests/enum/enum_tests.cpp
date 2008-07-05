@@ -12,9 +12,9 @@
 #include <string>
 
 namespace {
-	INDUSTRY_ENUM( day, (is)(os), (sunday)(monday)(tuesday)(wednesday)(thursday)(friday)(saturday) );
+	INDUSTRY_ENUM( day, (is)(os)(duplicate_constants_in_outer_scope), (sunday)(monday)(tuesday)(wednesday)(thursday)(friday)(saturday) );
 
-	bool overloaded_right( day ) { return true; }
+	bool overloaded_right( day ) { return true;  }
 	bool overloaded_right( int ) { return false; }
 }
 
@@ -69,5 +69,32 @@ BOOST_AUTO_TEST_CASE( test_enum_raw ) {
 	BOOST_CHECK_THROW( boost::lexical_cast<day>("monday "), boost::bad_lexical_cast );
 
 	BOOST_CHECK( overloaded_right(day1) );
-	BOOST_CHECK(!overloaded_right(day::_monday) ); // We can't get this right.
+	BOOST_CHECK(!overloaded_right(day::_monday) ); // We can't get this right since it's an actual enum.
+}
+
+BOOST_AUTO_TEST_CASE( test_enum_outer_scope ) {
+	const day day1 = monday;
+	const day day2 = tuesday;
+	
+	BOOST_CHECK_EQUAL( day1.value, monday  );
+	BOOST_CHECK_EQUAL( day2.value, tuesday );
+
+	BOOST_CHECK_EQUAL( day1  , day1   );
+	BOOST_CHECK_EQUAL( day1  , monday );
+	BOOST_CHECK_EQUAL( monday, day1   );
+
+	BOOST_CHECK( day1         != day2         );
+	BOOST_CHECK( day::tuesday != day1         );
+	BOOST_CHECK( day1         != day::tuesday );
+
+	BOOST_CHECK_EQUAL( boost::lexical_cast<std::string>(day1), "monday"    );
+	BOOST_CHECK_EQUAL( boost::lexical_cast<day>    ("monday"), monday );
+	BOOST_CHECK_EQUAL( boost::lexical_cast<day>    ("mOnDaY"), monday );
+
+	BOOST_CHECK_THROW( boost::lexical_cast<day>("monda")  , boost::bad_lexical_cast );
+	BOOST_CHECK_THROW( boost::lexical_cast<day>("mondayz"), boost::bad_lexical_cast );
+	BOOST_CHECK_THROW( boost::lexical_cast<day>("monday "), boost::bad_lexical_cast );
+
+	BOOST_CHECK( overloaded_right(day1)   );
+	BOOST_CHECK( overloaded_right(monday) );
 }

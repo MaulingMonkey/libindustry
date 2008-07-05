@@ -463,6 +463,10 @@
 						RelativePath="..\..\industry\enum\options\ostream.hpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\industry\enum\options\scope.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
