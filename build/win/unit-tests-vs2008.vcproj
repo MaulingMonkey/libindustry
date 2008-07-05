@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="WINDOWS-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -226,6 +226,14 @@
 			>
 			<File
 				RelativePath="..\..\unit-tests\math\vector_tests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="enum"
+			>
+			<File
+				RelativePath="..\..\unit-tests\enum\enum_tests.cpp"
 				>
 			</File>
 		</Filter>
