@@ -23,7 +23,7 @@
     BOOST_PP_RPAREN()                                                                \
 /*----------------------------------------------------------------------------------*/
 #define INDUSTRY_ENUM( name, options, values )                                       \
-    INDUSTRY_BASIC_ENUM( name, values )                                              \
+    INDUSTRY_BASIC_ENUM( name, values );                                             \
     BOOST_PP_SEQ_FOR_EACH( INDUSTRY_IMPL_ENUM_CALL_OPTION, (name)(values), options ) \
 //////////////////////////////////////////////////////////////////////////////////////
 

@@ -32,13 +32,13 @@ public:                                                            \
     T(): value( BOOST_PP_CAT(_,BOOST_PP_SEQ_HEAD(values)) ) {}     \
     template < _ value > T( void (*)( enumeration<value> ) ): value(value) {} \
     T( _ value ): value(value) {}                                  \
-};                                                                 \
-bool operator==( T lhs, T rhs ) { return lhs.value == rhs.value; } \
-bool operator!=( T lhs, T rhs ) { return lhs.value != rhs.value; } \
-bool operator==( T lhs, T::_ rhs ) { return lhs.value == rhs; }    \
-bool operator!=( T lhs, T::_ rhs ) { return lhs.value != rhs; }    \
-bool operator==( T::_ lhs, T rhs ) { return lhs == rhs.value; }    \
-bool operator!=( T::_ lhs, T rhs ) { return lhs != rhs.value; }    \
+	friend bool operator==( T lhs, T rhs ) { return lhs.value == rhs.value; } \
+	friend bool operator!=( T lhs, T rhs ) { return lhs.value != rhs.value; } \
+	friend bool operator==( T lhs, T::_ rhs ) { return lhs.value == rhs; }    \
+	friend bool operator!=( T lhs, T::_ rhs ) { return lhs.value != rhs; }    \
+	friend bool operator==( T::_ lhs, T rhs ) { return lhs == rhs.value; }    \
+	friend bool operator!=( T::_ lhs, T rhs ) { return lhs != rhs.value; }    \
+}                                                                  \
 ////////////////////////////////////////////////////////////////////
 
 #endif //ndef IG_INDUSTRY_ENUM_BASIC_ENUM
