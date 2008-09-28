@@ -38,6 +38,18 @@ public:                                                            \
 	friend bool operator!=( T lhs, T::_ rhs ) { return lhs.value != rhs; }    \
 	friend bool operator==( T::_ lhs, T rhs ) { return lhs == rhs.value; }    \
 	friend bool operator!=( T::_ lhs, T rhs ) { return lhs != rhs.value; }    \
+	friend bool operator<=( T lhs, T rhs ) { return lhs.value <= rhs.value; } \
+	friend bool operator< ( T lhs, T rhs ) { return lhs.value <  rhs.value; } \
+	friend bool operator<=( T lhs, T::_ rhs ) { return lhs.value <= rhs; }    \
+	friend bool operator< ( T lhs, T::_ rhs ) { return lhs.value <  rhs; }    \
+	friend bool operator<=( T::_ lhs, T rhs ) { return lhs <= rhs.value; }    \
+	friend bool operator< ( T::_ lhs, T rhs ) { return lhs <  rhs.value; }    \
+	friend bool operator>=( T lhs, T rhs ) { return lhs.value >= rhs.value; } \
+	friend bool operator> ( T lhs, T rhs ) { return lhs.value >  rhs.value; } \
+	friend bool operator>=( T lhs, T::_ rhs ) { return lhs.value >= rhs; }    \
+	friend bool operator> ( T lhs, T::_ rhs ) { return lhs.value >  rhs; }    \
+	friend bool operator>=( T::_ lhs, T rhs ) { return lhs >= rhs.value; }    \
+	friend bool operator> ( T::_ lhs, T rhs ) { return lhs >  rhs.value; }    \
 }                                                                  \
 ////////////////////////////////////////////////////////////////////
 
